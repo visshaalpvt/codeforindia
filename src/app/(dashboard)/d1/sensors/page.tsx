@@ -484,15 +484,20 @@ function LiveDataChart({ sensors, time }: { sensors: SensorDevice[]; time: numbe
 
 function HardwareStatusPanel({ lastReading, onSimulate }: { lastReading: SensorReading | null; onSimulate: () => void }) {
   const [heartbeatTime, setHeartbeatTime] = useState(Date.now());
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const iv = setInterval(() => setHeartbeatTime(Date.now()), 1000);
     return () => clearInterval(iv);
   }, []);
 
-  const jsonPayload = lastReading
-    ? JSON.stringify(lastReading, null, 2)
-    : JSON.stringify({ status: "awaiting data", timestamp: new Date().toISOString() }, null, 2);
+  const jsonPayload = useMemo(() => {
+    if (!mounted) return JSON.stringify({ status: "initializing" }, null, 2);
+    return lastReading
+      ? JSON.stringify(lastReading, null, 2)
+      : JSON.stringify({ status: "awaiting data", timestamp: new Date().toISOString() }, null, 2);
+  }, [lastReading, mounted]);
 
   return (
     <div className="backdrop-blur-md bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-4 md:p-6 space-y-4">
@@ -519,7 +524,9 @@ function HardwareStatusPanel({ lastReading, onSimulate }: { lastReading: SensorR
           <Wifi className="w-4 h-4 text-slate-500" />
           <div>
             <p className="text-xs font-semibold">Last Heartbeat</p>
-            <p className="text-[10px] text-slate-500 font-mono" suppressHydrationWarning>{timeAgo(new Date(heartbeatTime - 2000).toISOString())}</p>
+            <p className="text-[10px] text-slate-500 font-mono">
+              {mounted ? timeAgo(new Date(heartbeatTime - 2000).toISOString()) : "..."}
+            </p>
           </div>
         </div>
 
