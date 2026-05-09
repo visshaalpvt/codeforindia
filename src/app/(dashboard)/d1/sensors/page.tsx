@@ -176,44 +176,66 @@ function SensorCard({ sensor, time }: { sensor: SensorDevice; time: number }) {
 
 function ConnectionPanel({ 
   onConnect, 
-  status, 
+  espStatus,
+  camStatus,
   espIp, 
   setEspIp, 
   camIp, 
   setCamIp 
 }: { 
   onConnect: () => void; 
-  status: "disconnected" | "connecting" | "connected";
+  espStatus: "idle" | "connecting" | "connected" | "failed";
+  camStatus: "idle" | "connecting" | "connected" | "failed";
   espIp: string;
   setEspIp: (v: string) => void;
   camIp: string;
   setCamIp: (v: string) => void;
 }) {
+  const isConnecting = espStatus === "connecting" || camStatus === "connecting";
+
   return (
     <div className="backdrop-blur-md bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-4 flex flex-col h-full">
       <div className="flex items-center gap-2 mb-4">
-        <Wifi className={cn("w-4 h-4", status === "connected" ? "text-green-500" : "text-slate-400")} />
+        <Wifi className={cn("w-4 h-4", espStatus === "connected" ? "text-green-500" : "text-slate-400")} />
         <h2 className="text-xs font-bold text-slate-700 uppercase tracking-widest">ESP32 Device Gateway</h2>
       </div>
 
       <div className="space-y-4">
+        {/* ESP32 Controller IP */}
         <div className="space-y-1.5">
-          <label className="text-[10px] text-slate-500 font-mono flex items-center gap-1.5 uppercase tracking-wider">
-            <Cpu className="w-3 h-3" /> ESP32 Controller IP
-          </label>
+          <div className="flex items-center justify-between">
+            <label className="text-[10px] text-slate-500 font-mono flex items-center gap-1.5 uppercase tracking-wider">
+              <Cpu className="w-3 h-3" /> ESP32 Controller IP
+            </label>
+            <span className={cn(
+              "text-[8px] font-bold uppercase",
+              espStatus === "connected" ? "text-green-500" : espStatus === "failed" ? "text-red-500" : "text-slate-400"
+            )}>
+              {espStatus}
+            </span>
+          </div>
           <input 
             type="text" 
             value={espIp}
             onChange={(e) => setEspIp(e.target.value)}
-            placeholder="192.168.1.10"
+            placeholder="192.168.4.1"
             className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs font-mono focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition-all"
           />
         </div>
 
+        {/* ESP32-CAM Stream IP */}
         <div className="space-y-1.5">
-          <label className="text-[10px] text-slate-500 font-mono flex items-center gap-1.5 uppercase tracking-wider">
-            <Camera className="w-3 h-3" /> ESP32-CAM Stream IP
-          </label>
+          <div className="flex items-center justify-between">
+            <label className="text-[10px] text-slate-500 font-mono flex items-center gap-1.5 uppercase tracking-wider">
+              <Camera className="w-3 h-3" /> ESP32-CAM Stream IP
+            </label>
+            <span className={cn(
+              "text-[8px] font-bold uppercase",
+              camStatus === "connected" ? "text-green-500" : camStatus === "failed" ? "text-red-500" : "text-slate-400"
+            )}>
+              {camStatus}
+            </span>
+          </div>
           <input 
             type="text" 
             value={camIp}
@@ -225,44 +247,53 @@ function ConnectionPanel({
 
         <button 
           onClick={onConnect}
-          disabled={status === "connecting"}
+          disabled={isConnecting}
           className={cn(
             "w-full py-2.5 rounded-xl text-xs font-bold tracking-widest uppercase transition-all flex items-center justify-center gap-2",
-            status === "connected" 
+            espStatus === "connected" && camStatus === "connected"
               ? "bg-green-50 text-green-600 border border-green-200 hover:bg-green-100" 
               : "bg-cyan-500 text-white shadow-lg shadow-cyan-500/20 hover:bg-cyan-600 active:scale-95 disabled:opacity-50"
           )}
         >
-          {status === "connecting" ? (
+          {isConnecting ? (
             <>
               <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-              Initializing...
+              Verifying Network...
             </>
-          ) : status === "connected" ? (
+          ) : (espStatus === "connected" && camStatus === "connected") ? (
             <>
               <CheckCircle className="w-3.5 h-3.5" />
-              Devices Linked
+              Verified & Linked
             </>
           ) : (
             <>
               <Wifi className="w-3.5 h-3.5" />
-              Connect Devices
+              Initiate Link
             </>
           )}
         </button>
 
-        {status === "connected" && (
-          <div className="flex items-center gap-4 px-2 py-1 bg-green-50/50 rounded-lg border border-green-100">
+        {/* Status Breakdown */}
+        <div className="flex flex-col gap-2 mt-2">
+          <div className="flex items-center justify-between px-2 py-1.5 bg-white/50 rounded-lg border border-slate-100">
+            <span className="text-[9px] font-bold text-slate-500 uppercase">ESP32 Controller</span>
             <div className="flex items-center gap-1.5">
-              <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
-              <span className="text-[9px] font-bold text-green-700 uppercase">ESP32: UP</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
-              <span className="text-[9px] font-bold text-green-700 uppercase">CAM: LIVE</span>
+              <div className={cn("w-1.5 h-1.5 rounded-full", espStatus === "connected" ? "bg-green-500" : espStatus === "failed" ? "bg-red-500" : "bg-slate-300")} />
+              <span className={cn("text-[9px] font-bold uppercase", espStatus === "connected" ? "text-green-600" : "text-slate-400")}>
+                {espStatus === "connected" ? "ACTIVE" : espStatus === "failed" ? "TIMEOUT" : "IDLE"}
+              </span>
             </div>
           </div>
-        )}
+          <div className="flex items-center justify-between px-2 py-1.5 bg-white/50 rounded-lg border border-slate-100">
+            <span className="text-[9px] font-bold text-slate-500 uppercase">ESP32-CAM Stream</span>
+            <div className="flex items-center gap-1.5">
+              <div className={cn("w-1.5 h-1.5 rounded-full", camStatus === "connected" ? "bg-green-500" : camStatus === "failed" ? "bg-red-500" : "bg-slate-300")} />
+              <span className={cn("text-[9px] font-bold uppercase", camStatus === "connected" ? "text-green-600" : "text-slate-400")}>
+                {camStatus === "connected" ? "LIVE" : camStatus === "failed" ? "TIMEOUT" : "IDLE"}
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -273,7 +304,7 @@ function LiveSurveillanceFeed({
   onCapture,
   motionDetected
 }: { 
-  status: "disconnected" | "connecting" | "connected";
+  status: "idle" | "connecting" | "connected" | "failed";
   onCapture: () => void;
   motionDetected: boolean;
 }) {
@@ -561,24 +592,50 @@ export default function SensorsPage() {
   const [lastReading, setLastReading] = useState<SensorReading | null>(null);
   const [notification, setNotification] = useState<string | null>(null);
   const [renderTick, setRenderTick] = useState(0);
-  const [espIp, setEspIp] = useState("192.168.1.10");
+  const [espIp, setEspIp] = useState("192.168.4.1");
   const [camIp, setCamIp] = useState("192.168.1.20");
-  const [connStatus, setConnStatus] = useState<"disconnected" | "connecting" | "connected">("disconnected");
+  const [espStatus, setEspStatus] = useState<"idle" | "connecting" | "connected" | "failed">("idle");
+  const [camStatus, setCamStatus] = useState<"idle" | "connecting" | "connected" | "failed">("idle");
   const [motionAlert, setMotionAlert] = useState(false);
   
   const initialized = useRef(false);
 
-  const handleConnect = () => {
-    setConnStatus("connecting");
-    setTimeout(() => {
-      setConnStatus("connected");
-      setNotification("ESP32 Connection Established");
+  const handleConnect = async () => {
+    setEspStatus("connecting");
+    setCamStatus("connecting");
+    
+    // Real Network Verification (Simulated with fetch)
+    const verifyIp = async (ip: string) => {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 2000); // 2s timeout
+        
+        // Try to fetch root (no-cors to avoid blocking, but still detects if server is reachable)
+        await fetch(`http://${ip}/`, { mode: 'no-cors', signal: controller.signal });
+        clearTimeout(timeoutId);
+        return true;
+      } catch (err) {
+        return false;
+      }
+    };
+
+    const espResult = await verifyIp(espIp);
+    const camResult = await verifyIp(camIp);
+
+    setEspStatus(espResult ? "connected" : "failed");
+    setCamStatus(camResult ? "connected" : "failed");
+
+    if (espResult || camResult) {
+      setNotification(espResult && camResult ? "All Systems Linked" : "Partial Connection Established");
       setTimeout(() => setNotification(null), 3000);
-    }, 2000);
+    } else {
+      setNotification("Connection Failed: Check IP & Network");
+      setTimeout(() => setNotification(null), 4000);
+    }
   };
 
   const captureSnapshot = () => {
-    if (connStatus !== "connected") return;
+    if (camStatus !== "connected") return;
     
     setNotification("Surveillance Snapshot Captured");
     setTimeout(() => setNotification(null), 3000);
@@ -645,13 +702,13 @@ export default function SensorsPage() {
     const cameraSensor = currentSensors.find((s) => s.name === "Live Camera Feed");
     if (cameraSensor) {
       updateSensor(cameraSensor.id, { 
-        status: connStatus === "connected" ? "Online" : "Offline",
+        status: camStatus === "connected" ? "Online" : "Offline",
         lastUpdated: reading.timestamp 
       });
     }
 
     setRenderTick((t) => t + 1);
-  }, [updateSensor, connStatus]);
+  }, [updateSensor, camStatus]);
 
   const triggerMotion = useCallback(() => {
     const fakeReading: SensorReading = {
@@ -723,7 +780,8 @@ export default function SensorsPage() {
         {/* Left: Device Control */}
         <div className="xl:col-span-1 space-y-6">
           <ConnectionPanel 
-            status={connStatus} 
+            espStatus={espStatus}
+            camStatus={camStatus}
             onConnect={handleConnect}
             espIp={espIp}
             setEspIp={setEspIp}
@@ -744,7 +802,7 @@ export default function SensorsPage() {
         {/* Center: Live Feed */}
         <div className="xl:col-span-3 space-y-6">
           <LiveSurveillanceFeed 
-            status={connStatus} 
+            status={camStatus} 
             onCapture={captureSnapshot} 
             motionDetected={motionAlert} 
           />
