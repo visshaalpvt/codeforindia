@@ -302,11 +302,13 @@ function ConnectionPanel({
 function LiveSurveillanceFeed({ 
   status, 
   onCapture,
-  motionDetected
+  motionDetected,
+  camIp
 }: { 
   status: "idle" | "connecting" | "connected" | "failed";
   onCapture: () => void;
   motionDetected: boolean;
+  camIp: string;
 }) {
   return (
     <div className="backdrop-blur-md bg-slate-50 border border-slate-200 rounded-2xl p-4 md:p-6 flex flex-col gap-4 h-full">
@@ -341,9 +343,15 @@ function LiveSurveillanceFeed({
         {status === "connected" ? (
           <>
             <img 
-              src="/live_security_camera_feed_placeholder_1778365536252.png" 
+              src={`http://${camIp}/stream`} 
               alt="ESP32-CAM Stream" 
               className={cn("w-full h-full object-cover transition-opacity", motionDetected ? "opacity-100" : "opacity-80")}
+              onError={(e) => {
+                const img = e.target as HTMLImageElement;
+                if (img.src.includes("/stream")) {
+                  img.src = `http://${camIp}:81/stream`;
+                }
+              }}
             />
             {/* Surveillance Overlays */}
             <div className="absolute inset-0 pointer-events-none p-4 flex flex-col justify-between">
@@ -805,6 +813,7 @@ export default function SensorsPage() {
             status={camStatus} 
             onCapture={captureSnapshot} 
             motionDetected={motionAlert} 
+            camIp={camIp}
           />
         </div>
       </div>
