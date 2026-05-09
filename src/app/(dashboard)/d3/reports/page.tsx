@@ -162,7 +162,7 @@ function GeneratedPreview({
         {selectedCase && (
           <div className="space-y-4">
             {/* Case Details Section */}
-            {selectedSections.has("details") && (
+            {selectedSections.has("case-details") && (
               <div className="grid grid-cols-2 gap-3 bg-slate-50/50 p-3 rounded-lg border border-gray-100">
                 <div>
                   <p className="text-[10px] text-slate-400 uppercase tracking-wider">Case Title</p>
@@ -184,7 +184,7 @@ function GeneratedPreview({
             )}
 
             {/* Autopsy Body Diagram — Full Case & Risk Analysis */}
-            {(reportType.id === "full-case" || reportType.id === "risk-analysis") && selectedSections.has("risk") && (
+            {(reportType.id === "full-case" || reportType.id === "risk-analysis") && selectedSections.has("risk-analysis") && (
               <div className="border border-gray-300 rounded-lg overflow-hidden">
                 <div className="bg-slate-800 text-white px-3 py-1.5 flex items-center justify-between">
                   <span className="text-[10px] font-bold tracking-wider">FORENSIC AUTOPSY REPORT — BODY DIAGRAM</span>
@@ -242,7 +242,7 @@ function GeneratedPreview({
             )}
 
             {/* Evidence List Section */}
-            {selectedSections.has("evidence") && (
+            {selectedSections.has("evidence-list") && (
               <div>
                 <p className="text-[10px] text-slate-400 uppercase tracking-wider mb-1">Evidence Summary</p>
                 <div className="border border-gray-100 rounded-lg overflow-hidden">
@@ -290,7 +290,7 @@ function GeneratedPreview({
             )}
 
             {/* AI Summary Section */}
-            {selectedSections.has("ai") && (
+            {selectedSections.has("ai-summary") && (
               <div>
                 <p className="text-[10px] text-slate-400 uppercase tracking-wider mb-1">AI Forensic Synthesis</p>
                 <p className="text-xs text-gray-700 leading-relaxed bg-cyan-50/30 p-3 rounded-lg border border-cyan-100/50">

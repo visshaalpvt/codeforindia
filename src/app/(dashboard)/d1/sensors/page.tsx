@@ -4,16 +4,16 @@ import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Thermometer, Droplets, Wind, Activity, Video, MapPin,
-  Radio, Cpu, Wifi, Zap, AlertTriangle, RefreshCw, Camera,
+  Radio, Cpu, Wifi, Zap, AlertTriangle, RefreshCw, Camera, CheckCircle, ShieldCheck
 } from "lucide-react";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from "recharts";
-import { cn, formatTime, timeAgo } from "@/lib/utils";
+import { cn, formatTime, timeAgo, formatDate } from "@/lib/utils";
 import { generateMockSensorReading } from "@/lib/mock-data";
 import { useData } from "@/lib/store";
 import { getSocket } from "@/lib/socket";
-import type { SensorDevice, SensorReading } from "@/types";
+import type { SensorDevice, SensorReading, TimelineEvent } from "@/types";
 
 const sensorIcons: Record<string, React.ElementType> = {
   DHT22: Thermometer,
@@ -174,6 +174,239 @@ function SensorCard({ sensor, time }: { sensor: SensorDevice; time: number }) {
   );
 }
 
+function ConnectionPanel({ 
+  onConnect, 
+  status, 
+  espIp, 
+  setEspIp, 
+  camIp, 
+  setCamIp 
+}: { 
+  onConnect: () => void; 
+  status: "disconnected" | "connecting" | "connected";
+  espIp: string;
+  setEspIp: (v: string) => void;
+  camIp: string;
+  setCamIp: (v: string) => void;
+}) {
+  return (
+    <div className="backdrop-blur-md bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-4 flex flex-col h-full">
+      <div className="flex items-center gap-2 mb-4">
+        <Wifi className={cn("w-4 h-4", status === "connected" ? "text-green-500" : "text-slate-400")} />
+        <h2 className="text-xs font-bold text-slate-700 uppercase tracking-widest">ESP32 Device Gateway</h2>
+      </div>
+
+      <div className="space-y-4">
+        <div className="space-y-1.5">
+          <label className="text-[10px] text-slate-500 font-mono flex items-center gap-1.5 uppercase tracking-wider">
+            <Cpu className="w-3 h-3" /> ESP32 Controller IP
+          </label>
+          <input 
+            type="text" 
+            value={espIp}
+            onChange={(e) => setEspIp(e.target.value)}
+            placeholder="192.168.1.10"
+            className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs font-mono focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition-all"
+          />
+        </div>
+
+        <div className="space-y-1.5">
+          <label className="text-[10px] text-slate-500 font-mono flex items-center gap-1.5 uppercase tracking-wider">
+            <Camera className="w-3 h-3" /> ESP32-CAM Stream IP
+          </label>
+          <input 
+            type="text" 
+            value={camIp}
+            onChange={(e) => setCamIp(e.target.value)}
+            placeholder="192.168.1.20"
+            className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs font-mono focus:ring-1 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition-all"
+          />
+        </div>
+
+        <button 
+          onClick={onConnect}
+          disabled={status === "connecting"}
+          className={cn(
+            "w-full py-2.5 rounded-xl text-xs font-bold tracking-widest uppercase transition-all flex items-center justify-center gap-2",
+            status === "connected" 
+              ? "bg-green-50 text-green-600 border border-green-200 hover:bg-green-100" 
+              : "bg-cyan-500 text-white shadow-lg shadow-cyan-500/20 hover:bg-cyan-600 active:scale-95 disabled:opacity-50"
+          )}
+        >
+          {status === "connecting" ? (
+            <>
+              <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+              Initializing...
+            </>
+          ) : status === "connected" ? (
+            <>
+              <CheckCircle className="w-3.5 h-3.5" />
+              Devices Linked
+            </>
+          ) : (
+            <>
+              <Wifi className="w-3.5 h-3.5" />
+              Connect Devices
+            </>
+          )}
+        </button>
+
+        {status === "connected" && (
+          <div className="flex items-center gap-4 px-2 py-1 bg-green-50/50 rounded-lg border border-green-100">
+            <div className="flex items-center gap-1.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
+              <span className="text-[9px] font-bold text-green-700 uppercase">ESP32: UP</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
+              <span className="text-[9px] font-bold text-green-700 uppercase">CAM: LIVE</span>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function LiveSurveillanceFeed({ 
+  status, 
+  onCapture,
+  motionDetected
+}: { 
+  status: "disconnected" | "connecting" | "connected";
+  onCapture: () => void;
+  motionDetected: boolean;
+}) {
+  return (
+    <div className="backdrop-blur-md bg-slate-50 border border-slate-200 rounded-2xl p-4 md:p-6 flex flex-col gap-4 h-full">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="relative flex h-3 w-3">
+            <span className={cn("absolute inline-flex h-full w-full rounded-full opacity-75 animate-ping", status === "connected" ? "bg-red-400" : "bg-slate-400")} />
+            <span className={cn("relative inline-flex h-3 w-3 rounded-full", status === "connected" ? "bg-red-500" : "bg-slate-500")} />
+          </div>
+          <h2 className="text-xs font-bold text-slate-700 uppercase tracking-widest">🎥 Live Surveillance Feed</h2>
+        </div>
+        <div className="flex items-center gap-2">
+          {motionDetected && (
+            <span className="px-2 py-0.5 rounded bg-red-100 text-red-600 text-[10px] font-bold border border-red-200 animate-pulse uppercase tracking-wider">
+              Motion Alert
+            </span>
+          )}
+          <span className={cn(
+            "px-2 py-0.5 rounded text-[10px] font-bold border uppercase tracking-wider",
+            status === "connected" ? "bg-cyan-50 text-cyan-600 border-cyan-200" : "bg-slate-100 text-slate-400 border-slate-200"
+          )}>
+            {status.toUpperCase()}
+          </span>
+        </div>
+      </div>
+
+      <div className={cn(
+        "relative rounded-2xl overflow-hidden border transition-all aspect-video group",
+        motionDetected ? "border-red-500/50 shadow-lg shadow-red-500/10" : "border-slate-200 shadow-xl",
+        status === "connected" ? "bg-black" : "bg-slate-100 flex items-center justify-center"
+      )}>
+        {status === "connected" ? (
+          <>
+            <img 
+              src="/live_security_camera_feed_placeholder_1778365536252.png" 
+              alt="ESP32-CAM Stream" 
+              className={cn("w-full h-full object-cover transition-opacity", motionDetected ? "opacity-100" : "opacity-80")}
+            />
+            {/* Surveillance Overlays */}
+            <div className="absolute inset-0 pointer-events-none p-4 flex flex-col justify-between">
+              <div className="flex justify-between items-start">
+                <div className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                  <span className="text-[10px] font-bold text-white tracking-widest uppercase">REC • ESP32-CAM-01</span>
+                </div>
+                <div className="text-[10px] font-mono text-white/80 bg-black/40 px-2 py-1 rounded backdrop-blur-sm">
+                  1080P | 30FPS | CH-01
+                </div>
+              </div>
+              
+              <div className="flex justify-between items-end">
+                <div className="text-[10px] font-mono text-white/60 bg-black/40 px-2 py-1 rounded backdrop-blur-sm">
+                  ZONE: EVIDENCE_STORAGE_A
+                </div>
+                <div className="text-[10px] font-mono text-white/60 bg-black/40 px-2 py-1 rounded backdrop-blur-sm">
+                  {new Date().toISOString().slice(0, 19).replace("T", " ")}
+                </div>
+              </div>
+            </div>
+
+            {/* Viewfinder corners */}
+            <div className="absolute top-4 left-4 w-6 h-6 border-t-2 border-l-2 border-white/40" />
+            <div className="absolute top-4 right-4 w-6 h-6 border-t-2 border-r-2 border-white/40" />
+            <div className="absolute bottom-4 left-4 w-6 h-6 border-b-2 border-l-2 border-white/40" />
+            <div className="absolute bottom-4 right-4 w-6 h-6 border-b-2 border-r-2 border-white/40" />
+
+            {/* Motion Glow */}
+            <AnimatePresence>
+              {motionDetected && (
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="absolute inset-0 border-4 border-red-500/30 animate-pulse pointer-events-none"
+                />
+              )}
+            </AnimatePresence>
+
+            {/* Overlay Actions */}
+            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4 backdrop-blur-[2px]">
+              <button 
+                onClick={onCapture}
+                className="p-3 rounded-full bg-white text-slate-900 hover:scale-110 active:scale-95 transition-all shadow-xl"
+                title="Capture Snapshot"
+              >
+                <Camera className="w-5 h-5" />
+              </button>
+              <button 
+                className="p-3 rounded-full bg-white/10 text-white hover:bg-white/20 transition-all backdrop-blur-md border border-white/20"
+                title="Toggle Fullscreen"
+              >
+                <Activity className="w-5 h-5" />
+              </button>
+            </div>
+          </>
+        ) : (
+          <div className="text-center space-y-3">
+            <div className="p-4 rounded-full bg-white/50 inline-block border border-slate-200">
+              <Camera className="w-8 h-8 text-slate-300" />
+            </div>
+            <div>
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Waiting for stream...</p>
+              <p className="text-[10px] text-slate-400 font-medium">Initialize connection to view feed</p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {[
+          { label: "Stream Quality", value: "High (4K)", icon: Wifi },
+          { label: "Evidence Zone", value: "Active", icon: ShieldCheck },
+          { label: "IP Address", value: "192.168.1.20", icon: Radio },
+          { label: "Motion Detection", value: motionDetected ? "ALERT" : "CLEAR", icon: Activity, alert: motionDetected },
+        ].map((item, i) => (
+          <div key={i} className={cn(
+            "p-2.5 rounded-xl border flex flex-col gap-1 transition-all",
+            item.alert ? "bg-red-50 border-red-200" : "bg-white border-slate-100"
+          )}>
+            <div className="flex items-center gap-1.5 text-[9px] text-slate-400 uppercase font-bold tracking-wider">
+              <item.icon className={cn("w-3 h-3", item.alert ? "text-red-500" : "text-slate-400")} />
+              {item.label}
+            </div>
+            <p className={cn("text-xs font-bold", item.alert ? "text-red-600" : "text-slate-700")}>{item.value}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function LiveDataChart({ sensors, time }: { sensors: SensorDevice[]; time: number }) {
   const chartData = useMemo(() => {
     const temp = sensors.find((s) => s.name === "Temperature Sensor");
@@ -309,17 +542,54 @@ function LiveIndicator() {
 }
 
 export default function SensorsPage() {
-  const { sensors, updateSensor } = useData();
+  const { sensors, updateSensor, addTimelineEvent } = useData();
   const sensorsRef = useRef(sensors);
   useEffect(() => { sensorsRef.current = sensors; }, [sensors]);
+  
   const [lastReading, setLastReading] = useState<SensorReading | null>(null);
   const [notification, setNotification] = useState<string | null>(null);
   const [renderTick, setRenderTick] = useState(0);
+  const [espIp, setEspIp] = useState("192.168.1.10");
+  const [camIp, setCamIp] = useState("192.168.1.20");
+  const [connStatus, setConnStatus] = useState<"disconnected" | "connecting" | "connected">("disconnected");
+  const [motionAlert, setMotionAlert] = useState(false);
+  
   const initialized = useRef(false);
+
+  const handleConnect = () => {
+    setConnStatus("connecting");
+    setTimeout(() => {
+      setConnStatus("connected");
+      setNotification("ESP32 Connection Established");
+      setTimeout(() => setNotification(null), 3000);
+    }, 2000);
+  };
+
+  const captureSnapshot = () => {
+    if (connStatus !== "connected") return;
+    
+    setNotification("Surveillance Snapshot Captured");
+    setTimeout(() => setNotification(null), 3000);
+
+    addTimelineEvent({
+      caseId: "CI-moysc29b-5CVQ",
+      type: "CCTV",
+      title: "Evidence Zone Snapshot",
+      description: "Automated high-definition snapshot captured from ESP32-CAM surveillance stream.",
+      timestamp: new Date().toISOString(),
+      confidence: 98,
+    });
+  };
 
   const handleSensorUpdate = useCallback((reading: SensorReading) => {
     setLastReading(reading);
     const currentSensors = sensorsRef.current;
+
+    // Trigger motion alert logic
+    if (reading.motion) {
+      setMotionAlert(true);
+      setTimeout(() => setMotionAlert(false), 5000);
+    }
 
     const tempSensor = currentSensors.find((s) => s.name === "Temperature Sensor");
     if (tempSensor) {
@@ -359,14 +629,17 @@ export default function SensorsPage() {
       updateSensor(gpsSensor.id, { value: gpsStr, lastUpdated: reading.timestamp });
     }
 
-    // Camera feed is constant "LIVE"
+    // Camera feed status
     const cameraSensor = currentSensors.find((s) => s.name === "Live Camera Feed");
     if (cameraSensor) {
-      updateSensor(cameraSensor.id, { lastUpdated: reading.timestamp });
+      updateSensor(cameraSensor.id, { 
+        status: connStatus === "connected" ? "Online" : "Offline",
+        lastUpdated: reading.timestamp 
+      });
     }
 
     setRenderTick((t) => t + 1);
-  }, [updateSensor]);
+  }, [updateSensor, connStatus]);
 
   const triggerMotion = useCallback(() => {
     const fakeReading: SensorReading = {
@@ -393,7 +666,6 @@ export default function SensorsPage() {
       handleSensorUpdate({ ...reading, id: reading.id || `socket-${Date.now()}` });
     });
 
-    // We rely on the global simulation in DataProvider now
     return () => {
       socket.off("sensor-update", () => {});
     };
@@ -417,51 +689,70 @@ export default function SensorsPage() {
             initial={{ opacity: 0, y: -20, x: 20 }}
             animate={{ opacity: 1, y: 0, x: 0 }}
             exit={{ opacity: 0, y: -20, x: 20 }}
-            className="fixed top-4 right-4 z-50 flex items-center gap-2 px-4 py-3 rounded-xl bg-red-100 border border-slate-300 text-red-600 text-sm font-semibold shadow-lg backdrop-blur-md"
+            className="fixed top-20 right-4 z-50 flex items-center gap-2 px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-900 text-sm font-bold shadow-2xl backdrop-blur-md"
           >
-            <AlertTriangle className="w-4 h-4" />
+            <div className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
             {notification}
           </motion.div>
         )}
       </AnimatePresence>
 
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Live Sensors</h1>
-          <p className="text-sm text-slate-500 mt-1">Real-time IoT sensor monitoring</p>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">ESP32 Forensic Surveillance</h1>
+          <p className="text-sm text-slate-500 mt-1">Real-time IoT intelligence panel & evidence monitoring</p>
         </div>
         <LiveIndicator />
       </div>
 
-      {/* Sensor Grid */}
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
-      >
-        {sensors.map((sensor) => (
-          <motion.div key={sensor.id} variants={itemVariants}>
-            <SensorCard sensor={sensor} time={renderTick} />
-          </motion.div>
-        ))}
-      </motion.div>
-
-      {/* Live Data Chart */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="backdrop-blur-md bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-4 md:p-6"
-      >
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-sm font-semibold text-slate-700 uppercase tracking-wider">Live Sensor Data (30 min)</h2>
-          <RefreshCw className="w-4 h-4 text-violet-600 animate-spin" />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left Column - Connection & Grid */}
+        <div className="lg:col-span-1 space-y-6">
+          <ConnectionPanel 
+            status={connStatus} 
+            onConnect={handleConnect}
+            espIp={espIp}
+            setEspIp={setEspIp}
+            camIp={camIp}
+            setCamIp={setCamIp}
+          />
+          
+          <div className="grid grid-cols-1 gap-4">
+            {sensors.filter(s => s.type !== "Camera").map((sensor) => (
+              <motion.div key={sensor.id} variants={itemVariants} initial="hidden" animate="visible">
+                <SensorCard sensor={sensor} time={renderTick} />
+              </motion.div>
+            ))}
+          </div>
         </div>
-        <LiveDataChart sensors={sensors} time={renderTick} />
-      </motion.div>
 
-      {/* Hardware Status */}
+        {/* Right Column - Large Feed & Charts */}
+        <div className="lg:col-span-2 space-y-6">
+          <LiveSurveillanceFeed 
+            status={connStatus} 
+            onCapture={captureSnapshot} 
+            motionDetected={motionAlert} 
+          />
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="backdrop-blur-md bg-white/60 hover:bg-white/80 border border-slate-200 rounded-2xl p-4 md:p-6 shadow-sm"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Activity className="w-4 h-4 text-cyan-600" />
+                <h2 className="text-xs font-bold text-slate-700 uppercase tracking-widest">Live Telemetry Analysis</h2>
+              </div>
+              <RefreshCw className="w-4 h-4 text-slate-400 animate-spin" />
+            </div>
+            <LiveDataChart sensors={sensors} time={renderTick} />
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Hardware JSON Status */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
