@@ -4,7 +4,6 @@ import Sidebar from "@/components/layout/Sidebar";
 import Topbar from "@/components/layout/Topbar";
 import PageTransition from "@/components/layout/PageTransition";
 import { getSocket } from "@/lib/socket";
-import { DataProvider } from "@/lib/store";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
@@ -18,12 +17,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }, []);
 
   return (
-    <DataProvider>
       <div className="flex min-h-screen">
         <Sidebar collapsed={collapsed} onToggle={() => setCollapsed((prev) => !prev)} />
         <div
           className="flex-1 flex flex-col transition-all duration-300"
-          style={{ marginLeft: collapsed ? 64 : 240 }}
+          style={{ marginLeft: collapsed ? 64 : 256 }}
         >
           <Topbar />
           <main className="flex-1 p-6">
@@ -31,6 +29,5 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </main>
         </div>
       </div>
-    </DataProvider>
   );
 }

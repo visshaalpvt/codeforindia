@@ -59,3 +59,54 @@ body {
 .animate-slide-in {
   animation: slide-in 0.3s ease-out;
 }
+
+/* ========== DARK MODE GLOBAL OVERRIDES ========== */
+/* Fix white backgrounds on all native form elements */
+select,
+select option,
+input,
+textarea {
+  background-color: #111827 !important;
+  color: #F9FAFB !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+select option {
+  background-color: #1F2937 !important;
+  color: #F9FAFB !important;
+  padding: 8px;
+}
+
+select option:hover,
+select option:checked {
+  background-color: #0E7490 !important;
+  color: white !important;
+}
+
+/* Fix any default white backgrounds on interactive elements */
+button, a, div, span, p, h1, h2, h3, h4, h5, h6, li, ul, ol {
+  color: inherit;
+}
+
+/* Scrollbar styling */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Ensure no white flash on page load */
+html, body {
+  background-color: #0B1020;
+}

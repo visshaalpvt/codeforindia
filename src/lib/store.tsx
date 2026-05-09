@@ -1,15 +1,12 @@
 "use client";
 
-import React, { createContext, useContext, useReducer, useCallback, type ReactNode } from "react";
+import React, { createContext, useContext, useReducer, useCallback, useEffect, type ReactNode } from "react";
 import type {
   Case, EvidenceItem, TimelineEvent, SensorDevice, Anomaly,
   CustodyRecord, Notification, CorrelationNode, CorrelationEdge,
   ChatMessage,
 } from "@/types";
-import {
-  mockCases, mockEvidence, mockTimelineEvents, mockSensors, mockAnomalies,
-  mockCustodyRecords, mockNotifications, mockCorrelationNodes, mockCorrelationEdges, mockChatMessages,
-} from "./mock-data";
+import { mockCases, mockEvidence, mockTimelineEvents, mockSensors, mockAnomalies, mockCustodyRecords, mockNotifications, mockCorrelationNodes, mockCorrelationEdges, mockChatMessages, generateMockSensorReading } from "./mock-data";
 
 interface DataState {
   cases: Case[];
@@ -22,6 +19,7 @@ interface DataState {
   chatMessages: ChatMessage[];
   correlationNodes: CorrelationNode[];
   correlationEdges: CorrelationEdge[];
+  activeDashboard: "D1" | "D2" | "D3";
 }
 
 type Action =
@@ -48,7 +46,8 @@ type Action =
   | { type: "ADD_CORRELATION_NODE"; payload: CorrelationNode }
   | { type: "ADD_CORRELATION_EDGE"; payload: CorrelationEdge }
   | { type: "DELETE_CORRELATION_EDGE"; payload: string }
-  | { type: "UPDATE_CORRELATION_EDGE"; payload: { id: string; data: Partial<CorrelationEdge> } };
+  | { type: "UPDATE_CORRELATION_EDGE"; payload: { id: string; data: Partial<CorrelationEdge> } }
+  | { type: "SET_DASHBOARD"; payload: "D1" | "D2" | "D3" };
 
 function dataReducer(state: DataState, action: Action): DataState {
   switch (action.type) {
@@ -76,6 +75,7 @@ function dataReducer(state: DataState, action: Action): DataState {
     case "ADD_CORRELATION_EDGE": return { ...state, correlationEdges: [...state.correlationEdges, action.payload] };
     case "DELETE_CORRELATION_EDGE": return { ...state, correlationEdges: state.correlationEdges.filter(e => e.id !== action.payload) };
     case "UPDATE_CORRELATION_EDGE": return { ...state, correlationEdges: state.correlationEdges.map(e => e.id === action.payload.id ? { ...e, ...action.payload.data } : e) };
+    case "SET_DASHBOARD": return { ...state, activeDashboard: action.payload };
     default: return state;
   }
 }
@@ -91,6 +91,7 @@ const initialState: DataState = {
   chatMessages: mockChatMessages,
   correlationNodes: mockCorrelationNodes,
   correlationEdges: mockCorrelationEdges,
+  activeDashboard: "D1",
 };
 
 interface DataContextValue extends DataState {
@@ -118,6 +119,7 @@ interface DataContextValue extends DataState {
   addCorrelationEdge: (data: Omit<CorrelationEdge, "id">) => void;
   deleteCorrelationEdge: (id: string) => void;
   updateCorrelationEdge: (id: string, data: Partial<CorrelationEdge>) => void;
+  setDashboard: (id: "D1" | "D2" | "D3") => void;
 }
 
 const DataContext = createContext<DataContextValue | null>(null);
@@ -193,6 +195,94 @@ export function DataProvider({ children }: { children: ReactNode }) {
 
   const deleteCorrelationEdge = useCallback((id: string) => dispatch({ type: "DELETE_CORRELATION_EDGE", payload: id }), []);
   const updateCorrelationEdge = useCallback((id: string, data: Partial<CorrelationEdge>) => dispatch({ type: "UPDATE_CORRELATION_EDGE", payload: { id, data } }), []);
+  const setDashboard = useCallback((id: "D1" | "D2" | "D3") => {
+    dispatch({ type: "SET_DASHBOARD", payload: id });
+    localStorage.setItem("aiventra_active_dashboard", id);
+  }, []);
+
+  // Initialize dashboard from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem("aiventra_active_dashboard") as "D1" | "D2" | "D3";
+    if (saved && ["D1", "D2", "D3"].includes(saved)) {
+      dispatch({ type: "SET_DASHBOARD", payload: saved });
+    }
+  }, []);
+
+  // Real-time simulation
+  useEffect(() => {
+    const sensorInterval = setInterval(() => {
+      const reading = generateMockSensorReading();
+      
+      // Update Temperature
+      const tempSensor = state.sensors.find(s => s.name === "Temperature Sensor");
+      if (tempSensor) {
+        dispatch({
+          type: "UPDATE_SENSOR",
+          payload: {
+            id: tempSensor.id,
+            data: {
+              value: parseFloat(reading.temperature.toFixed(1)),
+              lastUpdated: reading.timestamp,
+              history: [...tempSensor.history.slice(1), { value: reading.temperature, timestamp: reading.timestamp }]
+            }
+          }
+        });
+      }
+
+      // Update Humidity
+      const humSensor = state.sensors.find(s => s.name === "Humidity Sensor");
+      if (humSensor) {
+        dispatch({
+          type: "UPDATE_SENSOR",
+          payload: {
+            id: humSensor.id,
+            data: {
+              value: Math.round(reading.humidity),
+              lastUpdated: reading.timestamp,
+              history: [...humSensor.history.slice(1), { value: reading.humidity, timestamp: reading.timestamp }]
+            }
+          }
+        });
+      }
+
+      // Update AQI
+      const aqiSensor = state.sensors.find(s => s.name === "Air Quality Monitor");
+      if (aqiSensor) {
+        dispatch({
+          type: "UPDATE_SENSOR",
+          payload: {
+            id: aqiSensor.id,
+            data: {
+              value: Math.round(reading.aqi),
+              lastUpdated: reading.timestamp,
+              history: [...aqiSensor.history.slice(1), { value: reading.aqi, timestamp: reading.timestamp }]
+            }
+          }
+        });
+      }
+
+    }, 3000);
+
+    const notificationInterval = setInterval(() => {
+      if (Math.random() > 0.85) {
+        const titles = ["Unauthorized Access Detected", "New Evidence Uploaded", "Anomaly Score Spike", "Case Priority Escalated"];
+        const title = titles[Math.floor(Math.random() * titles.length)];
+        addNotification({
+          type: "system",
+          title,
+          description: `Automated alert triggered for case ${state.cases[0]?.id}`,
+          timestamp: new Date().toISOString(),
+          read: false,
+          severity: Math.random() > 0.7 ? "critical" : "warning"
+        });
+      }
+    }, 15000);
+
+    return () => {
+      clearInterval(sensorInterval);
+      clearInterval(notificationInterval);
+    };
+  }, [state.sensors, state.cases, addNotification]);
 
   return (
     <DataContext.Provider value={{
@@ -207,6 +297,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
       addNotification, markNotificationRead, markAllNotificationsRead, deleteNotification,
       addChatMessage,
       addCorrelationNode, addCorrelationEdge, deleteCorrelationEdge, updateCorrelationEdge,
+      setDashboard,
     }}>
       {children}
     </DataContext.Provider>

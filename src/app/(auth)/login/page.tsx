@@ -6,167 +6,248 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { motion } from "framer-motion";
-import { Fingerprint, Eye, EyeOff, Loader2, Shield } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Fingerprint, Eye, EyeOff, Loader2, Shield, Microscope, Brain, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth";
+import { useData } from "@/lib/store";
 
 const loginSchema = z.object({
   email: z.string().email("Enter a valid email address"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-  remember: z.boolean().optional(),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
 type LoginForm = z.infer<typeof loginSchema>;
 
+const roles = [
+  {
+    id: "investigator",
+    label: "Investigation Officer",
+    email: "investigator@aiventra.gov",
+    password: "invest@123",
+    icon: Shield,
+    color: "cyan",
+    accent: "text-cyan-400",
+    bg: "bg-cyan-500/10",
+    border: "border-cyan-500/30",
+    dashboard: "D1",
+    desc: "Field operations & case management",
+  },
+  {
+    id: "scientist",
+    label: "Lab Scientist",
+    email: "scientist@aiventra.gov",
+    password: "labsci@123",
+    icon: Microscope,
+    color: "amber",
+    accent: "text-amber-400",
+    bg: "bg-amber-500/10",
+    border: "border-amber-500/30",
+    dashboard: "D2",
+    desc: "Forensic analysis & lab workflows",
+  },
+  {
+    id: "analyst",
+    label: "Intelligence Analyst",
+    email: "analyst@aiventra.gov",
+    password: "intel@123",
+    icon: Brain,
+    color: "purple",
+    accent: "text-purple-400",
+    bg: "bg-purple-500/10",
+    border: "border-purple-500/30",
+    dashboard: "D3",
+    desc: "Pattern recognition & AI analytics",
+  },
+];
+
+const dashboardPaths: Record<string, string> = {
+  D1: "/d1/overview",
+  D2: "/d2/lab-overview",
+  D3: "/d3/intel-overview",
+};
+
 export default function LoginPage() {
   const router = useRouter();
   const { login } = useAuth();
+  const { setDashboard } = useData();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedRole, setSelectedRole] = useState(roles[0]);
+  const [error, setError] = useState("");
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    setValue,
+    formState: { errors },
   } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { email: "", password: "", remember: false },
+    defaultValues: { email: roles[0].email, password: roles[0].password },
   });
+
+  const selectRole = (role: typeof roles[0]) => {
+    setSelectedRole(role);
+    setValue("email", role.email);
+    setValue("password", role.password);
+    setError("");
+  };
 
   async function onSubmit(data: LoginForm) {
     setIsLoading(true);
-    await login(data.email, data.password);
+    setError("");
+    const result = await login(data.email, data.password);
     setIsLoading(false);
-    router.push("/dashboard");
+    if (!result.success) {
+      setError(result.error || "Login failed");
+      return;
+    }
+    setDashboard(selectedRole.dashboard as "D1" | "D2" | "D3");
+    router.push(dashboardPaths[selectedRole.dashboard]);
   }
-
-  const loading = isSubmitting || isLoading;
 
   return (
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0B1020]">
-      <div className="animate-grid-bg absolute inset-0" />
-      <div className="scanline absolute inset-0 pointer-events-none z-10" />
+      <div className="absolute inset-0 opacity-20" style={{
+        backgroundImage: `linear-gradient(rgba(6,182,212,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(6,182,212,0.08) 1px, transparent 1px)`,
+        backgroundSize: '80px 80px'
+      }} />
 
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="relative z-20 w-full max-w-md px-4"
+        className="relative z-20 w-full max-w-lg px-4"
       >
-        <div className="backdrop-blur-md bg-white/5 border border-cyan-500/20 rounded-2xl p-8 shadow-[0_0_40px_rgba(0,245,255,0.08)]">
+        <div className="backdrop-blur-md bg-white/[0.03] border border-white/10 rounded-3xl p-8 shadow-[0_0_60px_rgba(0,0,0,0.4)]">
           <div className="flex flex-col items-center mb-8">
             <div className="relative mb-4">
               <Shield className="w-10 h-10 text-cyan-400" />
               <div className="absolute inset-0 blur-xl bg-cyan-500/30 rounded-full" />
             </div>
-            <h1 className="text-2xl font-bold text-white font-[family-name:var(--font-sans)] tracking-tight">
+            <h1 className="text-2xl font-bold text-white font-['Space_Grotesk'] tracking-tight">
               AIVENTRA
             </h1>
-            <p className="text-sm text-gray-400 mt-1">
-              Forensic Intelligence System
+            <p className="text-sm text-gray-500 mt-1">
+              Forensic Intelligence System — Secure Access
             </p>
           </div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+          {/* Role Selector */}
+          <div className="mb-6">
+            <p className="text-[10px] text-gray-500 uppercase font-bold tracking-widest mb-3">Select Your Role</p>
+            <div className="grid grid-cols-3 gap-2">
+              {roles.map((role) => (
+                <button
+                  key={role.id}
+                  type="button"
+                  onClick={() => selectRole(role)}
+                  className={cn(
+                    "p-3 rounded-xl border transition-all duration-300 text-center group",
+                    selectedRole.id === role.id
+                      ? cn(role.bg, role.border, "shadow-lg")
+                      : "bg-white/[0.02] border-white/5 hover:border-white/15"
+                  )}
+                >
+                  <role.icon className={cn("w-5 h-5 mx-auto mb-2", selectedRole.id === role.id ? role.accent : "text-gray-600")} />
+                  <p className={cn("text-[10px] font-bold uppercase tracking-wide", selectedRole.id === role.id ? role.accent : "text-gray-500")}>
+                    {role.id === "investigator" ? "Officer" : role.id === "scientist" ? "Scientist" : "Analyst"}
+                  </p>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Selected Role Info */}
+          <div className={cn("mb-6 p-3 rounded-xl border flex items-center gap-3", selectedRole.bg, selectedRole.border)}>
+            <selectedRole.icon className={cn("w-5 h-5 shrink-0", selectedRole.accent)} />
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1.5">
-                Email
-              </label>
+              <p className={cn("text-xs font-bold", selectedRole.accent)}>{selectedRole.label}</p>
+              <p className="text-[10px] text-gray-500">{selectedRole.desc}</p>
+            </div>
+            <ChevronRight className={cn("w-4 h-4 ml-auto", selectedRole.accent)} />
+          </div>
+
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <div>
+              <label className="block text-xs font-medium text-gray-400 mb-1.5">Email</label>
               <input
                 {...register("email")}
                 type="email"
-                placeholder="you@agency.gov"
                 className={cn(
-                  "w-full px-4 py-2.5 rounded-xl bg-white/5 border text-white placeholder-gray-500 outline-none transition-all duration-200",
-                  "focus:border-cyan-500/50 focus:shadow-[0_0_12px_rgba(0,245,255,0.15)]",
-                  errors.email
-                    ? "border-red-500/60 shadow-[0_0_12px_rgba(239,68,68,0.25)]"
-                    : "border-white/10"
+                  "w-full px-4 py-2.5 rounded-xl bg-white/5 border text-white placeholder-gray-600 outline-none transition-all text-sm",
+                  "focus:border-cyan-500/50 focus:shadow-[0_0_12px_rgba(0,245,255,0.1)]",
+                  errors.email ? "border-red-500/60" : "border-white/10"
                 )}
               />
-              {errors.email && (
-                <p className="mt-1 text-xs text-red-400">{errors.email.message}</p>
-              )}
+              {errors.email && <p className="mt-1 text-xs text-red-400">{errors.email.message}</p>}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1.5">
-                Password
-              </label>
+              <label className="block text-xs font-medium text-gray-400 mb-1.5">Password</label>
               <div className="relative">
                 <input
                   {...register("password")}
                   type={showPassword ? "text" : "password"}
-                  placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;"
                   className={cn(
-                    "w-full px-4 py-2.5 pr-10 rounded-xl bg-white/5 border text-white placeholder-gray-500 outline-none transition-all duration-200",
-                    "focus:border-cyan-500/50 focus:shadow-[0_0_12px_rgba(0,245,255,0.15)]",
-                    errors.password
-                      ? "border-red-500/60 shadow-[0_0_12px_rgba(239,68,68,0.25)]"
-                      : "border-white/10"
+                    "w-full px-4 py-2.5 pr-10 rounded-xl bg-white/5 border text-white placeholder-gray-600 outline-none transition-all text-sm",
+                    "focus:border-cyan-500/50 focus:shadow-[0_0_12px_rgba(0,245,255,0.1)]",
+                    errors.password ? "border-red-500/60" : "border-white/10"
                   )}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((s) => !s)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors"
                 >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
-              {errors.password && (
-                <p className="mt-1 text-xs text-red-400">{errors.password.message}</p>
-              )}
+              {errors.password && <p className="mt-1 text-xs text-red-400">{errors.password.message}</p>}
             </div>
 
-            <div className="flex items-center justify-between">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  {...register("remember")}
-                  type="checkbox"
-                  className="w-4 h-4 rounded border-white/20 bg-white/5 accent-cyan-400"
-                />
-                <span className="text-sm text-gray-400">Remember me</span>
-              </label>
-              <Link
-                href="/forgot-password"
-                className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors"
-              >
-                Forgot Password?
-              </Link>
-            </div>
+            <AnimatePresence>
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="p-3 rounded-xl bg-red-500/10 border border-red-500/20"
+                >
+                  <p className="text-xs text-red-400">{error}</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             <button
               type="submit"
-              disabled={loading}
+              disabled={isLoading}
               className={cn(
-                "w-full py-2.5 rounded-xl font-medium text-sm transition-all duration-200 flex items-center justify-center gap-2",
-                "bg-cyan-500/20 border border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/30",
+                "w-full py-3 rounded-xl font-bold text-sm transition-all duration-300 flex items-center justify-center gap-2",
+                selectedRole.id === "investigator" ? "bg-cyan-500 hover:bg-cyan-400 text-white shadow-[0_0_20px_rgba(6,182,212,0.3)]" :
+                selectedRole.id === "scientist" ? "bg-amber-500 hover:bg-amber-400 text-white shadow-[0_0_20px_rgba(245,158,11,0.3)]" :
+                "bg-purple-600 hover:bg-purple-500 text-white shadow-[0_0_20px_rgba(139,92,246,0.3)]",
                 "disabled:opacity-50 disabled:cursor-not-allowed"
               )}
             >
-              {loading ? (
-                <>
-                  <Loader2 size={18} className="animate-spin" />
-                  Authenticating...
-                </>
+              {isLoading ? (
+                <><Loader2 size={16} className="animate-spin" /> Authenticating...</>
               ) : (
-                "Sign In"
+                <>Access {selectedRole.dashboard} Dashboard</>
               )}
             </button>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-white/5 text-center">
-            <div className="flex items-center justify-center gap-2 text-gray-500 text-xs">
-              <Fingerprint size={16} className="text-cyan-500/50" />
+          <div className="mt-6 pt-4 border-t border-white/5">
+            <div className="flex items-center justify-center gap-2 text-gray-600 text-[10px]">
+              <Fingerprint size={14} className="text-cyan-500/40" />
               <span>Biometric Auth — Coming Soon</span>
             </div>
           </div>
         </div>
 
-        <p className="text-center text-xs text-gray-600 mt-6">
-          &copy; {new Date().getFullYear()} AIVENTRA. Restricted access.
+        <p className="text-center text-[10px] text-gray-700 mt-6">
+          &copy; {new Date().getFullYear()} AIVENTRA. Restricted government access.
         </p>
       </motion.div>
     </div>

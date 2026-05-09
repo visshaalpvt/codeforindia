@@ -1,51 +1,92 @@
 "use client";
 
-import React, { createContext, useContext, useState, useCallback, type ReactNode } from "react";
+import React, { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from "react";
+import { useRouter } from "next/navigation";
 
 interface User {
   name: string;
   email: string;
-  role: string;
+  role: "Investigator" | "Lab Scientist" | "Intelligence Analyst" | "Admin";
   badgeId: string;
+  dashboard: "D1" | "D2" | "D3";
 }
 
 interface AuthContextValue {
   user: User | null;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   register: (data: { name: string; email: string; password: string; role: string; badgeId: string }) => Promise<void>;
   forgotPassword: (email: string) => Promise<void>;
   logout: () => void;
 }
+
+const CREDENTIALS: Record<string, { password: string; user: User }> = {
+  "investigator@aiventra.gov": {
+    password: "invest@123",
+    user: {
+      name: "Det. Arjun Mehta",
+      email: "investigator@aiventra.gov",
+      role: "Investigator",
+      badgeId: "INV-401",
+      dashboard: "D1",
+    },
+  },
+  "scientist@aiventra.gov": {
+    password: "labsci@123",
+    user: {
+      name: "Dr. Priya Sharma",
+      email: "scientist@aiventra.gov",
+      role: "Lab Scientist",
+      badgeId: "LAB-208",
+      dashboard: "D2",
+    },
+  },
+  "analyst@aiventra.gov": {
+    password: "intel@123",
+    user: {
+      name: "Visshaalramachand...",
+      email: "analyst@aiventra.gov",
+      role: "Intelligence Analyst",
+      badgeId: "INT-115",
+      dashboard: "D3",
+    },
+  },
+};
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
 
-  const login = useCallback(async (email: string, _password: string) => {
-    await new Promise(r => setTimeout(r, 800));
-    const name = email.split("@")[0].replace(/[.]/g, " ").replace(/\b\w/g, c => c.toUpperCase());
-    setUser({
-      name,
-      email,
-      role: email.includes("investigator") ? "Investigator"
-        : email.includes("analyst") ? "Forensic Analyst"
-        : email.includes("admin") ? "Admin"
-        : email.includes("medical") ? "Medical Officer"
-        : "Investigator",
-      badgeId: `INV-${Math.floor(100 + Math.random() * 900)}`,
-    });
+  // Persist auth across refreshes
+  useEffect(() => {
+    const saved = localStorage.getItem("aiventra_user");
+    if (saved) {
+      try { setUser(JSON.parse(saved)); } catch {}
+    }
+  }, []);
+
+  const login = useCallback(async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+    await new Promise(r => setTimeout(r, 600));
+    const cred = CREDENTIALS[email.toLowerCase()];
+    if (!cred) return { success: false, error: "Unknown email. Use investigator@, scientist@, or analyst@aiventra.gov" };
+    if (cred.password !== password) return { success: false, error: "Incorrect password" };
+    setUser(cred.user);
+    localStorage.setItem("aiventra_user", JSON.stringify(cred.user));
+    return { success: true };
   }, []);
 
   const register = useCallback(async (data: { name: string; email: string; password: string; role: string; badgeId: string }) => {
     await new Promise(r => setTimeout(r, 800));
-    setUser({
+    const u: User = {
       name: data.name,
       email: data.email,
-      role: data.role,
+      role: data.role as User["role"],
       badgeId: data.badgeId,
-    });
+      dashboard: data.role === "Lab Scientist" ? "D2" : data.role === "Intelligence Analyst" ? "D3" : "D1",
+    };
+    setUser(u);
+    localStorage.setItem("aiventra_user", JSON.stringify(u));
   }, []);
 
   const forgotPassword = useCallback(async (_email: string) => {
@@ -54,6 +95,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = useCallback(() => {
     setUser(null);
+    localStorage.removeItem("aiventra_user");
   }, []);
 
   return (

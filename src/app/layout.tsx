@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/lib/auth";
+import { DataProvider } from "@/lib/store";
 
 export const metadata: Metadata = {
   title: "AIVENTRA — Forensic Intelligence System",
@@ -20,7 +21,7 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
       </head>
       <body className="min-h-full bg-[#0B1020] text-[#F9FAFB] font-sans">
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider><DataProvider>{children}</DataProvider></AuthProvider>
       </body>
     </html>
   );

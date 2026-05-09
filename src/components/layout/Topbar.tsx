@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { cn, riskColor, riskBgColor } from "@/lib/utils";
 import { getSocket } from "@/lib/socket";
 import { useData } from "@/lib/store";
@@ -9,27 +9,45 @@ import { useAuth } from "@/lib/auth";
 import { Bell, ChevronDown, Circle, User } from "lucide-react";
 
 const breadcrumbLabels: Record<string, string> = {
-  dashboard: "Dashboard",
-  cases: "Cases",
+  overview: "Command Overview",
+  cases: "Cases Management",
   evidence: "Evidence Upload",
   autopsy: "Autopsy Analysis",
   tod: "TOD Estimation",
-  timeline: "Timeline",
-  correlation: "Correlation Graph",
-  "crime-map": "Crime Map",
-  sensors: "Live Sensors",
+  timeline: "Investigation Timeline",
+  "crime-map": "Crime Scene Map",
+  sensors: "Live IoT Sensors",
   custody: "Chain of Custody",
   anomalies: "Anomaly Detection",
   "ai-summary": "AI Summary",
   chat: "AI Chat",
-  notifications: "Notifications",
+  notifications: "Alerts & Notifs",
   reports: "Reports & Export",
+  "lab-overview": "Lab Overview",
+  toxicology: "Toxicology Panel",
+  wounds: "Wound Analysis",
+  "image-ai": "Evidence Image AI",
+  fingerprints: "Fingerprint Vault",
+  dna: "DNA & Bio Data",
+  entomology: "Entomology Log",
+  decomp: "Decomposition Tracker",
+  "lab-samples": "Lab Sample Pipeline",
+  "intel-overview": "Intelligence Overview",
+  "risk-engine": "Risk Score Engine",
+  behavioral: "Behavioral Profiler",
+  "digital-forensics": "Digital Forensics",
+  "cross-case": "Cross-Case Links",
+  heatmap: "Evidence Heatmap",
+  suspects: "Suspect Tracker",
+  witnesses: "Witness Manager",
+  "field-reports": "Field Reports",
 };
 
 export default function Topbar() {
   const pathname = usePathname();
-  const { cases, notifications } = useData();
+  const { cases, notifications, activeDashboard, setDashboard } = useData();
   const { user } = useAuth();
+  const router = useRouter();
   const [connected, setConnected] = useState(false);
   const [caseSelectorOpen, setCaseSelectorOpen] = useState(false);
   const [selectedCaseId, setSelectedCaseId] = useState(cases[0]?.id ?? "");
@@ -37,7 +55,13 @@ export default function Topbar() {
   const selectedCase = cases.find((c) => c.id === selectedCaseId);
 
   const segments = pathname.split("/").filter(Boolean);
-  const label = breadcrumbLabels[segments[0] ?? ""] ?? "Dashboard";
+  const label = breadcrumbLabels[segments[segments.length - 1] ?? ""] ?? "Dashboard";
+
+  const handleDashboardSwitch = (id: "D1" | "D2" | "D3") => {
+    setDashboard(id);
+    const path = id === "D1" ? "/d1/overview" : id === "D2" ? "/d2/lab-overview" : "/d3/intel-overview";
+    router.push(path);
+  };
 
   useEffect(() => {
     const socket = getSocket();
@@ -53,9 +77,9 @@ export default function Topbar() {
 
   return (
     <header className="sticky top-0 z-40 flex items-center justify-between h-16 px-6 bg-[#0B1020]/80 backdrop-blur-xl border-b border-white/5">
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-6">
         <nav className="flex items-center gap-2 text-sm text-gray-400">
-          <Link href="/dashboard" className="hover:text-cyan-400 transition-colors">
+          <Link href="/select-dashboard" className="hover:text-cyan-400 transition-colors font-bold tracking-tighter">
             AIVENTRA
           </Link>
           {segments.length > 0 && (
@@ -65,6 +89,37 @@ export default function Topbar() {
             </>
           )}
         </nav>
+
+        {/* Dashboard Switcher */}
+        <div className="hidden lg:flex items-center bg-white/5 p-1 rounded-xl border border-white/10">
+          <button
+            onClick={() => handleDashboardSwitch("D1")}
+            className={cn(
+              "px-3 py-1.5 rounded-lg text-xs font-bold transition-all",
+              activeDashboard === "D1" ? "bg-cyan-500/20 text-cyan-400 shadow-[0_0_10px_rgba(6,182,212,0.2)]" : "text-gray-500 hover:text-gray-300"
+            )}
+          >
+            Investigation
+          </button>
+          <button
+            onClick={() => handleDashboardSwitch("D2")}
+            className={cn(
+              "px-3 py-1.5 rounded-lg text-xs font-bold transition-all",
+              activeDashboard === "D2" ? "bg-amber-500/20 text-amber-400 shadow-[0_0_10px_rgba(245,158,11,0.2)]" : "text-gray-500 hover:text-gray-300"
+            )}
+          >
+            Forensic Lab
+          </button>
+          <button
+            onClick={() => handleDashboardSwitch("D3")}
+            className={cn(
+              "px-3 py-1.5 rounded-lg text-xs font-bold transition-all",
+              activeDashboard === "D3" ? "bg-purple-500/20 text-purple-400 shadow-[0_0_10px_rgba(139,92,246,0.2)]" : "text-gray-500 hover:text-gray-300"
+            )}
+          >
+            Intelligence
+          </button>
+        </div>
       </div>
 
       <div className="flex items-center gap-4">
@@ -133,12 +188,19 @@ export default function Topbar() {
         )}
 
           <div className="flex items-center gap-2 pl-3 border-l border-white/10">
-            <div className="w-7 h-7 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center">
+            <div className={cn("w-7 h-7 rounded-full flex items-center justify-center bg-gradient-to-br",
+              activeDashboard === "D1" ? "from-cyan-400 to-blue-600" :
+              activeDashboard === "D2" ? "from-amber-400 to-orange-600" :
+              "from-purple-400 to-indigo-600"
+            )}>
               <User className="w-3.5 h-3.5 text-white" />
             </div>
             <div className="hidden sm:block">
               <p className="text-sm text-white leading-tight">{user?.name ?? "Guest"}</p>
-              <p className="text-[10px] text-cyan-400 leading-tight">{user?.role ?? "—"}</p>
+              <p className={cn("text-[10px] leading-tight", 
+                activeDashboard === "D1" ? "text-cyan-400" : 
+                activeDashboard === "D2" ? "text-amber-400" : "text-purple-400"
+              )}>{user?.role ?? "—"}</p>
             </div>
           </div>
       </div>

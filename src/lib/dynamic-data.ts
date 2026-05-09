@@ -185,3 +185,33 @@ export function generateRiskUpdate() {
   riskScoreValue = Math.max(0, Math.min(100, riskScoreValue + delta));
   return { score: riskScoreValue, change: delta > 0 ? 1 : -1 };
 }
+
+export function getAICaseContext(cases: Case[], evidence: EvidenceItem[], anomalies: Anomaly[], timelineEvents: TimelineEvent[]): string {
+  const activeCase = cases[0];
+  if (!activeCase) return "No active case data available.";
+
+  const caseEvidence = evidence.filter(e => e.caseId === activeCase.id);
+  const caseAnomalies = anomalies.filter(a => a.caseId === activeCase.id);
+  const caseTimeline = timelineEvents.filter(e => e.caseId === activeCase.id);
+
+  return `
+You are AIVENTRA AI, an advanced forensic investigative assistant. 
+Current Case Context:
+- ID: ${activeCase.id}
+- Title: ${activeCase.title}
+- Victim: ${activeCase.victim}
+- Priority: ${activeCase.priority}
+- Risk Score: ${activeCase.riskScore}/100
+
+Evidence (${caseEvidence.length} items):
+${caseEvidence.map(e => `- ${e.id}: ${e.name} (${e.type}, ${e.custodyStatus})`).join("\n")}
+
+Anomalies (${caseAnomalies.length} detected):
+${caseAnomalies.map(a => `- ${a.type}: ${a.description} (Severity: ${a.severity})`).join("\n")}
+
+Timeline Summary (${caseTimeline.length} events):
+${caseTimeline.slice(0, 5).map(e => `- ${e.timestamp}: ${e.title}`).join("\n")}
+
+Provide professional, forensic-focused assistance. Use technical terms where appropriate but remain accessible to investigators.
+`;
+}
