@@ -148,10 +148,10 @@ export default function AISummaryPage() {
         >
           <div>
             <h1 className="text-2xl md:text-3xl font-bold tracking-tight flex items-center gap-3">
-              <Sparkles className="w-7 h-7 text-cyan-400" />
+              <Sparkles className="w-7 h-7 text-violet-600" />
               AI Investigation Summary
             </h1>
-            <p className="text-sm text-gray-400 mt-1">
+            <p className="text-sm text-slate-500 mt-1">
               Automated case synthesis powered by AIVENTRA AI
             </p>
           </div>
@@ -159,11 +159,11 @@ export default function AISummaryPage() {
 
         {/* Case Selector */}
         <div className="flex items-center gap-3">
-          <FolderKanban className="w-4 h-4 text-cyan-400" />
+          <FolderKanban className="w-4 h-4 text-violet-600" />
           <select
             value={selectedCaseId}
             onChange={(e) => { setSelectedCaseId(e.target.value); setPhase("idle"); setSummary(null); }}
-            className="px-4 py-2 rounded-xl bg-white/5 border border-cyan-500/20 text-white focus:outline-none focus:border-cyan-500/50 text-sm min-w-[200px]"
+            className="px-4 py-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-900 focus:outline-none focus:border-slate-400 text-sm min-w-[200px]"
           >
             <option value="">Select a case...</option>
             {cases.map((c) => (
@@ -177,44 +177,44 @@ export default function AISummaryPage() {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="backdrop-blur-xl bg-white/5 border border-cyan-500/20 rounded-2xl p-5 md:p-6"
+          className="backdrop-blur-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-5 md:p-6"
         >
           <div className="flex items-start justify-between gap-4 flex-wrap">
             <div className="space-y-3 flex-1 min-w-0">
               <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded text-[10px] font-bold border text-red-400 border-red-500/40 bg-red-500/10">
+                <span className="px-2 py-0.5 rounded text-[10px] font-bold border text-red-600 border-slate-300 bg-red-500/10">
                   {caseData.priority}
                 </span>
-                <span className="text-xs font-mono text-cyan-400">{caseData.id}</span>
+                <span className="text-xs font-mono text-violet-600">{caseData.id}</span>
                 <span className={cn(
                   "px-2 py-0.5 rounded text-[10px] font-semibold border",
                   caseData.status === "Active"
-                    ? "text-green-400 border-green-500/30 bg-green-500/10"
-                    : "text-gray-400 border-gray-500/30 bg-gray-500/10",
+                    ? "text-green-600 border-green-500/30 bg-green-500/10"
+                    : "text-slate-500 border-gray-500/30 bg-gray-500/10",
                 )}>
                   {caseData.status}
                 </span>
               </div>
               <h2 className="text-lg font-bold">{caseData.title}</h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs text-gray-400">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs text-slate-500">
                 <div className="flex items-center gap-1.5">
-                  <User className="w-3.5 h-3.5 text-gray-500" />
+                  <User className="w-3.5 h-3.5 text-slate-400" />
                   <span className="truncate">{caseData.victim}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <User className="w-3.5 h-3.5 text-gray-500" />
+                  <User className="w-3.5 h-3.5 text-slate-400" />
                   <span className="truncate">{caseData.officer}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <Calendar className="w-3.5 h-3.5 text-gray-500" />
+                  <Calendar className="w-3.5 h-3.5 text-slate-400" />
                   <span>{formatDateTime(caseData.createdAt)}</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <MapPin className="w-3.5 h-3.5 text-gray-500" />
+                  <MapPin className="w-3.5 h-3.5 text-slate-400" />
                   <span className="truncate">{caseData.location}</span>
                 </div>
               </div>
-              <div className="flex items-center gap-4 text-xs text-gray-500">
+              <div className="flex items-center gap-4 text-xs text-slate-400">
                 <span className="flex items-center gap-1">
                   <Hash className="w-3 h-3" /> {caseData.evidenceCount} evidence items
                 </span>
@@ -226,8 +226,8 @@ export default function AISummaryPage() {
 
             {caseData.analyst && (
               <div className="shrink-0 text-right">
-                <p className="text-[10px] text-gray-500 uppercase tracking-wider">Analyst</p>
-                <p className="text-sm font-medium text-cyan-300">{caseData.analyst}</p>
+                <p className="text-[10px] text-slate-400 uppercase tracking-wider">Analyst</p>
+                <p className="text-sm font-medium text-violet-700">{caseData.analyst}</p>
               </div>
             )}
           </div>
@@ -238,7 +238,7 @@ export default function AISummaryPage() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="flex items-center gap-2 text-xs text-gray-500"
+            className="flex items-center gap-2 text-xs text-slate-400"
           >
             <Clock className="w-3.5 h-3.5" />
             Last generated: {formatDateTime(summary.generatedAt)}
@@ -254,8 +254,8 @@ export default function AISummaryPage() {
             <button
               onClick={handleGenerate}
               className="group relative px-8 py-4 rounded-2xl font-bold text-lg
-                bg-cyan-500/20 text-cyan-300 border border-cyan-400/50
-                hover:bg-cyan-500/30 hover:shadow-[0_0_40px_rgba(6,182,212,0.3)]
+                bg-violet-100 text-violet-700 border border-cyan-400/50
+                hover:bg-violet-200 hover:shadow-[0_0_40px_rgba(6,182,212,0.3)]
                 transition-all duration-300 flex items-center gap-3"
             >
               <Sparkles className="w-6 h-6" />
@@ -267,7 +267,7 @@ export default function AISummaryPage() {
         )}
 
         {phase === "idle" && !caseData && (
-          <div className="flex justify-center py-16 text-gray-500">
+          <div className="flex justify-center py-16 text-slate-400">
             <p className="text-sm">Select a case above to generate an AI summary</p>
           </div>
         )}
@@ -278,14 +278,14 @@ export default function AISummaryPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="backdrop-blur-xl bg-white/5 border border-cyan-500/20 rounded-2xl p-8
+              className="backdrop-blur-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-8
                 flex flex-col items-center justify-center gap-4"
             >
               <div className="relative">
-                <div className="w-12 h-12 rounded-full border-2 border-cyan-500/30 border-t-cyan-400 animate-spin" />
-                <Sparkles className="w-5 h-5 text-cyan-400 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+                <div className="w-12 h-12 rounded-full border-2 border-slate-300 border-t-cyan-400 animate-spin" />
+                <Sparkles className="w-5 h-5 text-violet-600 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
               </div>
-              <p className="text-sm text-gray-400 animate-pulse">
+              <p className="text-sm text-slate-500 animate-pulse">
                 AIVENTRA AI is analyzing case data...
               </p>
               <div className="flex gap-1.5">
@@ -312,10 +312,10 @@ export default function AISummaryPage() {
             >
               <motion.div
                 variants={itemVariants}
-                className="backdrop-blur-xl bg-white/5 border border-cyan-500/20 rounded-2xl p-5 md:p-6"
+                className="backdrop-blur-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-5 md:p-6"
               >
                 <div className="flex items-center gap-2.5 mb-4">
-                  <div className="p-2 rounded-lg bg-blue-500/20 text-blue-400">
+                  <div className="p-2 rounded-lg bg-blue-100 text-blue-600">
                     <ListChecks className="w-4 h-4" />
                   </div>
                   <h2 className="text-sm font-semibold uppercase tracking-wider text-blue-300">
@@ -325,11 +325,11 @@ export default function AISummaryPage() {
                 <ol className="space-y-3">
                   {summary.sequence.map((step, i) => (
                     <li key={i} className="flex gap-3 text-sm">
-                      <span className="shrink-0 w-6 h-6 rounded-full bg-blue-500/20 text-blue-400
+                      <span className="shrink-0 w-6 h-6 rounded-full bg-blue-100 text-blue-600
                         flex items-center justify-center text-[11px] font-bold mt-0.5">
                         {i + 1}
                       </span>
-                      <span className="text-gray-300 leading-relaxed">
+                      <span className="text-slate-700 leading-relaxed">
                         <TypewriterSection
                           text={step}
                           start={phase === "reveal"}
@@ -343,10 +343,10 @@ export default function AISummaryPage() {
 
               <motion.div
                 variants={itemVariants}
-                className="backdrop-blur-xl bg-white/5 border border-cyan-500/20 rounded-2xl p-5 md:p-6"
+                className="backdrop-blur-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-5 md:p-6"
               >
                 <div className="flex items-center gap-2.5 mb-4">
-                  <div className="p-2 rounded-lg bg-red-500/20 text-red-400">
+                  <div className="p-2 rounded-lg bg-red-100 text-red-600">
                     <Activity className="w-4 h-4" />
                   </div>
                   <h2 className="text-sm font-semibold uppercase tracking-wider text-red-300">
@@ -370,7 +370,7 @@ export default function AISummaryPage() {
                             {sp.severity}
                           </span>
                         </div>
-                        <p className="text-sm text-gray-300">
+                        <p className="text-sm text-slate-700">
                           <TypewriterSection
                             text={sp.pattern}
                             start={phase === "reveal"}
@@ -385,10 +385,10 @@ export default function AISummaryPage() {
 
               <motion.div
                 variants={itemVariants}
-                className="backdrop-blur-xl bg-white/5 border border-cyan-500/20 rounded-2xl p-5 md:p-6"
+                className="backdrop-blur-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-5 md:p-6"
               >
                 <div className="flex items-center gap-2.5 mb-4">
-                  <div className="p-2 rounded-lg bg-amber-500/20 text-amber-400">
+                  <div className="p-2 rounded-lg bg-amber-100 text-amber-600">
                     <Shield className="w-4 h-4" />
                   </div>
                   <h2 className="text-sm font-semibold uppercase tracking-wider text-amber-300">
@@ -408,23 +408,23 @@ export default function AISummaryPage() {
                         {summary.riskOverview.score}
                       </span>
                     </div>
-                    <span className="text-[10px] text-gray-500 mt-1.5 uppercase tracking-wider">
+                    <span className="text-[10px] text-slate-400 mt-1.5 uppercase tracking-wider">
                       Overall Risk Score
                     </span>
                   </div>
                   <div className="flex-1 w-full space-y-2">
-                    <p className="text-xs text-gray-500 uppercase tracking-wider mb-2">
+                    <p className="text-xs text-slate-400 uppercase tracking-wider mb-2">
                       Contributing Factors
                     </p>
                     {summary.riskOverview.factors.map((f, i) => (
                       <div key={i} className="flex items-center gap-3">
-                        <div className="flex-1 h-8 rounded-lg bg-white/5 overflow-hidden flex items-center px-3">
+                        <div className="flex-1 h-8 rounded-lg bg-slate-50 hover:bg-slate-100 overflow-hidden flex items-center px-3">
                           <div className="flex items-center justify-between w-full">
-                            <span className="text-xs text-gray-300">{f.label}</span>
-                            <span className="text-xs font-mono text-cyan-400 font-bold">{f.points}</span>
+                            <span className="text-xs text-slate-700">{f.label}</span>
+                            <span className="text-xs font-mono text-violet-600 font-bold">{f.points}</span>
                           </div>
                         </div>
-                        <div className="w-16 h-8 rounded-lg bg-white/5 overflow-hidden">
+                        <div className="w-16 h-8 rounded-lg bg-slate-50 hover:bg-slate-100 overflow-hidden">
                           <motion.div
                             initial={{ width: 0 }}
                             animate={{ width: `${f.points}%` }}
@@ -444,10 +444,10 @@ export default function AISummaryPage() {
 
               <motion.div
                 variants={itemVariants}
-                className="backdrop-blur-xl bg-white/5 border border-cyan-500/20 rounded-2xl p-5 md:p-6"
+                className="backdrop-blur-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-5 md:p-6"
               >
                 <div className="flex items-center gap-2.5 mb-4">
-                  <div className="p-2 rounded-lg bg-green-500/20 text-green-400">
+                  <div className="p-2 rounded-lg bg-green-100 text-green-600">
                     <Target className="w-4 h-4" />
                   </div>
                   <h2 className="text-sm font-semibold uppercase tracking-wider text-green-300">
@@ -457,11 +457,11 @@ export default function AISummaryPage() {
                 <ol className="space-y-3">
                   {summary.recommendedActions.map((action, i) => (
                     <li key={i} className="flex gap-3 text-sm">
-                      <span className="shrink-0 w-6 h-6 rounded-full bg-green-500/20 text-green-400
+                      <span className="shrink-0 w-6 h-6 rounded-full bg-green-100 text-green-600
                         flex items-center justify-center text-[11px] font-bold mt-0.5">
                         {i + 1}
                       </span>
-                      <span className="text-gray-300 leading-relaxed">
+                      <span className="text-slate-700 leading-relaxed">
                         <TypewriterSection
                           text={action}
                           start={phase === "reveal"}
@@ -478,12 +478,12 @@ export default function AISummaryPage() {
                 className="backdrop-blur-xl bg-amber-500/5 border border-amber-500/30 rounded-2xl p-4 md:p-5
                   flex items-start gap-3"
               >
-                <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+                <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
                 <div>
                   <p className="text-xs font-bold text-amber-300 uppercase tracking-wider mb-1">
                     IMPORTANT DISCLAIMER
                   </p>
-                  <p className="text-xs text-amber-400/80 leading-relaxed">
+                  <p className="text-xs text-amber-600/80 leading-relaxed">
                     This summary was generated by AIVENTRA AI and is provided for investigative
                     assistance only. This is NOT a legal conclusion, NOT admissible as court evidence.
                   </p>
@@ -495,15 +495,15 @@ export default function AISummaryPage() {
                 className="flex items-center gap-3 justify-end"
               >
                 <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium
-                  bg-white/5 text-gray-300 border border-white/10
-                  hover:bg-white/10 hover:border-cyan-500/30 transition-all"
+                  bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200
+                  hover:bg-slate-100 hover:border-slate-300 transition-all"
                 >
                   <Download className="w-4 h-4" />
                   Export as PDF
                 </button>
                 <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium
-                  bg-cyan-500/20 text-cyan-300 border border-cyan-500/30
-                  hover:bg-cyan-500/30 hover:shadow-[0_0_20px_rgba(6,182,212,0.2)] transition-all"
+                  bg-violet-100 text-violet-700 border border-slate-300
+                  hover:bg-violet-200 hover:shadow-[0_0_20px_rgba(6,182,212,0.2)] transition-all"
                 >
                   <Share2 className="w-4 h-4" />
                   Share with Team

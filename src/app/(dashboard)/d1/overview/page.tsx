@@ -38,7 +38,7 @@ function StatCard({
   target,
   trend,
   trendUp,
-  color = "text-cyan-400",
+  color = "text-violet-600",
   suffix = "",
 }: {
   icon: React.ElementType;
@@ -53,19 +53,19 @@ function StatCard({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="backdrop-blur-md bg-white/5 border border-cyan-500/20 rounded-2xl p-4 flex items-center gap-4"
+      className="backdrop-blur-md bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-4 flex items-center gap-4"
     >
-      <div className={cn("p-3 rounded-xl bg-white/5 border border-white/10", color)}>
+      <div className={cn("p-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200", color)}>
         <Icon className="w-5 h-5" />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-xs text-gray-400 uppercase tracking-wider">{label}</p>
+        <p className="text-xs text-slate-500 uppercase tracking-wider">{label}</p>
         <p className="text-2xl font-bold font-sans mt-0.5">
           <CountUp target={target} suffix={suffix} />
         </p>
       </div>
       {trend && (
-        <div className={cn("flex items-center gap-1 text-xs font-medium", trendUp ? "text-green-400" : "text-red-400")}>
+        <div className={cn("flex items-center gap-1 text-xs font-medium", trendUp ? "text-green-600" : "text-red-600")}>
           {trendUp ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
           {trend}
         </div>
@@ -91,14 +91,14 @@ function SensorCard({ sensor }: { sensor: SensorDevice }) {
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="backdrop-blur-md bg-white/5 border border-cyan-500/20 rounded-xl p-3"
+      className="backdrop-blur-md bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl p-3"
     >
       <div className="flex items-center justify-between mb-1">
-        <span className="text-xs text-gray-400 truncate">{sensor.name}</span>
+        <span className="text-xs text-slate-500 truncate">{sensor.name}</span>
         <span className={cn("w-2 h-2 rounded-full animate-pulse", statusColor)} />
       </div>
-      <p className="text-lg font-bold font-mono">{displayValue}<span className="text-xs text-gray-500 ml-0.5">{sensor.unit}</span></p>
-      <p className="text-[10px] text-gray-500 mt-0.5">{formatTime(sensor.lastUpdated)}</p>
+      <p className="text-lg font-bold font-mono">{displayValue}<span className="text-xs text-slate-400 ml-0.5">{sensor.unit}</span></p>
+      <p className="text-[10px] text-slate-400 mt-0.5">{formatTime(sensor.lastUpdated)}</p>
     </motion.div>
   );
 }
@@ -108,9 +108,9 @@ function SensorCard({ sensor }: { sensor: SensorDevice }) {
 /* ------------------------------------------------------------------ */
 function AlertToast({ notification, onDismiss }: { notification: Notification; onDismiss: () => void }) {
   const severityColorMap: Record<string, string> = {
-    critical: "border-red-500/40 bg-red-500/10",
-    warning: "border-amber-500/40 bg-amber-500/10",
-    info: "border-cyan-500/40 bg-cyan-500/10",
+    critical: "border-slate-300 bg-red-500/10",
+    warning: "border-amber-500/40 bg-amber-50",
+    info: "border-slate-300 bg-violet-50",
   };
 
   return (
@@ -120,19 +120,19 @@ function AlertToast({ notification, onDismiss }: { notification: Notification; o
       exit={{ opacity: 0, x: 100 }}
       className={cn(
         "backdrop-blur-md border rounded-xl p-3 shadow-lg max-w-sm cursor-pointer",
-        severityColorMap[notification.severity ?? "info"] ?? "border-gray-500/20 bg-white/5",
+        severityColorMap[notification.severity ?? "info"] ?? "border-gray-500/20 bg-slate-50 hover:bg-slate-100",
       )}
       onClick={onDismiss}
     >
       <div className="flex items-start gap-2">
         <AlertTriangle className={cn(
           "w-4 h-4 mt-0.5 shrink-0",
-          notification.severity === "critical" ? "text-red-400" :
-          notification.severity === "warning" ? "text-amber-400" : "text-cyan-400",
+          notification.severity === "critical" ? "text-red-600" :
+          notification.severity === "warning" ? "text-amber-600" : "text-violet-600",
         )} />
         <div className="flex-1 min-w-0">
           <p className="text-sm font-semibold">{notification.title}</p>
-          <p className="text-xs text-gray-400 mt-0.5 line-clamp-2">{notification.description}</p>
+          <p className="text-xs text-slate-500 mt-0.5 line-clamp-2">{notification.description}</p>
         </div>
       </div>
     </motion.div>
@@ -144,7 +144,7 @@ function AlertToast({ notification, onDismiss }: { notification: Notification; o
 /* ------------------------------------------------------------------ */
 function LiveIndicator() {
   return (
-    <div className="flex items-center gap-2 text-xs font-mono text-green-400">
+    <div className="flex items-center gap-2 text-xs font-mono text-green-600">
       <span className="relative flex h-2.5 w-2.5">
         <span className="absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75 animate-ping" />
         <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-500" />
@@ -288,7 +288,7 @@ export default function DashboardPage() {
           <h1 className="text-2xl md:text-3xl font-bold font-sans tracking-tight">
             Command Center
           </h1>
-          <p className="text-sm text-gray-400 mt-1">AIVENTRA Forensic Intelligence Dashboard</p>
+          <p className="text-sm text-slate-500 mt-1">AIVENTRA Forensic Intelligence Dashboard</p>
         </div>
         <div className="flex items-center gap-4">
           <LiveIndicator />
@@ -298,13 +298,13 @@ export default function DashboardPage() {
             animate={{ scale: 1 }}
             className={cn(
               "px-3 py-1.5 rounded-full text-xs font-bold font-mono border backdrop-blur-sm",
-              riskScore >= 70 ? "text-red-400 border-red-500/30 bg-red-500/10" :
-              riskScore >= 40 ? "text-amber-400 border-amber-500/30 bg-amber-500/10" :
-              "text-green-400 border-green-500/30 bg-green-500/10",
+              riskScore >= 70 ? "text-red-600 border-red-500/30 bg-red-500/10" :
+              riskScore >= 40 ? "text-amber-600 border-amber-500/30 bg-amber-50" :
+              "text-green-600 border-green-500/30 bg-green-500/10",
             )}
           >
             Risk: {riskScore}
-            <span className={cn("ml-1", riskChange >= 0 ? "text-green-400" : "text-red-400")}>
+            <span className={cn("ml-1", riskChange >= 0 ? "text-green-600" : "text-red-600")}>
               {riskChange >= 0 ? "↑" : "↓"}
             </span>
           </motion.div>
@@ -318,10 +318,10 @@ export default function DashboardPage() {
         animate="visible"
         className="grid grid-cols-2 md:grid-cols-4 gap-4"
       >
-        <motion.div variants={itemVariants}><StatCard icon={FolderKanban} label="Total Cases" target={totalCases} trend="+2 this week" trendUp color="text-cyan-400" /></motion.div>
-        <motion.div variants={itemVariants}><StatCard icon={AlertTriangle} label="High Risk" target={highRiskCases} trend="+1 vs yesterday" trendUp={false} color="text-red-400" /></motion.div>
-        <motion.div variants={itemVariants}><StatCard icon={Activity} label="Active Alerts" target={activeAlerts} trend="3 new" trendUp color="text-amber-400" /></motion.div>
-        <motion.div variants={itemVariants}><StatCard icon={Radio} label="Sensor Status" target={onlineSensors} suffix={`/${sensors.length} Online`} trend={onlineSensors === sensors.length ? "All OK" : `${sensors.length - onlineSensors} offline`} trendUp={onlineSensors === sensors.length} color="text-green-400" /></motion.div>
+        <motion.div variants={itemVariants}><StatCard icon={FolderKanban} label="Total Cases" target={totalCases} trend="+2 this week" trendUp color="text-violet-600" /></motion.div>
+        <motion.div variants={itemVariants}><StatCard icon={AlertTriangle} label="High Risk" target={highRiskCases} trend="+1 vs yesterday" trendUp={false} color="text-red-600" /></motion.div>
+        <motion.div variants={itemVariants}><StatCard icon={Activity} label="Active Alerts" target={activeAlerts} trend="3 new" trendUp color="text-amber-600" /></motion.div>
+        <motion.div variants={itemVariants}><StatCard icon={Radio} label="Sensor Status" target={onlineSensors} suffix={`/${sensors.length} Online`} trend={onlineSensors === sensors.length ? "All OK" : `${sensors.length - onlineSensors} offline`} trendUp={onlineSensors === sensors.length} color="text-green-600" /></motion.div>
       </motion.div>
 
       {/* main grid */}
@@ -332,11 +332,11 @@ export default function DashboardPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="backdrop-blur-md bg-white/5 border border-cyan-500/20 rounded-2xl p-4 md:p-6"
+            className="backdrop-blur-md bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-4 md:p-6"
           >
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">Risk Score Trend</h2>
-              <TrendingUp className="w-4 h-4 text-cyan-400" />
+              <h2 className="text-sm font-semibold text-slate-700 uppercase tracking-wider">Risk Score Trend</h2>
+              <TrendingUp className="w-4 h-4 text-violet-600" />
             </div>
             <ResponsiveContainer width="100%" height={200}>
               <AreaChart data={riskTrendData}>
@@ -362,11 +362,11 @@ export default function DashboardPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="backdrop-blur-md bg-white/5 border border-cyan-500/20 rounded-2xl p-4 md:p-6"
+            className="backdrop-blur-md bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-4 md:p-6"
           >
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">Investigation Activity</h2>
-              <FileText className="w-4 h-4 text-blue-400" />
+              <h2 className="text-sm font-semibold text-slate-700 uppercase tracking-wider">Investigation Activity</h2>
+              <FileText className="w-4 h-4 text-blue-600" />
             </div>
             <ResponsiveContainer width="100%" height={200}>
               <BarChart data={activityData}>
@@ -387,11 +387,11 @@ export default function DashboardPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="backdrop-blur-md bg-white/5 border border-cyan-500/20 rounded-2xl p-4 md:p-6"
+            className="backdrop-blur-md bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-4 md:p-6"
           >
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">Recent Timeline Events</h2>
-              <Link href="/timeline" className="text-xs text-cyan-400 hover:underline">View All</Link>
+              <h2 className="text-sm font-semibold text-slate-700 uppercase tracking-wider">Recent Timeline Events</h2>
+              <Link href="/timeline" className="text-xs text-violet-600 hover:underline">View All</Link>
             </div>
             <div className="relative">
               <div className="absolute left-[11px] top-2 bottom-2 w-px bg-gradient-to-b from-cyan-500/40 to-transparent" />
@@ -404,12 +404,12 @@ export default function DashboardPage() {
                       whileHover={{ x: 4 }}
                       className="relative pl-8 cursor-pointer"
                     >
-                      <div className="absolute left-0 top-0.5 w-6 h-6 rounded-full bg-white/5 border border-cyan-500/30 flex items-center justify-center">
-                        <Icon className="w-3 h-3 text-cyan-400" />
+                      <div className="absolute left-0 top-0.5 w-6 h-6 rounded-full bg-slate-50 hover:bg-slate-100 border border-slate-300 flex items-center justify-center">
+                        <Icon className="w-3 h-3 text-violet-600" />
                       </div>
                       <p className="text-sm font-semibold leading-tight">{event.title}</p>
-                      <p className="text-xs text-gray-400 mt-0.5 line-clamp-1">{event.description}</p>
-                      <p className="text-[10px] text-gray-500 mt-0.5 font-mono">{timeAgo(event.timestamp)}</p>
+                      <p className="text-xs text-slate-500 mt-0.5 line-clamp-1">{event.description}</p>
+                      <p className="text-[10px] text-slate-400 mt-0.5 font-mono">{timeAgo(event.timestamp)}</p>
                     </motion.div>
                   );
                 })}
@@ -424,11 +424,11 @@ export default function DashboardPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="backdrop-blur-md bg-white/5 border border-cyan-500/20 rounded-2xl p-4 md:p-6"
+            className="backdrop-blur-md bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-4 md:p-6"
           >
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">Live Sensor Feed</h2>
-              <Radio className="w-4 h-4 text-green-400" />
+              <h2 className="text-sm font-semibold text-slate-700 uppercase tracking-wider">Live Sensor Feed</h2>
+              <Radio className="w-4 h-4 text-green-600" />
             </div>
             <div className="grid grid-cols-2 gap-3">
               {sensors.slice(0, 4).map((s) => (
@@ -441,11 +441,11 @@ export default function DashboardPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="backdrop-blur-md bg-white/5 border border-cyan-500/20 rounded-2xl p-4 md:p-6"
+            className="backdrop-blur-md bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-4 md:p-6"
           >
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">Recent Alerts</h2>
-              <AlertTriangle className="w-4 h-4 text-amber-400" />
+              <h2 className="text-sm font-semibold text-slate-700 uppercase tracking-wider">Recent Alerts</h2>
+              <AlertTriangle className="w-4 h-4 text-amber-600" />
             </div>
             <div className="space-y-2 max-h-[260px] overflow-y-auto pr-1">
               {notifications.slice(0, 10).map((alert) => (
@@ -457,28 +457,28 @@ export default function DashboardPage() {
                     "flex items-start gap-3 p-2.5 rounded-xl border text-sm transition-colors",
                     alert.severity === "critical" ? "border-red-500/20 bg-red-500/5" :
                     alert.severity === "warning" ? "border-amber-500/20 bg-amber-500/5" :
-                    "border-white/5 bg-white/[0.02]",
+                    "border-white/5 bg-slate-50",
                   )}
                 >
                   {alert.severity && (
                     <span className={cn(
                       "px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider",
-                      alert.severity === "critical" ? "text-red-400 bg-red-500/10" :
-                      alert.severity === "warning" ? "text-amber-400 bg-amber-500/10" :
-                      "text-cyan-400 bg-cyan-500/10",
+                      alert.severity === "critical" ? "text-red-600 bg-red-500/10" :
+                      alert.severity === "warning" ? "text-amber-600 bg-amber-50" :
+                      "text-violet-600 bg-violet-50",
                     )}>
                       {alert.severity}
                     </span>
                   )}
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold leading-tight">{alert.title}</p>
-                    <p className="text-xs text-gray-400 mt-0.5 line-clamp-1">{alert.description}</p>
-                    <p className="text-[10px] text-gray-500 mt-0.5 font-mono">{timeAgo(alert.timestamp)}</p>
+                    <p className="text-xs text-slate-500 mt-0.5 line-clamp-1">{alert.description}</p>
+                    <p className="text-[10px] text-slate-400 mt-0.5 font-mono">{timeAgo(alert.timestamp)}</p>
                   </div>
                 </motion.div>
               ))}
               {notifications.length === 0 && (
-                <p className="text-sm text-gray-500 text-center py-4">No alerts</p>
+                <p className="text-sm text-slate-400 text-center py-4">No alerts</p>
               )}
             </div>
           </motion.div>
@@ -487,18 +487,18 @@ export default function DashboardPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="backdrop-blur-md bg-white/5 border border-cyan-500/20 rounded-2xl p-4 md:p-6 text-center"
+            className="backdrop-blur-md bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-4 md:p-6 text-center"
           >
-            <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-2">AI Anomalies Detected</h2>
+            <h2 className="text-sm font-semibold text-slate-700 uppercase tracking-wider mb-2">AI Anomalies Detected</h2>
             <motion.p
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ type: "spring", stiffness: 150, damping: 12, delay: 0.3 }}
-              className="text-5xl md:text-6xl font-bold font-mono text-red-400"
+              className="text-5xl md:text-6xl font-bold font-mono text-red-600"
             >
               <CountUp target={anomalyCount} />
             </motion.p>
-            <p className="text-xs text-gray-400 mt-2">
+            <p className="text-xs text-slate-500 mt-2">
               {anomalies.filter((a) => a.severity === "Critical").length} Critical &middot;{" "}
               {anomalies.filter((a) => a.severity === "High").length} High
             </p>
@@ -512,15 +512,15 @@ export default function DashboardPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="xl:col-span-2 backdrop-blur-md bg-white/5 border border-cyan-500/20 rounded-2xl p-4 md:p-6 overflow-x-auto"
+          className="xl:col-span-2 backdrop-blur-md bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-4 md:p-6 overflow-x-auto"
         >
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">Active Cases</h2>
-            <Users className="w-4 h-4 text-cyan-400" />
+            <h2 className="text-sm font-semibold text-slate-700 uppercase tracking-wider">Active Cases</h2>
+            <Users className="w-4 h-4 text-violet-600" />
           </div>
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-left text-gray-500 text-xs uppercase tracking-wider border-b border-white/5">
+              <tr className="text-left text-slate-400 text-xs uppercase tracking-wider border-b border-white/5">
                 <th className="pb-2 font-medium">Case ID</th>
                 <th className="pb-2 font-medium">Victim</th>
                 <th className="pb-2 font-medium">Officer</th>
@@ -539,9 +539,9 @@ export default function DashboardPage() {
                   whileHover={{ backgroundColor: "rgba(0,245,255,0.03)" }}
                   className="border-b border-white/[0.02]"
                 >
-                  <td className="py-3 pr-4 font-mono text-xs text-cyan-400">{c.id}</td>
+                  <td className="py-3 pr-4 font-mono text-xs text-violet-600">{c.id}</td>
                   <td className="py-3 pr-4 font-medium">{c.victim}</td>
-                  <td className="py-3 pr-4 text-gray-400 text-xs">{c.officer}</td>
+                  <td className="py-3 pr-4 text-slate-500 text-xs">{c.officer}</td>
                   <td className="py-3 pr-4">
                     <span className={cn("text-xs font-semibold", priorityColor(c.priority))}>{c.priority}</span>
                   </td>
@@ -550,7 +550,7 @@ export default function DashboardPage() {
                   </td>
                   <td className="py-3 pr-4">
                     <div className="flex items-center gap-2">
-                      <div className="flex-1 h-1.5 rounded-full bg-white/10 overflow-hidden w-20">
+                      <div className="flex-1 h-1.5 rounded-full bg-slate-100 overflow-hidden w-20">
                         <motion.div
                           initial={{ width: 0 }}
                           animate={{ width: `${Math.min(c.evidenceCount * 6, 100)}%` }}
@@ -561,15 +561,15 @@ export default function DashboardPage() {
                           )}
                         />
                       </div>
-                      <span className="text-[10px] text-gray-500 font-mono">{Math.min(c.evidenceCount * 6, 100)}%</span>
+                      <span className="text-[10px] text-slate-400 font-mono">{Math.min(c.evidenceCount * 6, 100)}%</span>
                     </div>
                   </td>
                   <td className="py-3">
                     <span className={cn(
                       "px-2 py-0.5 rounded text-[10px] font-semibold border",
-                      c.status === "Active" ? "text-green-400 border-green-500/30 bg-green-500/10" :
-                      c.status === "Pending" ? "text-amber-400 border-amber-500/30 bg-amber-500/10" :
-                      "text-gray-400 border-gray-500/30 bg-gray-500/10",
+                      c.status === "Active" ? "text-green-600 border-green-500/30 bg-green-500/10" :
+                      c.status === "Pending" ? "text-amber-600 border-amber-500/30 bg-amber-50" :
+                      "text-slate-500 border-gray-500/30 bg-gray-500/10",
                     )}>
                       {c.status}
                     </span>
@@ -584,11 +584,11 @@ export default function DashboardPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="backdrop-blur-md bg-white/5 border border-cyan-500/20 rounded-2xl p-4 md:p-6"
+          className="backdrop-blur-md bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-4 md:p-6"
         >
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">Evidence Distribution</h2>
-            <FileText className="w-4 h-4 text-cyan-400" />
+            <h2 className="text-sm font-semibold text-slate-700 uppercase tracking-wider">Evidence Distribution</h2>
+            <FileText className="w-4 h-4 text-violet-600" />
           </div>
           <ResponsiveContainer width="100%" height={220}>
             <PieChart>
@@ -615,8 +615,8 @@ export default function DashboardPage() {
             {evidencePieData.map((entry, i) => (
               <div key={entry.name} className="flex items-center gap-1.5 text-xs">
                 <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: PIE_COLORS[i % PIE_COLORS.length] }} />
-                <span className="text-gray-400">{entry.name}</span>
-                <span className="font-mono text-gray-500">{entry.value}</span>
+                <span className="text-slate-500">{entry.name}</span>
+                <span className="font-mono text-slate-400">{entry.value}</span>
               </div>
             ))}
           </div>

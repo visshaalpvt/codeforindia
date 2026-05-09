@@ -49,26 +49,26 @@ Provide a professional AFIS fingerprint analysis including:
     <div className="space-y-6 p-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-white font-['Space_Grotesk'] tracking-tight">Fingerprint Vault</h1>
-          <p className="text-gray-400">AFIS ridge pattern analysis and biometric database matching.</p>
+          <h1 className="text-3xl font-bold text-slate-900 font-['Space_Grotesk'] tracking-tight">Fingerprint Vault</h1>
+          <p className="text-slate-500">AFIS ridge pattern analysis and biometric database matching.</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500 text-white font-bold text-sm hover:bg-amber-400 transition-all shadow-[0_0_15px_rgba(245,158,11,0.3)]">
+        <button className="flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500 text-slate-900 font-bold text-sm hover:bg-amber-400 transition-all shadow-[0_0_15px_rgba(245,158,11,0.3)]">
           <Upload className="w-4 h-4" /> Upload Latent Print
         </button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {[
-          { label: "Total Prints", value: String(fingerprintEvidence.length + 24), icon: Database, color: "text-amber-400" },
-          { label: "AFIS Matches", value: "12", icon: CheckCircle2, color: "text-green-400" },
-          { label: "Pending Analysis", value: String(fingerprintEvidence.filter(e => e.custodyStatus !== "In Lab").length + 3), icon: Search, color: "text-blue-400" },
-          { label: "AI Engine", value: "Gemma", icon: Brain, color: "text-purple-400" },
+          { label: "Total Prints", value: String(fingerprintEvidence.length + 24), icon: Database, color: "text-amber-600" },
+          { label: "AFIS Matches", value: "12", icon: CheckCircle2, color: "text-green-600" },
+          { label: "Pending Analysis", value: String(fingerprintEvidence.filter(e => e.custodyStatus !== "In Lab").length + 3), icon: Search, color: "text-blue-600" },
+          { label: "AI Engine", value: "Gemma", icon: Brain, color: "text-violet-600" },
         ].map((stat, i) => (
-          <Card key={i} className="bg-[#111827] border-white/5">
+          <Card key={i} className="bg-white border-white/5">
             <CardContent className="p-6 flex items-center justify-between">
               <div>
-                <p className="text-xs text-gray-500 font-bold uppercase mb-1">{stat.label}</p>
-                <p className="text-2xl font-bold text-white font-mono">{stat.value}</p>
+                <p className="text-xs text-slate-400 font-bold uppercase mb-1">{stat.label}</p>
+                <p className="text-2xl font-bold text-slate-900 font-mono">{stat.value}</p>
               </div>
               <stat.icon className={cn("w-8 h-8 opacity-20", stat.color)} />
             </CardContent>
@@ -77,10 +77,10 @@ Provide a professional AFIS fingerprint analysis including:
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <Card className="bg-[#111827] border-white/5">
+        <Card className="bg-white border-white/5">
           <CardHeader>
-            <CardTitle className="text-lg text-white flex items-center gap-2 font-['Space_Grotesk']">
-              <ShieldCheck className="w-5 h-5 text-amber-400" />
+            <CardTitle className="text-lg text-slate-900 flex items-center gap-2 font-['Space_Grotesk']">
+              <ShieldCheck className="w-5 h-5 text-amber-600" />
               Print Library
             </CardTitle>
           </CardHeader>
@@ -91,41 +91,41 @@ Provide a professional AFIS fingerprint analysis including:
                 onClick={() => analyzePrint(e.id)}
                 className={cn(
                   "w-full text-left p-3 rounded-xl border transition-all flex items-center gap-3",
-                  selectedPrint === e.id ? "bg-amber-500/10 border-amber-500/30" : "bg-white/[0.02] border-white/5 hover:border-white/15"
+                  selectedPrint === e.id ? "bg-amber-50 border-amber-500/30" : "bg-slate-50 border-white/5 hover:border-white/15"
                 )}
               >
-                <ShieldCheck className={cn("w-4 h-4 shrink-0", selectedPrint === e.id ? "text-amber-400" : "text-gray-600")} />
+                <ShieldCheck className={cn("w-4 h-4 shrink-0", selectedPrint === e.id ? "text-amber-600" : "text-slate-400")} />
                 <div className="overflow-hidden">
-                  <p className="text-xs font-bold text-white truncate">{e.name}</p>
-                  <p className="text-[10px] text-gray-600">{e.caseId} • {e.type}</p>
+                  <p className="text-xs font-bold text-slate-900 truncate">{e.name}</p>
+                  <p className="text-[10px] text-slate-400">{e.caseId} • {e.type}</p>
                 </div>
               </button>
             )) : (
-              <p className="text-sm text-gray-600 text-center py-8">Upload evidence via D1 → Evidence Upload</p>
+              <p className="text-sm text-slate-400 text-center py-8">Upload evidence via D1 → Evidence Upload</p>
             )}
           </CardContent>
         </Card>
 
-        <Card className="lg:col-span-2 bg-[#111827] border-white/5">
+        <Card className="lg:col-span-2 bg-white border-white/5">
           <CardHeader>
-            <CardTitle className="text-lg text-white flex items-center gap-2 font-['Space_Grotesk']">
-              <Brain className="w-5 h-5 text-amber-400" />
+            <CardTitle className="text-lg text-slate-900 flex items-center gap-2 font-['Space_Grotesk']">
+              <Brain className="w-5 h-5 text-amber-600" />
               Gemma AI Fingerprint Analysis
-              {loading && <Loader2 className="w-4 h-4 animate-spin text-amber-400 ml-2" />}
+              {loading && <Loader2 className="w-4 h-4 animate-spin text-amber-600 ml-2" />}
             </CardTitle>
           </CardHeader>
           <CardContent>
             {loading ? (
               <div className="flex flex-col items-center justify-center py-16 gap-4">
-                <Loader2 className="w-8 h-8 animate-spin text-amber-400" />
-                <p className="text-sm text-gray-500">Running AFIS ridge analysis...</p>
+                <Loader2 className="w-8 h-8 animate-spin text-amber-600" />
+                <p className="text-sm text-slate-400">Running AFIS ridge analysis...</p>
               </div>
             ) : analysis ? (
               <div className="space-y-4">
                 <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/10">
-                  <p className="text-sm text-gray-300 leading-relaxed whitespace-pre-wrap">{analysis}</p>
+                  <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">{analysis}</p>
                 </div>
-                <div className="flex items-center gap-2 text-[10px] text-gray-600">
+                <div className="flex items-center gap-2 text-[10px] text-slate-400">
                   <AlertTriangle className="w-3 h-3" />
                   <span>AI analysis — requires certified latent print examiner verification.</span>
                 </div>
@@ -133,7 +133,7 @@ Provide a professional AFIS fingerprint analysis including:
             ) : (
               <div className="flex flex-col items-center justify-center py-16 gap-3">
                 <ShieldCheck className="w-12 h-12 text-amber-500/20" />
-                <p className="text-sm text-gray-600">Select evidence to run fingerprint analysis</p>
+                <p className="text-sm text-slate-400">Select evidence to run fingerprint analysis</p>
               </div>
             )}
           </CardContent>

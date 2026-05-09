@@ -64,8 +64,8 @@ export default function MapContent({ events, gpsPositions, selectedEventId, mapC
             <Popup>
               <div className="text-sm">
                 <p className="font-bold">{event.title}</p>
-                <p className="text-xs text-gray-600 mt-1">{event.description}</p>
-                <p className="text-xs text-gray-500 mt-1 font-mono">{formatTime(event.timestamp)} &middot; {event.confidence}% confidence</p>
+                <p className="text-xs text-slate-400 mt-1">{event.description}</p>
+                <p className="text-xs text-slate-400 mt-1 font-mono">{formatTime(event.timestamp)} &middot; {event.confidence}% confidence</p>
               </div>
             </Popup>
           </Marker>

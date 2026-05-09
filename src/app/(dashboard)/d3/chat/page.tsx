@@ -15,8 +15,8 @@ import type { ChatMessage } from "@/types";
 function ThinkingDots() {
   return (
     <div className="flex items-center gap-2 px-4 py-3">
-      <div className="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center">
-        <Bot className="w-3.5 h-3.5 text-cyan-400" />
+      <div className="w-6 h-6 rounded-full bg-violet-100 flex items-center justify-center">
+        <Bot className="w-3.5 h-3.5 text-violet-600" />
       </div>
       <div className="flex gap-1">
         {[0, 1, 2].map((i) => (
@@ -28,7 +28,7 @@ function ThinkingDots() {
           />
         ))}
       </div>
-      <span className="text-xs text-gray-500">AIVENTRA AI is thinking</span>
+      <span className="text-xs text-slate-400">AIVENTRA AI is thinking</span>
     </div>
   );
 }
@@ -72,11 +72,11 @@ function formatAIResponse(text: string) {
       const idx = numberedMatch ? parseInt(numberedMatch[1]) : ++listIndex;
       const formatted = content
         .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-        .replace(/✅/g, "<span class='text-green-400'>✅</span>")
-        .replace(/⚠️/g, "<span class='text-amber-400'>⚠️</span>");
+        .replace(/✅/g, "<span class='text-green-600'>✅</span>")
+        .replace(/⚠️/g, "<span class='text-amber-600'>⚠️</span>");
       listItems.push(
-        <li key={idx} className="text-sm text-gray-300 flex gap-2">
-          <span className="text-cyan-400 shrink-0">{idx}.</span>
+        <li key={idx} className="text-sm text-slate-700 flex gap-2">
+          <span className="text-violet-600 shrink-0">{idx}.</span>
           <span dangerouslySetInnerHTML={{ __html: formatted }} />
         </li>,
       );
@@ -92,12 +92,12 @@ function formatAIResponse(text: string) {
       }
       const formatted = trimmed
         .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-        .replace(/✅/g, "<span class='text-green-400'>✅</span>")
-        .replace(/⚠️/g, "<span class='text-amber-400'>⚠️</span>");
+        .replace(/✅/g, "<span class='text-green-600'>✅</span>")
+        .replace(/⚠️/g, "<span class='text-amber-600'>⚠️</span>");
       elements.push(
         <p
           key={`p-${i}`}
-          className="text-sm text-gray-300 leading-relaxed"
+          className="text-sm text-slate-700 leading-relaxed"
           dangerouslySetInnerHTML={{ __html: formatted }}
         />,
       );
@@ -260,7 +260,7 @@ export default function ChatPage() {
           backdrop-blur-xl bg-black/20 hidden md:flex flex-col"
       >
         <div className="p-3 border-b border-white/5">
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
             Conversations
           </h3>
         </div>
@@ -271,19 +271,19 @@ export default function ChatPage() {
               <button
                 key={conv.id}
                 className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left
-                  text-xs text-gray-400 hover:text-gray-200 hover:bg-white/5
+                  text-xs text-slate-500 hover:text-gray-200 hover:bg-slate-50 hover:bg-slate-100
                   transition-all"
               >
-                <Icon className="w-4 h-4 text-cyan-400/60" />
+                <Icon className="w-4 h-4 text-violet-600/60" />
                 <span className="truncate">{conv.title}</span>
               </button>
             );
           })}
         </div>
         <div className="mt-auto p-3 border-t border-white/5">
-          <div className="backdrop-blur-md bg-cyan-500/5 border border-cyan-500/20 rounded-xl p-3">
-            <p className="text-[10px] text-gray-500 uppercase tracking-wider">Active Case</p>
-            <p className="text-xs font-medium text-cyan-300 mt-0.5 truncate">{caseData?.id || "No Active Case"}</p>
+          <div className="backdrop-blur-md bg-cyan-500/5 border border-slate-200 rounded-xl p-3">
+            <p className="text-[10px] text-slate-400 uppercase tracking-wider">Active Case</p>
+            <p className="text-xs font-medium text-violet-700 mt-0.5 truncate">{caseData?.id || "No Active Case"}</p>
           </div>
         </div>
       </motion.div>
@@ -304,16 +304,16 @@ export default function ChatPage() {
                 <div className={cn(
                   "w-8 h-8 rounded-xl flex items-center justify-center shrink-0",
                   msg.role === "user"
-                    ? "bg-cyan-500/20 text-cyan-400"
-                    : "bg-white/10 text-gray-400",
+                    ? "bg-violet-100 text-violet-600"
+                    : "bg-slate-100 text-slate-500",
                 )}>
                   {msg.role === "user" ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
                 </div>
                 <div className={cn(
                   "rounded-2xl px-4 py-3 max-w-[85%] md:max-w-[70%]",
                   msg.role === "user"
-                    ? "bg-cyan-500/20 border border-cyan-500/40"
-                    : "bg-white/5 border border-cyan-500/20",
+                    ? "bg-violet-100 border border-slate-300"
+                    : "bg-slate-50 hover:bg-slate-100 border border-slate-200",
                 )}>
                   {msg.role === "assistant" && streamingId === msg.id ? (
                     <TypewriterText text={msg.content} />
@@ -322,7 +322,7 @@ export default function ChatPage() {
                   ) : (
                     <p className="text-sm text-gray-200">{msg.content}</p>
                   )}
-                  <p className="text-[10px] text-gray-600 mt-2">
+                  <p className="text-[10px] text-slate-400 mt-2">
                     {new Date(msg.timestamp).toLocaleTimeString("en-IN", {
                       hour: "2-digit",
                       minute: "2-digit",
@@ -349,8 +349,8 @@ export default function ChatPage() {
                   onClick={() => handleSend(s)}
                   disabled={thinking}
                   className="shrink-0 px-3 py-1.5 rounded-xl text-[11px] font-medium
-                    bg-white/5 border border-white/10 text-gray-400
-                    hover:bg-cyan-500/10 hover:border-cyan-500/30 hover:text-cyan-300
+                    bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-500
+                    hover:bg-violet-50 hover:border-slate-300 hover:text-violet-700
                     transition-all whitespace-nowrap disabled:opacity-40"
                 >
                   {s}
@@ -365,16 +365,16 @@ export default function ChatPage() {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Ask AIVENTRA AI about this case..."
-                className="flex-1 px-4 py-3 rounded-xl text-sm bg-white/5 border border-white/10
-                  text-gray-200 placeholder-gray-600 focus:outline-none focus:border-cyan-500/50
+                className="flex-1 px-4 py-3 rounded-xl text-sm bg-slate-50 hover:bg-slate-100 border border-slate-200
+                  text-gray-200 placeholder-gray-600 focus:outline-none focus:border-slate-400
                   transition-colors"
                 disabled={thinking}
               />
               <button
                 onClick={() => handleSend(input)}
                 disabled={!input.trim() || thinking}
-                className="p-3 rounded-xl bg-cyan-500/20 text-cyan-400 border border-cyan-500/30
-                  hover:bg-cyan-500/30 transition-all disabled:opacity-40 disabled:cursor-not-allowed
+                className="p-3 rounded-xl bg-violet-100 text-violet-600 border border-slate-300
+                  hover:bg-violet-200 transition-all disabled:opacity-40 disabled:cursor-not-allowed
                   hover:shadow-[0_0_20px_rgba(6,182,212,0.2)]"
               >
                 <Send className="w-4 h-4" />
@@ -394,50 +394,50 @@ export default function ChatPage() {
               backdrop-blur-xl bg-black/20 hidden lg:flex flex-col"
           >
             <div className="flex items-center justify-between p-3 border-b border-white/5">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
                 Context
               </h3>
               <button
                 onClick={() => setContextOpen(false)}
-                className="text-gray-500 hover:text-gray-300"
+                className="text-slate-400 hover:text-slate-700"
               >
                 <PanelRightClose className="w-4 h-4" />
               </button>
             </div>
             <div className="p-3 space-y-3 overflow-y-auto">
-              <div className="backdrop-blur-md bg-white/5 border border-cyan-500/20 rounded-xl p-3">
-                <p className="text-[10px] text-gray-500 uppercase tracking-wider">Current Case</p>
+              <div className="backdrop-blur-md bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl p-3">
+                <p className="text-[10px] text-slate-400 uppercase tracking-wider">Current Case</p>
                 <p className="text-sm font-semibold mt-1">{caseData?.id || "No Active Case"}</p>
-                <p className="text-xs text-gray-400 truncate">{caseData?.title || "Pending Selection"}</p>
+                <p className="text-xs text-slate-500 truncate">{caseData?.title || "Pending Selection"}</p>
                 <div className="mt-2 flex items-center gap-2">
                   <span className={cn(
                     "px-1.5 py-0.5 rounded text-[9px] font-bold",
-                    "text-red-400 border border-red-500/40 bg-red-500/10",
+                    "text-red-600 border border-slate-300 bg-red-500/10",
                   )}>
                     {caseData?.priority || "None"}
                   </span>
-                  <span className="text-[10px] text-gray-500">{caseData?.status || "None"}</span>
+                  <span className="text-[10px] text-slate-400">{caseData?.status || "None"}</span>
                 </div>
               </div>
               <div className="space-y-2">
-                <div className="backdrop-blur-md bg-white/5 border border-white/10 rounded-xl p-3">
+                <div className="backdrop-blur-md bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl p-3">
                   <div className="flex items-center gap-2">
-                    <FileText className="w-3.5 h-3.5 text-cyan-400" />
-                    <span className="text-xs text-gray-400">Evidence Items</span>
+                    <FileText className="w-3.5 h-3.5 text-violet-600" />
+                    <span className="text-xs text-slate-500">Evidence Items</span>
                   </div>
-                  <p className="text-lg font-bold text-cyan-300 mt-1">{caseData?.evidenceCount || 0}</p>
+                  <p className="text-lg font-bold text-violet-700 mt-1">{caseData?.evidenceCount || 0}</p>
                 </div>
-                <div className="backdrop-blur-md bg-white/5 border border-white/10 rounded-xl p-3">
+                <div className="backdrop-blur-md bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl p-3">
                   <div className="flex items-center gap-2">
-                    <Activity className="w-3.5 h-3.5 text-amber-400" />
-                    <span className="text-xs text-gray-400">Anomalies</span>
+                    <Activity className="w-3.5 h-3.5 text-amber-600" />
+                    <span className="text-xs text-slate-500">Anomalies</span>
                   </div>
                   <p className="text-lg font-bold text-amber-300 mt-1">{caseData?.anomalies || 0}</p>
                 </div>
-                <div className="backdrop-blur-md bg-white/5 border border-white/10 rounded-xl p-3">
+                <div className="backdrop-blur-md bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl p-3">
                   <div className="flex items-center gap-2">
                     <Shield className="w-3.5 h-3.5" />
-                    <span className="text-xs text-gray-400">Risk Score</span>
+                    <span className="text-xs text-slate-500">Risk Score</span>
                   </div>
                   <p className={cn("text-lg font-bold mt-1", riskColor(caseData?.riskScore || 0))}>
                     {caseData?.riskScore || 0}
@@ -446,8 +446,8 @@ export default function ChatPage() {
               </div>
               <div className="backdrop-blur-md bg-amber-500/5 border border-amber-500/20 rounded-xl p-3">
                 <div className="flex items-start gap-2">
-                  <AlertTriangle className="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" />
-                  <p className="text-[9px] text-amber-400/70 leading-relaxed">
+                  <AlertTriangle className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" />
+                  <p className="text-[9px] text-amber-600/70 leading-relaxed">
                     AI responses are for investigative assistance only.
                   </p>
                 </div>
@@ -461,8 +461,8 @@ export default function ChatPage() {
         <button
           onClick={() => setContextOpen(true)}
           className="hidden lg:flex absolute right-4 top-4 w-8 h-8 rounded-lg
-            bg-white/5 border border-white/10 items-center justify-center
-            text-gray-500 hover:text-gray-300 hover:bg-white/10 transition-all"
+            bg-slate-50 hover:bg-slate-100 border border-slate-200 items-center justify-center
+            text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all"
         >
           <ChevronRight className="w-4 h-4" />
         </button>

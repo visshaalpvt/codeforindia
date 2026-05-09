@@ -26,13 +26,13 @@ const nodeStyleConfig: Record<string, {
   border: string;
   shape: "circle" | "hexagon" | "rounded" | "rect";
 }> = {
-  victim:   { icon: User,       color: "text-blue-400",   bg: "bg-blue-500/10",   border: "border-blue-500/40",   shape: "circle" },
-  suspect:  { icon: UserX,      color: "text-red-400",    bg: "bg-red-500/10",    border: "border-red-500/40",    shape: "hexagon" },
-  device:   { icon: Smartphone, color: "text-amber-400",  bg: "bg-amber-500/10",  border: "border-amber-500/40",  shape: "rounded" },
-  cctv:     { icon: Camera,     color: "text-cyan-400",   bg: "bg-cyan-500/10",   border: "border-cyan-500/40",   shape: "rounded" },
-  gps:      { icon: MapPin,     color: "text-green-400",  bg: "bg-green-500/10",  border: "border-green-500/40",  shape: "rounded" },
-  evidence: { icon: FileText,   color: "text-purple-400", bg: "bg-purple-500/10", border: "border-purple-500/40", shape: "rounded" },
-  location: { icon: Building2,  color: "text-gray-400",   bg: "bg-gray-500/10",   border: "border-gray-500/40",   shape: "rect" },
+  victim:   { icon: User,       color: "text-blue-600",   bg: "bg-blue-500/10",   border: "border-slate-300",   shape: "circle" },
+  suspect:  { icon: UserX,      color: "text-red-600",    bg: "bg-red-500/10",    border: "border-slate-300",    shape: "hexagon" },
+  device:   { icon: Smartphone, color: "text-amber-600",  bg: "bg-amber-50",  border: "border-amber-500/40",  shape: "rounded" },
+  cctv:     { icon: Camera,     color: "text-violet-600",   bg: "bg-violet-50",   border: "border-slate-300",   shape: "rounded" },
+  gps:      { icon: MapPin,     color: "text-green-600",  bg: "bg-green-500/10",  border: "border-green-500/40",  shape: "rounded" },
+  evidence: { icon: FileText,   color: "text-violet-600", bg: "bg-violet-50", border: "border-slate-300", shape: "rounded" },
+  location: { icon: Building2,  color: "text-slate-500",   bg: "bg-gray-500/10",   border: "border-gray-500/40",   shape: "rect" },
 };
 
 /* ------------------------------------------------------------------ */
@@ -148,10 +148,10 @@ function CorrelationGraphEdge({
               className={cn(
                 "px-2 py-0.5 rounded text-[9px] font-mono font-bold border whitespace-nowrap backdrop-blur-sm",
                 isSuspicious
-                  ? "bg-red-500/20 border-red-500/30 text-red-400"
+                  ? "bg-red-100 border-red-500/30 text-red-600"
                   : isConfirmed
-                  ? "bg-green-500/20 border-green-500/30 text-green-400"
-                  : "bg-amber-500/20 border-amber-500/30 text-amber-400",
+                  ? "bg-green-100 border-green-500/30 text-green-600"
+                  : "bg-amber-100 border-amber-500/30 text-amber-600",
               )}
             >
               {edgeData.label}
@@ -187,28 +187,28 @@ function SuspectLinkCard({
         "flex items-center gap-3 px-4 py-3 rounded-xl border backdrop-blur-md transition-all",
         edge.data && (edge.data as Record<string, unknown>).suspicious
           ? "bg-red-500/10 border-red-500/30"
-          : "bg-amber-500/10 border-amber-500/30",
+          : "bg-amber-50 border-amber-500/30",
       )}
     >
-      <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
+      <Sparkles className="w-4 h-4 text-amber-600 shrink-0" />
       <div className="flex-1 min-w-0">
         <p className="text-xs font-semibold text-gray-200 truncate">
           {edge.source} → {edge.target}
         </p>
-        <p className="text-[10px] text-gray-400 font-mono mt-0.5">
+        <p className="text-[10px] text-slate-500 font-mono mt-0.5">
           {d?.label ?? "Unknown"} &middot; {d?.confidence ?? 0}% confidence
         </p>
       </div>
       <div className="flex gap-1 shrink-0">
         <button
           onClick={onAccept}
-          className="p-1.5 rounded-lg bg-green-500/20 border border-green-500/30 text-green-400 hover:bg-green-500/30 transition-all"
+          className="p-1.5 rounded-lg bg-green-100 border border-green-500/30 text-green-600 hover:bg-green-500/30 transition-all"
         >
           <Check className="w-3.5 h-3.5" />
         </button>
         <button
           onClick={onDismiss}
-          className="p-1.5 rounded-lg bg-red-500/20 border border-red-500/30 text-red-400 hover:bg-red-500/30 transition-all"
+          className="p-1.5 rounded-lg bg-red-100 border border-red-500/30 text-red-600 hover:bg-red-200 transition-all"
         >
           <X className="w-3.5 h-3.5" />
         </button>
@@ -375,7 +375,7 @@ export default function CorrelationPage() {
         }}
       >
         <Background color="rgba(0,245,255,0.06)" gap={30} />
-        <Controls className="!bg-[#0B1020]/90 !border !border-cyan-500/20 !rounded-xl !backdrop-blur-md [&_button]:!text-gray-400 [&_button]:!border-none [&_button]:!bg-transparent" />
+        <Controls className="!bg-white/90 !border !border-slate-200 !rounded-xl !backdrop-blur-md [&_button]:!text-slate-500 [&_button]:!border-none [&_button]:!bg-transparent" />
       </ReactFlow>
 
       {/* Floating Controls — Top Right */}
@@ -391,16 +391,16 @@ export default function CorrelationPage() {
             className={cn(
               "flex items-center gap-2 w-full px-3 py-2 rounded-lg text-xs font-medium border transition-all",
               showAiSuggestions
-                ? "bg-green-500/20 border-green-500/30 text-green-400"
-                : "bg-amber-500/20 border-amber-500/30 text-amber-400 hover:bg-amber-500/30",
+                ? "bg-green-100 border-green-500/30 text-green-600"
+                : "bg-amber-100 border-amber-500/30 text-amber-600 hover:bg-amber-500/30",
             )}
           >
             <Sparkles className="w-3.5 h-3.5" />
             {showAiSuggestions ? "Suggested!" : "AI Suggest Links"}
           </button>
 
-          <div className="border-t border-white/10 pt-1.5 space-y-1">
-            <p className="text-[10px] text-gray-500 font-semibold uppercase tracking-wider px-1">Layout</p>
+          <div className="border-t border-slate-200 pt-1.5 space-y-1">
+            <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider px-1">Layout</p>
             {(["force", "hierarchical", "circular"] as const).map((l) => (
               <button
                 key={l}
@@ -408,8 +408,8 @@ export default function CorrelationPage() {
                 className={cn(
                   "flex items-center gap-2 w-full px-3 py-1.5 rounded-lg text-xs font-medium transition-all",
                   layout === l
-                    ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30"
-                    : "text-gray-500 hover:text-gray-300",
+                    ? "bg-violet-100 text-violet-600 border border-slate-300"
+                    : "text-slate-400 hover:text-slate-700",
                 )}
               >
                 {l === "force" ? <Circle className="w-3 h-3" /> :
@@ -428,14 +428,14 @@ export default function CorrelationPage() {
           transition={{ delay: 0.1 }}
           className="glass p-3 space-y-1.5 min-w-[140px]"
         >
-          <p className="text-[10px] text-gray-500 font-semibold uppercase tracking-wider">Legend</p>
+          <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Legend</p>
           <div className="space-y-1">
             {[
               { label: "Confirmed", color: "bg-green-500", dash: false },
               { label: "AI-suspected", color: "bg-amber-500", dash: true },
               { label: "Suspicious", color: "bg-red-500", dash: false },
             ].map((item) => (
-              <div key={item.label} className="flex items-center gap-2 text-[10px] text-gray-400">
+              <div key={item.label} className="flex items-center gap-2 text-[10px] text-slate-500">
                 <div className={cn(
                   "w-4 h-0.5 rounded-full",
                   item.color,
@@ -460,7 +460,7 @@ export default function CorrelationPage() {
             className="absolute bottom-4 left-4 right-4 z-10 glass p-4 max-h-[180px] overflow-y-auto"
           >
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-amber-400 flex items-center gap-2">
+              <h3 className="text-sm font-semibold text-amber-600 flex items-center gap-2">
                 <Sparkles className="w-4 h-4" />
                 AI-Suspected Links ({suspectEdges.length})
               </h3>
@@ -469,7 +469,7 @@ export default function CorrelationPage() {
                   const d = e.data as { confirmed?: boolean } | undefined;
                   return d?.confirmed;
                 }))}
-                className="text-xs text-gray-500 hover:text-gray-300"
+                className="text-xs text-slate-400 hover:text-slate-700"
               >
                 Dismiss All
               </button>

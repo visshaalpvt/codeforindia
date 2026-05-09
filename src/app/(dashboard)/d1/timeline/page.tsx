@@ -20,12 +20,12 @@ const zoomLevels = ["Hour", "6H", "Day", "Week", "Month"] as const;
 const playbackSpeeds = [0.5, 1, 2, 5] as const;
 
 const typeConfig: Record<string, { icon: typeof Camera; color: string; bg: string; border: string }> = {
-  CCTV:            { icon: Camera,       color: "text-blue-400",      bg: "bg-blue-500/10",      border: "border-blue-500/30" },
-  Motion:          { icon: Footprints,   color: "text-amber-400",     bg: "bg-amber-500/10",     border: "border-amber-500/30" },
-  GPS:             { icon: MapPin,       color: "text-green-400",     bg: "bg-green-500/10",     border: "border-green-500/30" },
-  "Call Log":      { icon: Phone,        color: "text-purple-400",    bg: "bg-purple-500/10",    border: "border-purple-500/30" },
-  "AI Alert":      { icon: AlertTriangle,color: "text-red-400",       bg: "bg-red-500/10",       border: "border-red-500/30" },
-  "Evidence Upload":{ icon: Upload,      color: "text-cyan-400",      bg: "bg-cyan-500/10",      border: "border-cyan-500/30" },
+  CCTV:            { icon: Camera,       color: "text-blue-600",      bg: "bg-blue-500/10",      border: "border-blue-500/30" },
+  Motion:          { icon: Footprints,   color: "text-amber-600",     bg: "bg-amber-50",     border: "border-amber-500/30" },
+  GPS:             { icon: MapPin,       color: "text-green-600",     bg: "bg-green-500/10",     border: "border-green-500/30" },
+  "Call Log":      { icon: Phone,        color: "text-violet-600",    bg: "bg-violet-50",    border: "border-purple-500/30" },
+  "AI Alert":      { icon: AlertTriangle,color: "text-red-600",       bg: "bg-red-500/10",       border: "border-red-500/30" },
+  "Evidence Upload":{ icon: Upload,      color: "text-violet-600",      bg: "bg-violet-50",      border: "border-slate-300" },
   "Sensor Trigger": { icon: Radio,       color: "text-orange-400",    bg: "bg-orange-500/10",    border: "border-orange-500/30" },
 };
 
@@ -36,9 +36,9 @@ function confidenceColor(score: number): string {
 }
 
 function confidenceTextColor(score: number): string {
-  if (score >= 85) return "text-green-400";
-  if (score >= 70) return "text-amber-400";
-  return "text-red-400";
+  if (score >= 85) return "text-green-600";
+  if (score >= 70) return "text-amber-600";
+  return "text-red-600";
 }
 
 /* ------------------------------------------------------------------ */
@@ -71,23 +71,23 @@ function EventCard({
       className={cn(
         "relative flex gap-4 p-4 rounded-xl border transition-all duration-500",
         isActive
-          ? "bg-cyan-500/10 border-cyan-400/60 shadow-[0_0_30px_rgba(0,245,255,0.15)]"
-          : "bg-white/[0.03] border-white/10 hover:bg-white/[0.06]",
+          ? "bg-violet-50 border-cyan-400/60 shadow-[0_0_30px_rgba(0,245,255,0.15)]"
+          : "bg-white/[0.03] border-slate-200 hover:bg-white/[0.06]",
       )}
     >
       {/* Time Column */}
       <div className="shrink-0 w-16 pt-1 text-right">
-        <p className="text-xs font-mono text-cyan-400 font-bold">{formatTime(event.timestamp)}</p>
-        <p className="text-[10px] font-mono text-gray-500">{formatDate(event.timestamp)}</p>
+        <p className="text-xs font-mono text-violet-600 font-bold">{formatTime(event.timestamp)}</p>
+        <p className="text-[10px] font-mono text-slate-400">{formatDate(event.timestamp)}</p>
       </div>
 
       {/* Timeline Dot + Connector */}
       <div className="relative flex flex-col items-center shrink-0">
         <div className={cn(
           "w-5 h-5 rounded-full border-2 flex items-center justify-center z-10 transition-colors duration-500",
-          isActive ? "border-cyan-400 bg-cyan-500/30" : `${cfg.bg} ${cfg.border}`,
+          isActive ? "border-cyan-400 bg-violet-200" : `${cfg.bg} ${cfg.border}`,
         )}>
-          <Icon className={cn("w-2.5 h-2.5", isActive ? "text-white" : cfg.color)} />
+          <Icon className={cn("w-2.5 h-2.5", isActive ? "text-slate-900" : cfg.color)} />
         </div>
       </div>
 
@@ -100,22 +100,22 @@ function EventCard({
           )}>
             {event.type}
           </span>
-          <h3 className="text-sm font-semibold text-white">{event.title}</h3>
+          <h3 className="text-sm font-semibold text-slate-900">{event.title}</h3>
           {onDelete && (
             <button
               onClick={() => onDelete(event.id)}
-              className="ml-auto text-gray-500 hover:text-red-400 transition-colors p-1"
+              className="ml-auto text-slate-400 hover:text-red-600 transition-colors p-1"
               title="Delete event"
             >
               <span className="text-xs font-bold">&times;</span>
             </button>
           )}
         </div>
-        <p className="text-xs text-gray-400 leading-relaxed">{event.description}</p>
+        <p className="text-xs text-slate-500 leading-relaxed">{event.description}</p>
 
         {/* Confidence Bar */}
         <div className="flex items-center gap-2">
-          <div className="flex-1 h-1.5 rounded-full bg-white/10 overflow-hidden max-w-[160px]">
+          <div className="flex-1 h-1.5 rounded-full bg-slate-100 overflow-hidden max-w-[160px]">
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: `${event.confidence}%` }}
@@ -129,7 +129,7 @@ function EventCard({
         </div>
 
         {event.location && (
-          <p className="text-[10px] text-gray-500 font-mono flex items-center gap-1">
+          <p className="text-[10px] text-slate-400 font-mono flex items-center gap-1">
             <MapPin className="w-3 h-3" />
             {event.location.lat.toFixed(4)}, {event.location.lng.toFixed(4)}
           </p>
@@ -248,7 +248,7 @@ export default function TimelinePage() {
         animate={{ opacity: 1, y: 0 }}
       >
         <h1 className="text-2xl font-bold tracking-tight">Timeline</h1>
-        <p className="text-sm text-gray-400 mt-1">Chronological event sequencing with AI-powered playback</p>
+        <p className="text-sm text-slate-500 mt-1">Chronological event sequencing with AI-powered playback</p>
       </motion.div>
 
       {/* Controls Bar */}
@@ -265,19 +265,19 @@ export default function TimelinePage() {
               <select
                 value={selectedCase}
                 onChange={(e) => setSelectedCase(e.target.value)}
-                className="appearance-none pl-3 pr-8 py-2 rounded-lg bg-white/5 border border-cyan-500/20 text-sm text-gray-300 focus:outline-none focus:border-cyan-500/50 cursor-pointer min-w-[160px]"
+                className="appearance-none pl-3 pr-8 py-2 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-sm text-slate-700 focus:outline-none focus:border-slate-400 cursor-pointer min-w-[160px]"
               >
                 <option value="">All Cases</option>
                 {caseOptions.map((c) => (
                   <option key={c.id} value={c.id}>{c.id} — {c.victim}</option>
                 ))}
               </select>
-              <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500 pointer-events-none" />
+              <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 pointer-events-none" />
             </div>
 
             {/* Date Range Display */}
-            <div className="flex items-center gap-1.5 text-xs text-gray-400 font-mono bg-white/5 px-3 py-2 rounded-lg border border-white/10">
-              <Clock className="w-3.5 h-3.5 text-cyan-400" />
+            <div className="flex items-center gap-1.5 text-xs text-slate-500 font-mono bg-slate-50 hover:bg-slate-100 px-3 py-2 rounded-lg border border-slate-200">
+              <Clock className="w-3.5 h-3.5 text-violet-600" />
               {filtered.length > 0 ? (
                 <>
                   {formatDate(filtered[0].timestamp)} — {formatDate(filtered[filtered.length - 1].timestamp)}
@@ -293,8 +293,8 @@ export default function TimelinePage() {
             className={cn(
               "flex items-center gap-2 px-4 py-2 rounded-lg border text-sm font-medium transition-all",
               isPlaying
-                ? "bg-red-500/20 border-red-500/40 text-red-400 hover:bg-red-500/30"
-                : "bg-cyan-500/20 border-cyan-500/40 text-cyan-400 hover:bg-cyan-500/30",
+                ? "bg-red-100 border-slate-300 text-red-600 hover:bg-red-200"
+                : "bg-violet-100 border-slate-300 text-violet-600 hover:bg-violet-200",
               filtered.length === 0 && "opacity-40 cursor-not-allowed",
             )}
           >
@@ -307,7 +307,7 @@ export default function TimelinePage() {
         <div className="flex items-center justify-between flex-wrap gap-3">
           {/* Type Filters */}
           <div className="flex items-center gap-1.5 flex-wrap">
-            <Filter className="w-3.5 h-3.5 text-gray-500 mr-1 shrink-0" />
+            <Filter className="w-3.5 h-3.5 text-slate-400 mr-1 shrink-0" />
             {eventTypes.map((type) => {
               const isActive = activeTypes.has(type);
               const cfg = type === "All" ? null : typeConfig[type];
@@ -322,8 +322,8 @@ export default function TimelinePage() {
                     isActive
                       ? cfg
                         ? `${cfg.bg} ${cfg.border} ${cfg.color}`
-                        : "bg-cyan-500/20 border-cyan-500/40 text-cyan-400"
-                      : "bg-white/[0.03] border-white/10 text-gray-500 hover:text-gray-300",
+                        : "bg-violet-100 border-slate-300 text-violet-600"
+                      : "bg-white/[0.03] border-slate-200 text-slate-400 hover:text-slate-700",
                   )}
                 >
                   {cfg && <cfg.icon className="w-3 h-3" />}
@@ -334,7 +334,7 @@ export default function TimelinePage() {
           </div>
 
           {/* Zoom Controls */}
-          <div className="flex items-center bg-white/5 rounded-lg border border-white/10 p-0.5">
+          <div className="flex items-center bg-slate-50 hover:bg-slate-100 rounded-lg border border-slate-200 p-0.5">
             {zoomLevels.map((level) => (
               <button
                 key={level}
@@ -342,8 +342,8 @@ export default function TimelinePage() {
                 className={cn(
                   "px-3 py-1.5 rounded-md text-xs font-medium transition-all",
                   zoom === level
-                    ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30"
-                    : "text-gray-500 hover:text-gray-300 border border-transparent",
+                    ? "bg-violet-100 text-violet-600 border border-slate-300"
+                    : "text-slate-400 hover:text-slate-700 border border-transparent",
                 )}
               >
                 {level}
@@ -364,7 +364,7 @@ export default function TimelinePage() {
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => { setPlayIndex(0); }}
-                  className="text-gray-500 hover:text-cyan-400 transition-colors"
+                  className="text-slate-400 hover:text-violet-600 transition-colors"
                 >
                   <SkipBack className="w-4 h-4" />
                 </button>
@@ -376,8 +376,8 @@ export default function TimelinePage() {
                     className={cn(
                       "px-2 py-0.5 rounded text-xs font-mono font-bold transition-all",
                       playbackSpeed === speed
-                        ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30"
-                        : "text-gray-500 hover:text-gray-300",
+                        ? "bg-violet-100 text-violet-600 border border-slate-300"
+                        : "text-slate-400 hover:text-slate-700",
                     )}
                   >
                     {speed}x
@@ -386,17 +386,17 @@ export default function TimelinePage() {
 
                 <button
                   onClick={() => { setPlayIndex(filtered.length - 1); stopPlayback(); }}
-                  className="text-gray-500 hover:text-cyan-400 transition-colors"
+                  className="text-slate-400 hover:text-violet-600 transition-colors"
                 >
                   <SkipForward className="w-4 h-4" />
                 </button>
 
-                <span className="text-xs font-mono text-gray-400 ml-auto">
+                <span className="text-xs font-mono text-slate-500 ml-auto">
                   {playIndex + 1} / {filtered.length}
                 </span>
               </div>
 
-              <div className="h-1.5 rounded-full bg-white/10 overflow-hidden">
+              <div className="h-1.5 rounded-full bg-slate-100 overflow-hidden">
                 <motion.div
                   className="h-full rounded-full bg-gradient-to-r from-cyan-400 to-blue-500"
                   style={{ width: `${progress}%` }}
@@ -423,11 +423,11 @@ export default function TimelinePage() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="flex flex-col items-center justify-center py-20 text-gray-500"
+              className="flex flex-col items-center justify-center py-20 text-slate-400"
             >
               <Clock className="w-12 h-12 mb-3 opacity-40" />
               <p className="text-sm">No timeline events match your filters</p>
-              <p className="text-xs text-gray-600 mt-1">Try adjusting the case or event type selection</p>
+              <p className="text-xs text-slate-400 mt-1">Try adjusting the case or event type selection</p>
             </motion.div>
           )}
 

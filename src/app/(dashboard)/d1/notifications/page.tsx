@@ -71,16 +71,16 @@ function ToastNotification({
       className="pointer-events-auto backdrop-blur-xl bg-red-900/60 border border-red-500/30 rounded-xl p-4 shadow-xl shadow-red-500/10 w-full max-w-sm"
     >
       <div className="flex items-start gap-3">
-        <div className="p-2 rounded-lg bg-red-500/20 text-red-400 shrink-0">
+        <div className="p-2 rounded-lg bg-red-100 text-red-600 shrink-0">
           <Icon className="w-4 h-4" />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-white">{notification.title}</p>
-          <p className="text-xs text-gray-300 mt-0.5 line-clamp-2">{notification.description}</p>
+          <p className="text-sm font-semibold text-slate-900">{notification.title}</p>
+          <p className="text-xs text-slate-700 mt-0.5 line-clamp-2">{notification.description}</p>
         </div>
         <button
           onClick={onDismiss}
-          className="text-gray-500 hover:text-gray-300 shrink-0"
+          className="text-slate-400 hover:text-slate-700 shrink-0"
         >
           <X className="w-4 h-4" />
         </button>
@@ -148,18 +148,18 @@ export default function NotificationsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Notifications</h1>
-          <p className="text-sm text-gray-400 mt-1">Stay informed about case activity and alerts</p>
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Notifications</h1>
+          <p className="text-sm text-slate-500 mt-1">Stay informed about case activity and alerts</p>
         </div>
         <div className="flex items-center gap-3">
-          <span className="text-sm text-gray-400">
-            <span className="text-cyan-400 font-semibold">{unreadCount}</span> unread
+          <span className="text-sm text-slate-500">
+            <span className="text-violet-600 font-semibold">{unreadCount}</span> unread
           </span>
           <button
             onClick={markAllRead}
             disabled={unreadCount === 0}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-cyan-500/30 text-cyan-400
-              hover:bg-cyan-500/10 text-xs font-medium transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-300 text-violet-600
+              hover:bg-violet-50 text-xs font-medium transition-all disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <CheckCheck className="w-3.5 h-3.5" />
             Mark All Read
@@ -175,8 +175,8 @@ export default function NotificationsPage() {
             className={cn(
               "px-3 py-1.5 rounded-lg text-xs font-medium transition-all",
               activeTab === tab.id
-                ? "bg-cyan-500/15 text-cyan-400 border border-cyan-500/30"
-                : "text-gray-400 hover:text-gray-300 border border-transparent"
+                ? "bg-cyan-500/15 text-violet-600 border border-slate-300"
+                : "text-slate-500 hover:text-slate-700 border border-transparent"
             )}
           >
             {tab.label}
@@ -191,7 +191,7 @@ export default function NotificationsPage() {
               key="empty"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="flex flex-col items-center justify-center py-20 text-gray-500"
+              className="flex flex-col items-center justify-center py-20 text-slate-400"
             >
               <Bell className="w-12 h-12 mb-3 opacity-40" />
               <p className="text-sm">No notifications</p>
@@ -209,7 +209,7 @@ export default function NotificationsPage() {
                   exit={{ opacity: 0, y: -10, scale: 0.98 }}
                   transition={{ type: "spring", stiffness: 300, damping: 30 }}
                   onClick={() => markNotificationRead(notif.id)}
-                  className="relative glass rounded-2xl overflow-hidden hover:border-cyan-500/30 transition-colors cursor-pointer"
+                  className="relative glass rounded-2xl overflow-hidden hover:border-slate-300 transition-colors cursor-pointer"
                 >
                   <div className="flex">
                     <div className={cn("w-1 shrink-0", severityBarColor[sev] ?? "bg-gray-500")} />
@@ -221,10 +221,10 @@ export default function NotificationsPage() {
                         className={cn(
                           "p-2 rounded-xl shrink-0",
                           sev === "critical"
-                            ? "bg-red-500/20 text-red-400"
+                            ? "bg-red-100 text-red-600"
                             : sev === "warning"
-                            ? "bg-amber-500/20 text-amber-400"
-                            : "bg-blue-500/20 text-blue-400"
+                            ? "bg-amber-100 text-amber-600"
+                            : "bg-blue-100 text-blue-600"
                         )}
                       >
                         <Icon className="w-4 h-4" />
@@ -234,22 +234,22 @@ export default function NotificationsPage() {
                           <h3
                             className={cn(
                               "text-sm",
-                              !notif.read ? "font-bold text-white" : "font-medium text-gray-300"
+                              !notif.read ? "font-bold text-slate-900" : "font-medium text-slate-700"
                             )}
                           >
                             {notif.title}
                           </h3>
-                          <span className="text-[10px] text-gray-500 shrink-0">
+                          <span className="text-[10px] text-slate-400 shrink-0">
                             {timeAgo(notif.timestamp)}
                           </span>
                         </div>
-                        <p className="text-xs text-gray-400 mt-0.5 leading-relaxed">
+                        <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">
                           {notif.description}
                         </p>
                         {notif.actionable && (
                           <div className="flex items-center gap-2 mt-2.5">
                             {notif.actionLabel && (
-                              <button className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-cyan-500/15 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/25 text-[10px] font-medium transition-all">
+                              <button className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-cyan-500/15 border border-slate-300 text-violet-600 hover:bg-cyan-500/25 text-[10px] font-medium transition-all">
                                 {notif.actionLabel === "View on Map" && <MapPin className="w-3 h-3" />}
                                 {notif.actionLabel === "View Snapshot" && <Camera className="w-3 h-3" />}
                                 {notif.actionLabel === "Review" && <Eye className="w-3 h-3" />}
@@ -260,7 +260,7 @@ export default function NotificationsPage() {
                             )}
                             <button
                               onClick={(e) => { e.stopPropagation(); dismissNotification(notif.id); }}
-                              className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 text-[10px] font-medium transition-all"
+                              className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-500 hover:bg-slate-100 text-[10px] font-medium transition-all"
                             >
                               <CheckCircle2 className="w-3 h-3" />
                               Dismiss
@@ -283,22 +283,22 @@ export default function NotificationsPage() {
         className="glass rounded-2xl p-5"
       >
         <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 rounded-lg bg-cyan-500/10 border border-cyan-500/20">
-            <Phone className="w-4 h-4 text-cyan-400" />
+          <div className="p-2 rounded-lg bg-violet-50 border border-slate-200">
+            <Phone className="w-4 h-4 text-violet-600" />
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-white">GSM Alert Integration</h3>
-            <p className="text-xs text-gray-400">SMS Integration &mdash; Twilio</p>
+            <h3 className="text-sm font-semibold text-slate-900">GSM Alert Integration</h3>
+            <p className="text-xs text-slate-500">SMS Integration &mdash; Twilio</p>
           </div>
         </div>
 
-        <p className="text-xs text-gray-500 mb-4">
-          Critical alerts will be sent to: <span className="text-cyan-400 font-mono">+91-XXXXXXXXXX</span>
+        <p className="text-xs text-slate-400 mb-4">
+          Critical alerts will be sent to: <span className="text-violet-600 font-mono">+91-XXXXXXXXXX</span>
         </p>
 
         <div className="space-y-3">
-          <label className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5">
-            <span className="text-xs text-gray-300">Enable SMS for Critical alerts</span>
+          <label className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-white/5">
+            <span className="text-xs text-slate-700">Enable SMS for Critical alerts</span>
             <button
               onClick={() => setSmsCritical(!smsCritical)}
               className={cn(
@@ -314,8 +314,8 @@ export default function NotificationsPage() {
               />
             </button>
           </label>
-          <label className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5">
-            <span className="text-xs text-gray-300">Enable SMS for All alerts</span>
+          <label className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-white/5">
+            <span className="text-xs text-slate-700">Enable SMS for All alerts</span>
             <button
               onClick={() => setSmsAll(!smsAll)}
               className={cn(

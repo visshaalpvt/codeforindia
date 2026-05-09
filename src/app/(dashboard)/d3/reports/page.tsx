@@ -94,17 +94,17 @@ function useRecentExports(): RecentExport[] {
 }
 
 const statusColor: Record<string, string> = {
-  Generated: "bg-green-500/15 text-green-400 border-green-500/30",
-  Pending: "bg-amber-500/15 text-amber-400 border-amber-500/30",
-  Error: "bg-red-500/15 text-red-400 border-red-500/30",
+  Generated: "bg-green-500/15 text-green-600 border-green-500/30",
+  Pending: "bg-amber-500/15 text-amber-600 border-amber-500/30",
+  Error: "bg-red-500/15 text-red-600 border-red-500/30",
 };
 
 function PreviewPlaceholder() {
   return (
-    <div className="flex flex-col items-center justify-center h-full text-gray-500">
+    <div className="flex flex-col items-center justify-center h-full text-slate-400">
       <FileText className="w-16 h-16 mb-3 opacity-30" />
       <p className="text-sm">Select report type and generate a report to preview</p>
-      <p className="text-xs text-gray-600 mt-1">Configure options on the left and click Generate Report</p>
+      <p className="text-xs text-slate-400 mt-1">Configure options on the left and click Generate Report</p>
     </div>
   );
 }
@@ -147,7 +147,7 @@ function GeneratedPreview({
           </div>
           <div>
             <h3 className="text-sm font-bold text-gray-900">{reportType.label}</h3>
-            <p className="text-[10px] text-gray-500 font-mono">{caseId}</p>
+            <p className="text-[10px] text-slate-400 font-mono">{caseId}</p>
           </div>
         </div>
 
@@ -155,25 +155,25 @@ function GeneratedPreview({
           <div className="space-y-3">
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <p className="text-[10px] text-gray-500 uppercase tracking-wider">Case Title</p>
+                <p className="text-[10px] text-slate-400 uppercase tracking-wider">Case Title</p>
                 <p className="text-xs font-semibold text-gray-900">{selectedCase.title}</p>
               </div>
               <div>
-                <p className="text-[10px] text-gray-500 uppercase tracking-wider">Victim</p>
+                <p className="text-[10px] text-slate-400 uppercase tracking-wider">Victim</p>
                 <p className="text-xs text-gray-800">{selectedCase.victim}</p>
               </div>
               <div>
-                <p className="text-[10px] text-gray-500 uppercase tracking-wider">Officer</p>
+                <p className="text-[10px] text-slate-400 uppercase tracking-wider">Officer</p>
                 <p className="text-xs text-gray-800">{selectedCase.officer}</p>
               </div>
               <div>
-                <p className="text-[10px] text-gray-500 uppercase tracking-wider">Priority</p>
+                <p className="text-[10px] text-slate-400 uppercase tracking-wider">Priority</p>
                 <p className="text-xs font-semibold text-gray-900">{selectedCase.priority}</p>
               </div>
             </div>
 
             <div>
-              <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Description</p>
+              <p className="text-[10px] text-slate-400 uppercase tracking-wider mb-1">Description</p>
               <p className="text-xs text-gray-700 leading-relaxed">
                 This report provides a comprehensive analysis of {selectedCase.title}. The investigation
                 involves {selectedCase.evidenceCount} evidence items with {selectedCase.anomalies} flagged
@@ -182,7 +182,7 @@ function GeneratedPreview({
             </div>
 
             <div>
-              <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Key Findings</p>
+              <p className="text-[10px] text-slate-400 uppercase tracking-wider mb-1">Key Findings</p>
               <ul className="text-xs text-gray-700 space-y-1 list-disc list-inside">
                 <li>Evidence tampering detected in chain of custody logs</li>
                 <li>GPS data shows unexplained location discrepancies</li>
@@ -192,7 +192,7 @@ function GeneratedPreview({
             </div>
 
             <div className="pt-3 border-t border-gray-200">
-              <p className="text-[10px] text-gray-400 font-mono">
+              <p className="text-[10px] text-slate-500 font-mono">
                 Generated: {formatDate(new Date().toISOString())} | {watermark || "No watermark"}
               </p>
             </div>
@@ -265,14 +265,14 @@ export default function ReportsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-white tracking-tight">Reports & Export</h1>
-        <p className="text-sm text-gray-400 mt-1">Generate, preview, and export case reports</p>
+        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Reports & Export</h1>
+        <p className="text-sm text-slate-500 mt-1">Generate, preview, and export case reports</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
         <div className="lg:col-span-3 space-y-5">
           <div className="glass rounded-2xl p-5">
-            <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-4">
+            <h2 className="text-sm font-semibold text-slate-700 uppercase tracking-wider mb-4">
               Report Type
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -286,14 +286,14 @@ export default function ReportsPage() {
                     className={cn(
                       "flex items-start gap-3 p-3 rounded-xl border text-left transition-all",
                       isActive
-                        ? "bg-cyan-500/10 border-cyan-500/40"
-                        : "bg-white/[0.02] border-white/10 hover:border-white/20"
+                        ? "bg-violet-50 border-slate-300"
+                        : "bg-slate-50 border-slate-200 hover:border-slate-300"
                     )}
                   >
                     <div
                       className={cn(
                         "p-2 rounded-lg shrink-0",
-                        isActive ? "bg-cyan-500/20 text-cyan-400" : "bg-white/5 text-gray-400"
+                        isActive ? "bg-violet-100 text-violet-600" : "bg-slate-50 hover:bg-slate-100 text-slate-500"
                       )}
                     >
                       <RIcon className="w-4 h-4" />
@@ -302,12 +302,12 @@ export default function ReportsPage() {
                       <p
                         className={cn(
                           "text-xs font-semibold",
-                          isActive ? "text-cyan-300" : "text-gray-300"
+                          isActive ? "text-violet-700" : "text-slate-700"
                         )}
                       >
                         {rt.label}
                       </p>
-                      <p className="text-[10px] text-gray-500 mt-0.5">{rt.description}</p>
+                      <p className="text-[10px] text-slate-400 mt-0.5">{rt.description}</p>
                     </div>
                     {isActive && (
                       <div className="w-2 h-2 rounded-full bg-cyan-400 shrink-0 mt-1.5 ml-auto" />
@@ -319,18 +319,18 @@ export default function ReportsPage() {
           </div>
 
           <div className="glass rounded-2xl p-5 space-y-4">
-            <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">
+            <h2 className="text-sm font-semibold text-slate-700 uppercase tracking-wider">
               Configuration
             </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-[11px] text-gray-500 mb-1">Case</label>
+                <label className="block text-[11px] text-slate-400 mb-1">Case</label>
                 <select
                   value={selectedCase}
                   onChange={(e) => setSelectedCase(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-white/5 border border-cyan-500/20 text-gray-300 text-xs
-                    focus:outline-none focus:border-cyan-500/50 cursor-pointer appearance-none"
+                  className="w-full px-3 py-2 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs
+                    focus:outline-none focus:border-slate-400 cursor-pointer appearance-none"
                 >
                   {cases.map((c) => (
                     <option key={c.id} value={c.id}>
@@ -341,30 +341,30 @@ export default function ReportsPage() {
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-[11px] text-gray-500 mb-1">From</label>
+                  <label className="block text-[11px] text-slate-400 mb-1">From</label>
                   <input
                     type="date"
                     value={dateFrom}
                     onChange={(e) => setDateFrom(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg bg-white/5 border border-cyan-500/20 text-gray-300 text-xs
-                      focus:outline-none focus:border-cyan-500/50"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs
+                      focus:outline-none focus:border-slate-400"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] text-gray-500 mb-1">To</label>
+                  <label className="block text-[11px] text-slate-400 mb-1">To</label>
                   <input
                     type="date"
                     value={dateTo}
                     onChange={(e) => setDateTo(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg bg-white/5 border border-cyan-500/20 text-gray-300 text-xs
-                      focus:outline-none focus:border-cyan-500/50"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs
+                      focus:outline-none focus:border-slate-400"
                   />
                 </div>
               </div>
             </div>
 
             <div>
-              <label className="block text-[11px] text-gray-500 mb-2">Include Sections</label>
+              <label className="block text-[11px] text-slate-400 mb-2">Include Sections</label>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                 {sections.map((s) => (
                   <label
@@ -372,15 +372,15 @@ export default function ReportsPage() {
                     className={cn(
                       "flex items-center gap-2 px-3 py-2 rounded-lg border text-xs cursor-pointer transition-all",
                       selectedSections.has(s.id)
-                        ? "bg-cyan-500/10 border-cyan-500/30 text-cyan-300"
-                        : "bg-white/[0.02] border-white/10 text-gray-400 hover:border-white/20"
+                        ? "bg-violet-50 border-slate-300 text-violet-700"
+                        : "bg-slate-50 border-slate-200 text-slate-500 hover:border-slate-300"
                     )}
                   >
                     <input
                       type="checkbox"
                       checked={selectedSections.has(s.id)}
                       onChange={() => toggleSection(s.id)}
-                      className="w-3 h-3 rounded border-white/20 bg-white/5 accent-cyan-400"
+                      className="w-3 h-3 rounded border-slate-300 bg-slate-50 hover:bg-slate-100 accent-cyan-400"
                     />
                     {s.label}
                   </label>
@@ -389,8 +389,8 @@ export default function ReportsPage() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <label className="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/5">
-                <span className="text-xs text-gray-300">Redact sensitive information</span>
+              <label className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-white/5">
+                <span className="text-xs text-slate-700">Redact sensitive information</span>
                 <button
                   onClick={() => setRedact(!redact)}
                   className={cn(
@@ -407,12 +407,12 @@ export default function ReportsPage() {
                 </button>
               </label>
               <div>
-                <label className="block text-[11px] text-gray-500 mb-1">Watermark</label>
+                <label className="block text-[11px] text-slate-400 mb-1">Watermark</label>
                 <select
                   value={watermark}
                   onChange={(e) => setWatermark(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-white/5 border border-cyan-500/20 text-gray-300 text-xs
-                    focus:outline-none focus:border-cyan-500/50 cursor-pointer appearance-none"
+                  className="w-full px-3 py-2 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs
+                    focus:outline-none focus:border-slate-400 cursor-pointer appearance-none"
                 >
                   <option value="">None</option>
                   {watermarks.map((w) => (
@@ -422,7 +422,7 @@ export default function ReportsPage() {
               </div>
             </div>
 
-            <p className="text-[10px] text-gray-600 italic">
+            <p className="text-[10px] text-slate-400 italic">
               Role-based access: Reports will include investigator, forensic analyst, and medical officer signatures based on user role.
             </p>
           </div>
@@ -430,8 +430,8 @@ export default function ReportsPage() {
           <button
             onClick={handleGenerate}
             disabled={generating}
-            className="w-full py-3 rounded-xl bg-cyan-500/20 border border-cyan-500/40 text-cyan-400
-              hover:bg-cyan-500/30 text-sm font-semibold transition-all flex items-center justify-center gap-2
+            className="w-full py-3 rounded-xl bg-violet-100 border border-slate-300 text-violet-600
+              hover:bg-violet-200 text-sm font-semibold transition-all flex items-center justify-center gap-2
               disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {generating ? (
@@ -450,7 +450,7 @@ export default function ReportsPage() {
 
         <div className="lg:col-span-2">
           <div className="glass rounded-2xl p-4 h-full flex flex-col">
-            <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-4">
+            <h2 className="text-sm font-semibold text-slate-700 uppercase tracking-wider mb-4">
               Preview
             </h2>
             <div className="flex-1 min-h-[400px]">
@@ -466,20 +466,20 @@ export default function ReportsPage() {
               )}
             </div>
             {generatedReport && (
-              <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-white/10">
-                <button onClick={handleDownload} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-500/15 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/25 text-[11px] font-medium transition-all">
+              <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-slate-200">
+                <button onClick={handleDownload} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-500/15 border border-slate-300 text-violet-600 hover:bg-cyan-500/25 text-[11px] font-medium transition-all">
                   <FileDown className="w-3.5 h-3.5" />
                   Download
                 </button>
-                <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10 text-[11px] font-medium transition-all">
+                <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-100 text-[11px] font-medium transition-all">
                   <Printer className="w-3.5 h-3.5" />
                   Print
                 </button>
-                <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10 text-[11px] font-medium transition-all">
+                <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-100 text-[11px] font-medium transition-all">
                   <Share2 className="w-3.5 h-3.5" />
                   Share with Team
                 </button>
-                <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10 text-[11px] font-medium transition-all">
+                <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-100 text-[11px] font-medium transition-all">
                   <CheckCircle className="w-3.5 h-3.5" />
                   Submit to Case Record
                 </button>
@@ -491,14 +491,14 @@ export default function ReportsPage() {
 
       <div className="glass rounded-2xl overflow-hidden">
         <div className="p-5 pb-3">
-          <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">
+          <h2 className="text-sm font-semibold text-slate-700 uppercase tracking-wider">
             Recent Exports
           </h2>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-xs">
             <thead>
-              <tr className="border-b border-white/5 text-gray-500">
+              <tr className="border-b border-white/5 text-slate-400">
                 <th className="text-left px-5 py-3 font-medium uppercase tracking-wider">Report Name</th>
                 <th className="text-left px-5 py-3 font-medium uppercase tracking-wider">Type</th>
                 <th className="text-left px-5 py-3 font-medium uppercase tracking-wider">Generated By</th>
@@ -514,17 +514,17 @@ export default function ReportsPage() {
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.05 }}
-                  className="border-b border-white/5 hover:bg-white/[0.02] transition-colors"
+                  className="border-b border-white/5 hover:bg-slate-50 transition-colors"
                 >
                   <td className="px-5 py-3">
                     <div className="flex items-center gap-2">
-                      <FileSpreadsheet className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-                      <span className="text-gray-300 font-medium">{exp.name}</span>
+                      <FileSpreadsheet className="w-3.5 h-3.5 text-violet-600 shrink-0" />
+                      <span className="text-slate-700 font-medium">{exp.name}</span>
                     </div>
                   </td>
-                  <td className="px-5 py-3 text-gray-400">{exp.type}</td>
-                  <td className="px-5 py-3 text-gray-400">{exp.generatedBy}</td>
-                  <td className="px-5 py-3 text-gray-400 font-mono">{formatDate(exp.date)}</td>
+                  <td className="px-5 py-3 text-slate-500">{exp.type}</td>
+                  <td className="px-5 py-3 text-slate-500">{exp.generatedBy}</td>
+                  <td className="px-5 py-3 text-slate-500 font-mono">{formatDate(exp.date)}</td>
                   <td className="px-5 py-3">
                     <span
                       className={cn(
@@ -541,7 +541,7 @@ export default function ReportsPage() {
                         const c = cases.find(cs => cs.id.includes(exp.name.split('_')[0]));
                         const content = generateForensicReport(exp.type + ' Report', [{ heading: 'Report', content: `  Report: ${exp.name}\n  Type: ${exp.type}\n  Generated by: ${exp.generatedBy}\n  Date: ${exp.date}\n  Status: ${exp.status}` }]);
                         downloadReport(exp.name.replace('.pdf', '.txt'), content);
-                      }} className="flex items-center gap-1 px-2 py-1 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/20 text-[10px] font-medium transition-all">
+                      }} className="flex items-center gap-1 px-2 py-1 rounded-lg bg-violet-50 border border-slate-300 text-violet-600 hover:bg-violet-100 text-[10px] font-medium transition-all">
                         <Download className="w-3 h-3" />
                         Download
                       </button>

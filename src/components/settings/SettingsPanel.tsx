@@ -20,9 +20,9 @@ interface SettingsPanelProps {
 
 const accentMap = {
   cyan: {
-    text: "text-cyan-400",
-    bg: "bg-cyan-500/10",
-    border: "border-cyan-500/20",
+    text: "text-violet-600",
+    bg: "bg-violet-50",
+    border: "border-slate-200",
     glow: "shadow-[0_0_30px_rgba(6,182,212,0.15)]",
     toggle: "bg-cyan-500",
     toggleGlow: "shadow-[0_0_12px_rgba(6,182,212,0.5)]",
@@ -30,8 +30,8 @@ const accentMap = {
     ring: "ring-cyan-500/30",
   },
   amber: {
-    text: "text-amber-400",
-    bg: "bg-amber-500/10",
+    text: "text-amber-600",
+    bg: "bg-amber-50",
     border: "border-amber-500/20",
     glow: "shadow-[0_0_30px_rgba(245,158,11,0.15)]",
     toggle: "bg-amber-500",
@@ -40,9 +40,9 @@ const accentMap = {
     ring: "ring-amber-500/30",
   },
   purple: {
-    text: "text-purple-400",
-    bg: "bg-purple-500/10",
-    border: "border-purple-500/20",
+    text: "text-violet-600",
+    bg: "bg-violet-50",
+    border: "border-slate-200",
     glow: "shadow-[0_0_30px_rgba(139,92,246,0.15)]",
     toggle: "bg-purple-500",
     toggleGlow: "shadow-[0_0_12px_rgba(139,92,246,0.5)]",
@@ -108,18 +108,18 @@ export default function SettingsPanel({
                 <Settings className={cn("w-7 h-7", accent.text)} />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-white font-['Space_Grotesk'] tracking-tight">
+                <h1 className="text-2xl font-bold text-slate-900 font-['Space_Grotesk'] tracking-tight">
                   {title}
                 </h1>
-                <p className="text-sm text-gray-400 mt-1">{subtitle}</p>
+                <p className="text-sm text-slate-500 mt-1">{subtitle}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/[0.03] border border-white/5">
                 <Layers className={cn("w-4 h-4", accent.text)} />
-                <span className="text-xs text-gray-400">
+                <span className="text-xs text-slate-500">
                   <span className={cn("font-bold", accent.text)}>{enabledCount}</span>
-                  <span className="text-gray-500"> / {optionalModules.length} active</span>
+                  <span className="text-slate-400"> / {optionalModules.length} active</span>
                 </span>
               </div>
             </div>
@@ -140,12 +140,12 @@ export default function SettingsPanel({
             </button>
             <button
               onClick={handleDisableAll}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-medium transition-all border bg-white/[0.03] border-white/10 text-gray-400 hover:text-gray-200 hover:bg-white/5"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-medium transition-all border bg-white/[0.03] border-slate-200 text-slate-500 hover:text-gray-200 hover:bg-slate-50 hover:bg-slate-100"
             >
               <XCircle className="w-3.5 h-3.5" />
               Disable All
             </button>
-            <div className="ml-auto flex items-center gap-2 text-[10px] text-gray-600">
+            <div className="ml-auto flex items-center gap-2 text-[10px] text-slate-400">
               <Zap className="w-3 h-3" />
               Sidebar updates instantly
             </div>
@@ -163,11 +163,11 @@ export default function SettingsPanel({
             transition={{ delay: ci * 0.08 }}
           >
             <div className="flex items-center gap-3 mb-4">
-              <h2 className="text-sm font-bold text-gray-300 uppercase tracking-wider">
+              <h2 className="text-sm font-bold text-slate-700 uppercase tracking-wider">
                 {category}
               </h2>
               <div className="flex-1 h-px bg-gradient-to-r from-white/10 to-transparent" />
-              <span className="text-[10px] text-gray-600 font-mono">
+              <span className="text-[10px] text-slate-400 font-mono">
                 {mods.filter((m) => enabledModules[m.key]).length}/{mods.length}
               </span>
             </div>
@@ -189,7 +189,7 @@ export default function SettingsPanel({
                         "group relative rounded-2xl border transition-all duration-300 overflow-hidden",
                         enabled
                           ? cn("bg-gradient-to-br", accent.gradient, accent.border, accent.glow)
-                          : "bg-white/[0.02] border-white/5 hover:border-white/10"
+                          : "bg-slate-50 border-white/5 hover:border-slate-200"
                       )}
                     >
                       <div className="p-5 flex items-start gap-4">
@@ -198,13 +198,13 @@ export default function SettingsPanel({
                             "w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-all duration-300",
                             enabled
                               ? cn(accent.bg, "border", accent.border)
-                              : "bg-white/5 border border-white/10"
+                              : "bg-slate-50 hover:bg-slate-100 border border-slate-200"
                           )}
                         >
                           <Icon
                             className={cn(
                               "w-5 h-5 transition-colors duration-300",
-                              enabled ? accent.text : "text-gray-500"
+                              enabled ? accent.text : "text-slate-400"
                             )}
                           />
                         </div>
@@ -214,7 +214,7 @@ export default function SettingsPanel({
                             <h3
                               className={cn(
                                 "text-sm font-bold transition-colors duration-300",
-                                enabled ? "text-white" : "text-gray-300"
+                                enabled ? "text-slate-900" : "text-slate-700"
                               )}
                             >
                               {mod.label}
@@ -229,7 +229,7 @@ export default function SettingsPanel({
                               </motion.div>
                             )}
                           </div>
-                          <p className="text-xs text-gray-500 mt-1 leading-relaxed line-clamp-2">
+                          <p className="text-xs text-slate-400 mt-1 leading-relaxed line-clamp-2">
                             {mod.description}
                           </p>
                         </div>
@@ -278,11 +278,11 @@ export default function SettingsPanel({
         className="glass rounded-2xl p-6 border border-white/5"
       >
         <div className="flex items-center gap-3 mb-4">
-          <Shield className="w-5 h-5 text-gray-500" />
-          <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider">
+          <Shield className="w-5 h-5 text-slate-400" />
+          <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wider">
             Core Modules
           </h3>
-          <span className="text-[10px] text-gray-600 bg-white/5 px-2 py-0.5 rounded-full border border-white/10">
+          <span className="text-[10px] text-slate-400 bg-slate-50 hover:bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200">
             Always Active
           </span>
         </div>
@@ -294,17 +294,17 @@ export default function SettingsPanel({
               return (
                 <div
                   key={mod.key}
-                  className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.02] border border-white/5"
+                  className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 border border-white/5"
                 >
                   <Icon className={cn("w-4 h-4", accent.text)} />
-                  <span className="text-xs text-gray-300 font-medium">
+                  <span className="text-xs text-slate-700 font-medium">
                     {mod.label}
                   </span>
                 </div>
               );
             })}
         </div>
-        <p className="text-[10px] text-gray-600 mt-3">
+        <p className="text-[10px] text-slate-400 mt-3">
           Core modules cannot be disabled. They are essential for dashboard operation.
         </p>
       </motion.div>

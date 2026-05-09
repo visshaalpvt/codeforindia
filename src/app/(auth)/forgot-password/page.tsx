@@ -40,7 +40,7 @@ export default function ForgotPasswordPage() {
   const loading = isSubmitting || isLoading;
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0B1020]">
+    <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-white">
       <div className="animate-grid-bg absolute inset-0" />
       <div className="scanline absolute inset-0 pointer-events-none z-10" />
 
@@ -50,16 +50,16 @@ export default function ForgotPasswordPage() {
         transition={{ duration: 0.5, ease: "easeOut" }}
         className="relative z-20 w-full max-w-md px-4"
       >
-        <div className="backdrop-blur-md bg-white/5 border border-cyan-500/20 rounded-2xl p-8 shadow-[0_0_40px_rgba(0,245,255,0.08)]">
+        <div className="backdrop-blur-md bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-8 shadow-[0_0_40px_rgba(0,245,255,0.08)]">
           <div className="flex flex-col items-center mb-8">
             <div className="relative mb-4">
-              <Shield className="w-10 h-10 text-cyan-400" />
-              <div className="absolute inset-0 blur-xl bg-cyan-500/30 rounded-full" />
+              <Shield className="w-10 h-10 text-violet-600" />
+              <div className="absolute inset-0 blur-xl bg-violet-200 rounded-full" />
             </div>
-            <h1 className="text-2xl font-bold text-white font-[family-name:var(--font-sans)] tracking-tight">
+            <h1 className="text-2xl font-bold text-slate-900 font-[family-name:var(--font-sans)] tracking-tight">
               Reset Password
             </h1>
-            <p className="text-sm text-gray-400 mt-1 text-center">
+            <p className="text-sm text-slate-500 mt-1 text-center">
               {sent
                 ? "Check your inbox for the reset link"
                 : "Enter your email to receive a reset link"}
@@ -79,14 +79,14 @@ export default function ForgotPasswordPage() {
               >
                 <CheckCircle2 size={56} className="text-emerald-400" />
               </motion.div>
-              <p className="text-sm text-gray-300 text-center">
+              <p className="text-sm text-slate-700 text-center">
                 Reset link sent to{" "}
-                <span className="text-cyan-400 font-mono">your email</span>.
+                <span className="text-violet-600 font-mono">your email</span>.
                 It expires in 30 minutes.
               </p>
               <Link
                 href="/login"
-                className="mt-2 text-sm text-cyan-400 hover:text-cyan-300 transition-colors"
+                className="mt-2 text-sm text-violet-600 hover:text-violet-700 transition-colors"
               >
                 Back to login
               </Link>
@@ -94,7 +94,7 @@ export default function ForgotPasswordPage() {
           ) : (
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1.5">
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">
                   Email
                 </label>
                 <input
@@ -102,15 +102,15 @@ export default function ForgotPasswordPage() {
                   type="email"
                   placeholder="you@agency.gov"
                   className={cn(
-                    "w-full px-4 py-2.5 rounded-xl bg-white/5 border text-white placeholder-gray-500 outline-none transition-all duration-200",
-                    "focus:border-cyan-500/50 focus:shadow-[0_0_12px_rgba(0,245,255,0.15)]",
+                    "w-full px-4 py-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border text-slate-900 placeholder-gray-500 outline-none transition-all duration-200",
+                    "focus:border-slate-400 focus:shadow-[0_0_12px_rgba(0,245,255,0.15)]",
                     errors.email
                       ? "border-red-500/60 shadow-[0_0_12px_rgba(239,68,68,0.25)]"
-                      : "border-white/10"
+                      : "border-slate-200"
                   )}
                 />
                 {errors.email && (
-                  <p className="mt-1 text-xs text-red-400">{errors.email.message}</p>
+                  <p className="mt-1 text-xs text-red-600">{errors.email.message}</p>
                 )}
               </div>
 
@@ -119,7 +119,7 @@ export default function ForgotPasswordPage() {
                 disabled={loading}
                 className={cn(
                   "w-full py-2.5 rounded-xl font-medium text-sm transition-all duration-200 flex items-center justify-center gap-2",
-                  "bg-cyan-500/20 border border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/30",
+                  "bg-violet-100 border border-slate-400 text-violet-600 hover:bg-violet-200",
                   "disabled:opacity-50 disabled:cursor-not-allowed"
                 )}
               >
@@ -136,11 +136,11 @@ export default function ForgotPasswordPage() {
           )}
 
           {!sent && (
-            <p className="text-center text-sm text-gray-500 mt-6">
+            <p className="text-center text-sm text-slate-400 mt-6">
               Remember your password?{" "}
               <Link
                 href="/login"
-                className="text-cyan-400 hover:text-cyan-300 transition-colors"
+                className="text-violet-600 hover:text-violet-700 transition-colors"
               >
                 Sign in
               </Link>
@@ -148,7 +148,7 @@ export default function ForgotPasswordPage() {
           )}
         </div>
 
-        <p className="text-center text-xs text-gray-600 mt-6">
+        <p className="text-center text-xs text-slate-400 mt-6">
           &copy; {new Date().getFullYear()} AIVENTRA. Restricted access.
         </p>
       </motion.div>

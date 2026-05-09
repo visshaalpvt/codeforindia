@@ -16,10 +16,10 @@ export default function Sidebar({ collapsed, onToggle }: { collapsed: boolean; o
   const { user, logout } = useAuth();
   const { activeDashboard, enabledModules } = useData();
 
-  const accentClass = activeDashboard === "D1" ? "text-cyan-400" : activeDashboard === "D2" ? "text-amber-400" : "text-purple-400";
-  const accentBg = activeDashboard === "D1" ? "bg-cyan-500/10" : activeDashboard === "D2" ? "bg-amber-500/10" : "bg-purple-500/10";
+  const accentClass = activeDashboard === "D1" ? "text-violet-600" : activeDashboard === "D2" ? "text-amber-600" : "text-violet-600";
+  const accentBg = activeDashboard === "D1" ? "bg-violet-50" : activeDashboard === "D2" ? "bg-amber-50" : "bg-violet-50";
   const accentBorder = activeDashboard === "D1" ? "border-cyan-400" : activeDashboard === "D2" ? "border-amber-400" : "border-purple-400";
-  const logoBorder = activeDashboard === "D1" ? "border-cyan-500/50" : activeDashboard === "D2" ? "border-amber-500/50" : "border-purple-500/50";
+  const logoBorder = activeDashboard === "D1" ? "border-slate-400" : activeDashboard === "D2" ? "border-amber-500/50" : "border-purple-500/50";
   const settingsHref = activeDashboard === "D1" ? "/d1/settings" : activeDashboard === "D2" ? "/d2/settings" : "/d3/settings";
 
   // Get all modules for the active dashboard
@@ -32,7 +32,7 @@ export default function Sidebar({ collapsed, onToggle }: { collapsed: boolean; o
 
   return (
     <aside className={cn(
-      "fixed left-0 top-0 h-full z-50 flex flex-col bg-[#0B1020]/95 backdrop-blur border-r border-white/5 transition-all duration-300",
+      "fixed left-0 top-0 h-full z-50 flex flex-col bg-white/95 backdrop-blur border-r border-white/5 transition-all duration-300",
       collapsed ? "w-16" : "w-64"
     )}>
       {/* Logo */}
@@ -57,7 +57,7 @@ export default function Sidebar({ collapsed, onToggle }: { collapsed: boolean; o
       {/* Dashboard Label */}
       {!collapsed && (
         <div className="px-6 py-4">
-          <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.2em]">
+          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">
             {activeDashboard === "D1" ? "Investigation Command" : activeDashboard === "D2" ? "Forensic Science Lab" : "Intelligence Analytics"}
           </p>
         </div>
@@ -84,7 +84,7 @@ export default function Sidebar({ collapsed, onToggle }: { collapsed: boolean; o
                     "flex items-center gap-3 px-4 py-2.5 my-1 rounded-xl transition-all duration-200 group relative",
                     active
                       ? cn(accentBg, "border-l-2", accentBorder, accentClass)
-                      : "text-gray-400 hover:text-white hover:bg-white/5"
+                      : "text-slate-500 hover:text-slate-900 hover:bg-slate-50 hover:bg-slate-100"
                   )}
                   title={item.label}
                 >
@@ -93,7 +93,7 @@ export default function Sidebar({ collapsed, onToggle }: { collapsed: boolean; o
                     <div className="flex items-center justify-between flex-1">
                       <span className="text-sm whitespace-nowrap">{item.label}</span>
                       {!item.isCore && (
-                        <span className={cn("text-[7px] font-bold px-1.5 py-0.5 rounded-full bg-white/5 border border-white/10", accentClass)}>
+                        <span className={cn("text-[7px] font-bold px-1.5 py-0.5 rounded-full bg-slate-50 hover:bg-slate-100 border border-slate-200", accentClass)}>
                           OPT
                         </span>
                       )}
@@ -113,7 +113,7 @@ export default function Sidebar({ collapsed, onToggle }: { collapsed: boolean; o
               "flex items-center gap-3 px-4 py-2.5 my-1 rounded-xl transition-all duration-200",
               pathname === settingsHref
                 ? cn(accentBg, "border-l-2", accentBorder, accentClass)
-                : "text-gray-400 hover:text-white hover:bg-white/5"
+                : "text-slate-500 hover:text-slate-900 hover:bg-slate-50 hover:bg-slate-100"
             )}
             title="Settings"
           >
@@ -137,13 +137,13 @@ export default function Sidebar({ collapsed, onToggle }: { collapsed: boolean; o
               activeDashboard === "D2" ? "from-amber-400 to-orange-600" :
               "from-purple-400 to-indigo-600"
             )}>
-              <User className="w-4 h-4 text-white" />
+              <User className="w-4 h-4 text-slate-900" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm text-white truncate">{user?.name ?? "Guest"}</p>
+              <p className="text-sm text-slate-900 truncate">{user?.name ?? "Guest"}</p>
               <p className={cn("text-xs", accentClass)}>{user?.role ?? "—"}</p>
             </div>
-            <LogOut onClick={logout} className="w-4 h-4 text-gray-500 hover:text-red-400 cursor-pointer transition-colors" />
+            <LogOut onClick={logout} className="w-4 h-4 text-slate-400 hover:text-red-600 cursor-pointer transition-colors" />
           </div>
         ) : (
           <div className="flex flex-col items-center gap-2">
@@ -152,9 +152,9 @@ export default function Sidebar({ collapsed, onToggle }: { collapsed: boolean; o
               activeDashboard === "D2" ? "from-amber-400 to-orange-600" :
               "from-purple-400 to-indigo-600"
             )}>
-              <User className="w-4 h-4 text-white" />
+              <User className="w-4 h-4 text-slate-900" />
             </div>
-            <LogOut onClick={logout} className="w-4 h-4 text-gray-500 hover:text-red-400 cursor-pointer transition-colors" />
+            <LogOut onClick={logout} className="w-4 h-4 text-slate-400 hover:text-red-600 cursor-pointer transition-colors" />
           </div>
         )}
       </div>
@@ -163,7 +163,7 @@ export default function Sidebar({ collapsed, onToggle }: { collapsed: boolean; o
       <button
         onClick={onToggle}
         className={cn(
-          "absolute -right-3 top-20 w-6 h-6 rounded-full bg-[#0B1020] border flex items-center justify-center transition-all",
+          "absolute -right-3 top-20 w-6 h-6 rounded-full bg-white border flex items-center justify-center transition-all",
           accentBorder, accentClass, "hover:scale-110"
         )}
       >

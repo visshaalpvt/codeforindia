@@ -49,10 +49,10 @@ const typeIconMap: Record<EvidenceType, typeof FileText> = {
 };
 
 const custodyColor: Record<CustodyStatus, string> = {
-  Secured: "bg-green-500/20 text-green-400 border-green-500/30",
-  "In Lab": "bg-blue-500/20 text-blue-400 border-blue-500/30",
-  "In Transit": "bg-amber-500/20 text-amber-400 border-amber-500/30",
-  Compromised: "bg-red-500/20 text-red-400 border-red-500/30",
+  Secured: "bg-green-100 text-green-600 border-green-500/30",
+  "In Lab": "bg-blue-100 text-blue-600 border-blue-500/30",
+  "In Transit": "bg-amber-100 text-amber-600 border-amber-500/30",
+  Compromised: "bg-red-100 text-red-600 border-red-500/30",
 };
 
 const stagger = {
@@ -215,8 +215,8 @@ export default function EvidencePage() {
     <div className="space-y-6">
       {/* Page Header */}
       <div>
-        <h1 className="text-2xl font-bold text-white tracking-tight">Evidence Upload System</h1>
-        <p className="text-sm text-gray-400 mt-1">Upload, manage, and analyze digital evidence</p>
+        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Evidence Upload System</h1>
+        <p className="text-sm text-slate-500 mt-1">Upload, manage, and analyze digital evidence</p>
       </div>
 
       {/* Drag & Drop Zone */}
@@ -227,23 +227,23 @@ export default function EvidencePage() {
         className={cn(
           "relative border-2 border-dashed rounded-2xl p-8 text-center transition-all duration-300",
           dragOver
-            ? "border-cyan-400 bg-cyan-500/10 shadow-[0_0_40px_rgba(0,245,255,0.15)]"
-            : "border-cyan-500/30 bg-white/[0.02] hover:border-cyan-500/50 hover:bg-white/[0.04]"
+            ? "border-cyan-400 bg-violet-50 shadow-[0_0_40px_rgba(0,245,255,0.15)]"
+            : "border-slate-300 bg-slate-50 hover:border-slate-400 hover:bg-slate-100"
         )}
       >
         <motion.div
           animate={dragOver ? { scale: 1.05 } : { scale: 1 }}
           className="flex flex-col items-center"
         >
-          <div className="w-16 h-16 rounded-full bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center mb-4">
-            <Upload className="w-7 h-7 text-cyan-400" />
+          <div className="w-16 h-16 rounded-full bg-violet-50 border border-slate-300 flex items-center justify-center mb-4">
+            <Upload className="w-7 h-7 text-violet-600" />
           </div>
-          <h3 className="text-lg font-semibold text-white mb-1">
+          <h3 className="text-lg font-semibold text-slate-900 mb-1">
             {dragOver ? "Drop files here" : "Drag & drop evidence files"}
           </h3>
-          <p className="text-sm text-gray-400 mb-4">
+          <p className="text-sm text-slate-500 mb-4">
             or{" "}
-            <label className="text-cyan-400 cursor-pointer hover:underline">
+            <label className="text-violet-600 cursor-pointer hover:underline">
               browse files
               <input
                 type="file"
@@ -264,9 +264,9 @@ export default function EvidencePage() {
               return (
                 <span
                   key={type.label}
-                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-cyan-500/15 text-xs text-gray-300"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-50 hover:bg-slate-100 border border-slate-200 text-xs text-slate-700"
                 >
-                  <Icon className="w-3 h-3 text-cyan-400" />
+                  <Icon className="w-3 h-3 text-violet-600" />
                   {type.label}
                 </span>
               );
@@ -281,15 +281,15 @@ export default function EvidencePage() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="mt-6 border-t border-cyan-500/10 pt-4"
+              className="mt-6 border-t border-slate-200 pt-4"
             >
               <div className="flex items-center justify-between mb-3">
-                <span className="text-xs text-gray-400 font-medium">
+                <span className="text-xs text-slate-500 font-medium">
                   {uploadQueue.length} file{uploadQueue.length !== 1 ? "s" : ""} selected
                 </span>
                 <button
                   onClick={clearQueue}
-                  className="text-xs text-red-400 hover:text-red-300"
+                  className="text-xs text-red-600 hover:text-red-300"
                 >
                   Clear all
                 </button>
@@ -300,16 +300,16 @@ export default function EvidencePage() {
                     key={`${f.name}-${i}`}
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
-                    className="flex items-center justify-between px-3 py-2 rounded-lg bg-white/5 text-xs text-gray-300"
+                    className="flex items-center justify-between px-3 py-2 rounded-lg bg-slate-50 hover:bg-slate-100 text-xs text-slate-700"
                   >
                     <div className="flex items-center gap-2 truncate">
-                      <File className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                      <File className="w-3.5 h-3.5 text-violet-600 shrink-0" />
                       <span className="truncate">{f.name}</span>
-                      <span className="text-gray-500 shrink-0">({(f.size / 1024 / 1024).toFixed(1)} MB)</span>
+                      <span className="text-slate-400 shrink-0">({(f.size / 1024 / 1024).toFixed(1)} MB)</span>
                     </div>
                     <button
                       onClick={() => removeFromQueue(i)}
-                      className="text-red-400 hover:text-red-300 ml-2 shrink-0"
+                      className="text-red-600 hover:text-red-300 ml-2 shrink-0"
                     >
                       <X className="w-3.5 h-3.5" />
                     </button>
@@ -318,7 +318,7 @@ export default function EvidencePage() {
               </div>
               <button
                 onClick={handleUpload}
-                className="mt-3 w-full py-2 rounded-lg bg-cyan-500/20 border border-cyan-500/40 text-cyan-400 hover:bg-cyan-500/30 text-sm font-medium transition-all"
+                className="mt-3 w-full py-2 rounded-lg bg-violet-100 border border-slate-300 text-violet-600 hover:bg-violet-200 text-sm font-medium transition-all"
               >
                 Upload {uploadQueue.length} file{uploadQueue.length !== 1 ? "s" : ""}
               </button>
@@ -329,27 +329,27 @@ export default function EvidencePage() {
 
       {/* Evidence Library */}
       <div>
-        <h2 className="text-lg font-semibold text-white mb-4">Evidence Library</h2>
+        <h2 className="text-lg font-semibold text-slate-900 mb-4">Evidence Library</h2>
 
         {/* Filters */}
         <div className="glass p-4 mb-4 space-y-3">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <input
               type="text"
               placeholder="Search evidence by name, ID, case, or tags..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white/5 border border-cyan-500/20 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500/50 text-sm"
+              className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-900 placeholder-gray-500 focus:outline-none focus:border-slate-400 text-sm"
             />
           </div>
           <div className="flex flex-wrap gap-3">
             <div className="relative">
-              <SlidersHorizontal className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500 pointer-events-none" />
+              <SlidersHorizontal className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 pointer-events-none" />
               <select
                 value={typeFilter}
                 onChange={(e) => setTypeFilter(e.target.value as EvidenceType | "")}
-                className="appearance-none pl-9 pr-8 py-2 rounded-lg bg-white/5 border border-cyan-500/20 text-gray-300 text-sm focus:outline-none focus:border-cyan-500/50 cursor-pointer min-w-[120px]"
+                className="appearance-none pl-9 pr-8 py-2 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-sm focus:outline-none focus:border-slate-400 cursor-pointer min-w-[120px]"
               >
                 <option value="">All Types</option>
                 {evidenceTypes.map((t) => (
@@ -358,11 +358,11 @@ export default function EvidencePage() {
               </select>
             </div>
             <div className="relative">
-              <FileText className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500 pointer-events-none" />
+              <FileText className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 pointer-events-none" />
               <select
                 value={caseFilter}
                 onChange={(e) => setCaseFilter(e.target.value)}
-                className="appearance-none pl-9 pr-8 py-2 rounded-lg bg-white/5 border border-cyan-500/20 text-gray-300 text-sm focus:outline-none focus:border-cyan-500/50 cursor-pointer min-w-[160px]"
+                className="appearance-none pl-9 pr-8 py-2 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-sm focus:outline-none focus:border-slate-400 cursor-pointer min-w-[160px]"
               >
                 <option value="">All Cases</option>
                 {caseOptions.map((co) => (
@@ -371,11 +371,11 @@ export default function EvidencePage() {
               </select>
             </div>
             <div className="relative">
-              <Tag className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500 pointer-events-none" />
+              <Tag className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 pointer-events-none" />
               <select
                 value={tagFilter}
                 onChange={(e) => setTagFilter(e.target.value)}
-                className="appearance-none pl-9 pr-8 py-2 rounded-lg bg-white/5 border border-cyan-500/20 text-gray-300 text-sm focus:outline-none focus:border-cyan-500/50 cursor-pointer min-w-[130px]"
+                className="appearance-none pl-9 pr-8 py-2 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-sm focus:outline-none focus:border-slate-400 cursor-pointer min-w-[130px]"
               >
                 <option value="">All Tags</option>
                 {allTags.map((t) => (
@@ -384,11 +384,11 @@ export default function EvidencePage() {
               </select>
             </div>
             <div className="relative">
-              <BarChart3 className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500 pointer-events-none" />
+              <BarChart3 className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 pointer-events-none" />
               <select
                 value={classFilter}
                 onChange={(e) => setClassFilter(e.target.value)}
-                className="appearance-none pl-9 pr-8 py-2 rounded-lg bg-white/5 border border-cyan-500/20 text-gray-300 text-sm focus:outline-none focus:border-cyan-500/50 cursor-pointer min-w-[150px]"
+                className="appearance-none pl-9 pr-8 py-2 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-sm focus:outline-none focus:border-slate-400 cursor-pointer min-w-[150px]"
               >
                 <option value="">All Classifications</option>
                 {allClassifications.map((c) => (
@@ -414,25 +414,25 @@ export default function EvidencePage() {
                 variants={fadeUp}
                 onMouseEnter={() => setHoveredId(item.id)}
                 onMouseLeave={() => setHoveredId(null)}
-                className="relative glass rounded-xl p-4 transition-all duration-300 hover:border-cyan-500/30"
+                className="relative glass rounded-xl p-4 transition-all duration-300 hover:border-slate-300"
               >
                 {/* Type Icon */}
-                <div className="w-10 h-10 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-3">
-                  <Icon className="w-5 h-5 text-cyan-400" />
+                <div className="w-10 h-10 rounded-lg bg-violet-50 border border-slate-200 flex items-center justify-center mb-3">
+                  <Icon className="w-5 h-5 text-violet-600" />
                 </div>
 
                 {/* Name + Case */}
-                <h3 className="text-white font-medium text-sm leading-snug mb-1 line-clamp-1">{item.name}</h3>
-                <p className="text-xs text-gray-500 font-mono mb-3">{item.caseId}</p>
+                <h3 className="text-slate-900 font-medium text-sm leading-snug mb-1 line-clamp-1">{item.name}</h3>
+                <p className="text-xs text-slate-400 font-mono mb-3">{item.caseId}</p>
 
                 {/* Meta Row */}
                 <div className="space-y-1 mb-3">
-                  <div className="flex items-center gap-1.5 text-xs text-gray-400">
-                    <HardDrive className="w-3 h-3 text-gray-500" />
+                  <div className="flex items-center gap-1.5 text-xs text-slate-500">
+                    <HardDrive className="w-3 h-3 text-slate-400" />
                     {item.size}
                   </div>
-                  <div className="flex items-center gap-1.5 text-xs text-gray-400">
-                    <Clock className="w-3 h-3 text-gray-500" />
+                  <div className="flex items-center gap-1.5 text-xs text-slate-500">
+                    <Clock className="w-3 h-3 text-slate-400" />
                     {timeAgo(item.uploadedAt)}
                   </div>
                 </div>
@@ -443,13 +443,13 @@ export default function EvidencePage() {
                     {item.tags.slice(0, 3).map((tag) => (
                       <span
                         key={tag}
-                        className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-cyan-500/10 text-cyan-300 border border-cyan-500/20"
+                        className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-violet-50 text-violet-700 border border-slate-200"
                       >
                         {tag}
                       </span>
                     ))}
                     {item.tags.length > 3 && (
-                      <span className="text-[10px] text-gray-500">+{item.tags.length - 3}</span>
+                      <span className="text-[10px] text-slate-400">+{item.tags.length - 3}</span>
                     )}
                   </div>
                 )}
@@ -457,14 +457,14 @@ export default function EvidencePage() {
                 {/* AI Classification */}
                 {item.aiClassification && (
                   <div className="flex items-center gap-1 mb-3">
-                    <BarChart3 className="w-3 h-3 text-purple-400" />
-                    <span className="text-[10px] text-purple-300 font-medium">{item.aiClassification}</span>
+                    <BarChart3 className="w-3 h-3 text-violet-600" />
+                    <span className="text-[10px] text-violet-700 font-medium">{item.aiClassification}</span>
                   </div>
                 )}
 
                 {/* Custody Badge */}
                 <div className="flex items-center gap-1.5">
-                  <Shield className="w-3 h-3 text-gray-500" />
+                  <Shield className="w-3 h-3 text-slate-400" />
                   <span
                     className={cn(
                       "text-[10px] px-1.5 py-0.5 rounded-full border font-medium",
@@ -480,32 +480,32 @@ export default function EvidencePage() {
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="absolute inset-0 rounded-xl bg-[#0B1020]/90 backdrop-blur-sm flex items-center justify-center gap-2"
+                    className="absolute inset-0 rounded-xl bg-white/90 backdrop-blur-sm flex items-center justify-center gap-2"
                   >
                     <button
                       onClick={() => setViewEvidence(item)}
-                      className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-cyan-500/20 border border-cyan-500/40 text-cyan-400 hover:bg-cyan-500/30 text-xs font-medium transition-all"
+                      className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-violet-100 border border-slate-300 text-violet-600 hover:bg-violet-200 text-xs font-medium transition-all"
                     >
                       <Eye className="w-3.5 h-3.5" />
                       View
                     </button>
                     <button
                       onClick={() => alert(`Downloading ${item.name}...\n\nFile download would start in a production environment.`)}
-                      className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-blue-500/20 border border-blue-500/40 text-blue-400 hover:bg-blue-500/30 text-xs font-medium transition-all"
+                      className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-blue-100 border border-slate-300 text-blue-600 hover:bg-blue-200 text-xs font-medium transition-all"
                     >
                       <Download className="w-3.5 h-3.5" />
                       Download
                     </button>
                     <button
                       onClick={() => router.push(`/autopsy?caseId=${item.caseId}`)}
-                      className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-purple-500/20 border border-purple-500/40 text-purple-400 hover:bg-purple-500/30 text-xs font-medium transition-all"
+                      className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-violet-100 border border-slate-300 text-violet-600 hover:bg-violet-200 text-xs font-medium transition-all"
                     >
                       <BarChart3 className="w-3.5 h-3.5" />
                       Analyze
                     </button>
                     <button
                       onClick={() => handleDelete(item.id)}
-                      className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-red-500/20 border border-red-500/40 text-red-400 hover:bg-red-500/30 text-xs font-medium transition-all"
+                      className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-red-100 border border-slate-300 text-red-600 hover:bg-red-200 text-xs font-medium transition-all"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -516,10 +516,10 @@ export default function EvidencePage() {
           })}
 
           {filtered.length === 0 && (
-            <div className="col-span-full flex flex-col items-center justify-center py-20 text-gray-500">
+            <div className="col-span-full flex flex-col items-center justify-center py-20 text-slate-400">
               <Upload className="w-12 h-12 mb-3 opacity-40" />
               <p className="text-sm">No evidence matches your filters</p>
-              <p className="text-xs text-gray-600 mt-1">Try adjusting the search or filter criteria</p>
+              <p className="text-xs text-slate-400 mt-1">Try adjusting the search or filter criteria</p>
             </div>
           )}
         </motion.div>
@@ -532,7 +532,7 @@ export default function EvidencePage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm"
             onClick={() => setShowUploadDialog(false)}
           >
             <motion.div
@@ -540,16 +540,16 @@ export default function EvidencePage() {
               animate={{ scale: 1 }}
               exit={{ scale: 0.95 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-[#111827] border border-cyan-500/30 rounded-2xl p-6 w-full max-w-md shadow-2xl"
+              className="bg-white border border-slate-300 rounded-2xl p-6 w-full max-w-md shadow-2xl"
             >
-              <h3 className="text-lg font-semibold text-white mb-4">Select Case for Upload</h3>
-              <p className="text-sm text-gray-400 mb-4">
+              <h3 className="text-lg font-semibold text-slate-900 mb-4">Select Case for Upload</h3>
+              <p className="text-sm text-slate-500 mb-4">
                 {uploadQueue.length} file{uploadQueue.length !== 1 ? "s" : ""} will be uploaded to:
               </p>
               <select
                 value={uploadCaseId}
                 onChange={(e) => setUploadCaseId(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-cyan-500/20 text-white focus:outline-none focus:border-cyan-500/50 mb-4"
+                className="w-full px-4 py-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-900 focus:outline-none focus:border-slate-400 mb-4"
               >
                 {cases.map((c) => (
                   <option key={c.id} value={c.id}>{c.id} — {c.title}</option>
@@ -558,13 +558,13 @@ export default function EvidencePage() {
               <div className="flex gap-3">
                 <button
                   onClick={() => setShowUploadDialog(false)}
-                  className="flex-1 py-2 rounded-xl bg-white/5 border border-white/10 text-gray-300 hover:bg-white/10 text-sm transition-all"
+                  className="flex-1 py-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-100 text-sm transition-all"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={confirmUpload}
-                  className="flex-1 py-2 rounded-xl bg-cyan-500/20 border border-cyan-500/40 text-cyan-400 hover:bg-cyan-500/30 text-sm font-medium transition-all"
+                  className="flex-1 py-2 rounded-xl bg-violet-100 border border-slate-300 text-violet-600 hover:bg-violet-200 text-sm font-medium transition-all"
                 >
                   Upload to Case
                 </button>
@@ -581,7 +581,7 @@ export default function EvidencePage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm"
             onClick={() => setViewEvidence(null)}
           >
             <motion.div
@@ -589,30 +589,30 @@ export default function EvidencePage() {
               animate={{ scale: 1 }}
               exit={{ scale: 0.95 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-[#111827] border border-cyan-500/30 rounded-2xl p-6 w-full max-w-lg shadow-2xl"
+              className="bg-white border border-slate-300 rounded-2xl p-6 w-full max-w-lg shadow-2xl"
             >
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-white">{viewEvidence.name}</h3>
-                <button onClick={() => setViewEvidence(null)} className="text-gray-400 hover:text-white">
+                <h3 className="text-lg font-semibold text-slate-900">{viewEvidence.name}</h3>
+                <button onClick={() => setViewEvidence(null)} className="text-slate-500 hover:text-slate-900">
                   <X className="w-5 h-5" />
                 </button>
               </div>
               <div className="space-y-3 text-sm">
-                <div className="flex justify-between"><span className="text-gray-400">ID</span><span className="text-white font-mono">{viewEvidence.id}</span></div>
-                <div className="flex justify-between"><span className="text-gray-400">Case</span><span className="text-white">{viewEvidence.caseId}</span></div>
-                <div className="flex justify-between"><span className="text-gray-400">Type</span><span className="text-white">{viewEvidence.type}</span></div>
-                <div className="flex justify-between"><span className="text-gray-400">Size</span><span className="text-white">{viewEvidence.size}</span></div>
-                <div className="flex justify-between"><span className="text-gray-400">Custody</span><span className="text-white">{viewEvidence.custodyStatus}</span></div>
-                <div className="flex justify-between"><span className="text-gray-400">Uploaded</span><span className="text-white">{formatDate(viewEvidence.uploadedAt)}</span></div>
+                <div className="flex justify-between"><span className="text-slate-500">ID</span><span className="text-slate-900 font-mono">{viewEvidence.id}</span></div>
+                <div className="flex justify-between"><span className="text-slate-500">Case</span><span className="text-slate-900">{viewEvidence.caseId}</span></div>
+                <div className="flex justify-between"><span className="text-slate-500">Type</span><span className="text-slate-900">{viewEvidence.type}</span></div>
+                <div className="flex justify-between"><span className="text-slate-500">Size</span><span className="text-slate-900">{viewEvidence.size}</span></div>
+                <div className="flex justify-between"><span className="text-slate-500">Custody</span><span className="text-slate-900">{viewEvidence.custodyStatus}</span></div>
+                <div className="flex justify-between"><span className="text-slate-500">Uploaded</span><span className="text-slate-900">{formatDate(viewEvidence.uploadedAt)}</span></div>
                 {viewEvidence.aiClassification && (
-                  <div className="flex justify-between"><span className="text-gray-400">AI Classification</span><span className="text-purple-300">{viewEvidence.aiClassification}</span></div>
+                  <div className="flex justify-between"><span className="text-slate-500">AI Classification</span><span className="text-violet-700">{viewEvidence.aiClassification}</span></div>
                 )}
                 {viewEvidence.tags.length > 0 && (
                   <div className="flex justify-between items-start gap-2">
-                    <span className="text-gray-400 shrink-0">Tags</span>
+                    <span className="text-slate-500 shrink-0">Tags</span>
                     <div className="flex flex-wrap gap-1 justify-end">
                       {viewEvidence.tags.map(t => (
-                        <span key={t} className="px-2 py-0.5 rounded text-[10px] bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">{t}</span>
+                        <span key={t} className="px-2 py-0.5 rounded text-[10px] bg-violet-50 text-violet-700 border border-slate-200">{t}</span>
                       ))}
                     </div>
                   </div>

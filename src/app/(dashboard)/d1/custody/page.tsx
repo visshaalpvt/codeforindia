@@ -22,10 +22,10 @@ const typeIcon: Record<EvidenceType, React.ElementType> = {
 };
 
 const statusStyle: Record<CustodyStatus, string> = {
-  Secured: "text-green-400 border-green-500/30 bg-green-500/10",
-  "In Lab": "text-blue-400 border-blue-500/30 bg-blue-500/10",
-  "In Transit": "text-amber-400 border-amber-500/30 bg-amber-500/10",
-  Compromised: "text-red-400 border-red-500/30 bg-red-500/10",
+  Secured: "text-green-600 border-green-500/30 bg-green-500/10",
+  "In Lab": "text-blue-600 border-blue-500/30 bg-blue-500/10",
+  "In Transit": "text-amber-600 border-amber-500/30 bg-amber-50",
+  Compromised: "text-red-600 border-red-500/30 bg-red-500/10",
 };
 
 const containerVariants = {
@@ -55,21 +55,21 @@ function EvidenceCard({
       className={cn(
         "flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all",
         selected
-          ? "border-cyan-500/40 bg-cyan-500/10"
-          : "border-white/5 bg-white/[0.02] hover:bg-white/5 hover:border-white/10",
+          ? "border-slate-300 bg-violet-50"
+          : "border-white/5 bg-slate-50 hover:bg-slate-50 hover:bg-slate-100 hover:border-slate-200",
       )}
     >
       <div className={cn(
         "p-2 rounded-lg shrink-0",
-        selected ? "bg-cyan-500/20 text-cyan-400" : "bg-white/5 text-gray-400",
+        selected ? "bg-violet-100 text-violet-600" : "bg-slate-50 hover:bg-slate-100 text-slate-500",
       )}>
         <Icon className="w-4 h-4" />
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-semibold truncate">{evidence.name}</p>
         <div className="flex items-center gap-2 mt-0.5">
-          <span className="text-[10px] font-mono text-cyan-400">{evidence.id}</span>
-          <span className="text-[10px] text-gray-500">{evidence.size}</span>
+          <span className="text-[10px] font-mono text-violet-600">{evidence.id}</span>
+          <span className="text-[10px] text-slate-400">{evidence.size}</span>
         </div>
       </div>
       <span className={cn(
@@ -86,14 +86,14 @@ function getTimelineDotColor(action: string): string {
   const lower = action.toLowerCase();
   if (lower.includes("collect") || lower.includes("secured")) return "bg-green-500 border-green-500/40";
   if (lower.includes("transfer")) return "bg-amber-500 border-amber-500/40";
-  if (lower.includes("lab") || lower.includes("analyz") || lower.includes("analysis")) return "bg-blue-500 border-blue-500/40";
-  return "bg-cyan-500 border-cyan-500/40";
+  if (lower.includes("lab") || lower.includes("analyz") || lower.includes("analysis")) return "bg-blue-500 border-slate-300";
+  return "bg-cyan-500 border-slate-300";
 }
 
 function ChainTimeline({ records }: { records: CustodyRecord[] }) {
   if (records.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-500 text-sm">
+      <div className="text-center py-8 text-slate-400 text-sm">
         No custody records for this evidence.
       </div>
     );
@@ -116,8 +116,8 @@ function ChainTimeline({ records }: { records: CustodyRecord[] }) {
               getTimelineDotColor(record.action),
             )}>
               {record.verified
-                ? <CheckCircle className="w-3 h-3 text-green-400" />
-                : <XCircle className="w-3 h-3 text-red-400" />
+                ? <CheckCircle className="w-3 h-3 text-green-600" />
+                : <XCircle className="w-3 h-3 text-red-600" />
               }
             </div>
             <div className="backdrop-blur-sm bg-white/[0.03] border border-white/5 rounded-xl p-3">
@@ -125,7 +125,7 @@ function ChainTimeline({ records }: { records: CustodyRecord[] }) {
                 <p className="text-sm font-semibold">{record.action}</p>
                 <span className={cn(
                   "flex items-center gap-1 text-[10px] font-medium",
-                  record.verified ? "text-green-400" : "text-red-400",
+                  record.verified ? "text-green-600" : "text-red-600",
                 )}>
                   {record.verified
                     ? <><CheckCircle className="w-3 h-3" /> Verified</>
@@ -133,12 +133,12 @@ function ChainTimeline({ records }: { records: CustodyRecord[] }) {
                   }
                 </span>
               </div>
-              <div className="flex items-center gap-2 mt-1.5 text-xs text-gray-400">
+              <div className="flex items-center gap-2 mt-1.5 text-xs text-slate-500">
                 <UserCheck className="w-3 h-3 shrink-0" />
                 <span>{record.person}</span>
-                <span className="text-gray-600">({record.role})</span>
+                <span className="text-slate-400">({record.role})</span>
               </div>
-              <div className="flex items-center gap-3 mt-1 text-[11px] text-gray-500">
+              <div className="flex items-center gap-3 mt-1 text-[11px] text-slate-400">
                 <span className="flex items-center gap-1">
                   <Clock className="w-3 h-3" />
                   {formatDate(record.timestamp)} {formatTime(record.timestamp)}
@@ -146,7 +146,7 @@ function ChainTimeline({ records }: { records: CustodyRecord[] }) {
                 <span>{record.location}</span>
               </div>
               {record.signature && (
-                <p className="mt-1 text-[10px] text-gray-600 font-mono">Sig: {record.signature}</p>
+                <p className="mt-1 text-[10px] text-slate-400 font-mono">Sig: {record.signature}</p>
               )}
             </div>
           </motion.div>
@@ -159,7 +159,7 @@ function ChainTimeline({ records }: { records: CustodyRecord[] }) {
 function AccessLogsTable({ records }: { records: CustodyRecord[] }) {
   if (records.length === 0) {
     return (
-      <div className="text-center py-6 text-gray-500 text-sm">
+      <div className="text-center py-6 text-slate-400 text-sm">
         No access logs available.
       </div>
     );
@@ -169,7 +169,7 @@ function AccessLogsTable({ records }: { records: CustodyRecord[] }) {
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
-          <tr className="text-left text-gray-500 text-xs uppercase tracking-wider border-b border-white/5">
+          <tr className="text-left text-slate-400 text-xs uppercase tracking-wider border-b border-white/5">
             <th className="pb-2 font-medium">Timestamp</th>
             <th className="pb-2 font-medium">User</th>
             <th className="pb-2 font-medium">Role</th>
@@ -185,19 +185,19 @@ function AccessLogsTable({ records }: { records: CustodyRecord[] }) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: idx * 0.04 }}
-              className="border-b border-white/[0.02] hover:bg-white/[0.02]"
+              className="border-b border-white/[0.02] hover:bg-slate-50"
             >
-              <td className="py-2.5 pr-3 text-[11px] font-mono text-gray-400 whitespace-nowrap">
+              <td className="py-2.5 pr-3 text-[11px] font-mono text-slate-500 whitespace-nowrap">
                 {formatDate(record.timestamp)} {formatTime(record.timestamp)}
               </td>
               <td className="py-2.5 pr-3 text-xs font-medium">{record.person}</td>
-              <td className="py-2.5 pr-3 text-xs text-gray-400">{record.role}</td>
+              <td className="py-2.5 pr-3 text-xs text-slate-500">{record.role}</td>
               <td className="py-2.5 pr-3 text-xs">{record.action}</td>
-              <td className="py-2.5 pr-3 text-[11px] font-mono text-cyan-400">{record.evidenceId}</td>
+              <td className="py-2.5 pr-3 text-[11px] font-mono text-violet-600">{record.evidenceId}</td>
               <td className="py-2.5">
                 {record.verified
-                  ? <CheckCircle className="w-4 h-4 text-green-400" />
-                  : <XCircle className="w-4 h-4 text-red-400" />
+                  ? <CheckCircle className="w-4 h-4 text-green-600" />
+                  : <XCircle className="w-4 h-4 text-red-600" />
                 }
               </td>
             </motion.tr>
@@ -225,7 +225,7 @@ function AlertCard({ icon: Icon, title, description, color }: {
       <Icon className="w-5 h-5 shrink-0 mt-0.5" />
       <div>
         <p className="text-sm font-semibold">{title}</p>
-        <p className="text-xs text-gray-400 mt-1">{description}</p>
+        <p className="text-xs text-slate-500 mt-1">{description}</p>
       </div>
     </motion.div>
   );
@@ -275,7 +275,7 @@ export default function CustodyPage() {
         icon: AlertTriangle,
         title: "Evidence #E-004 accessed outside authorized hours",
         description: "Access attempt logged at 03:15 AM on Jan 15, 2025. Investigation recommended.",
-        color: "border-red-500/40 bg-red-500/10",
+        color: "border-slate-300 bg-red-500/10",
       });
     }
     const unverified = custodyRecords.filter((r) => !r.verified);
@@ -284,7 +284,7 @@ export default function CustodyPage() {
         icon: ShieldOff,
         title: "Unauthorized access attempt logged",
         description: `${unverified.length} unverified custody record(s) detected for ${selectedId}.`,
-        color: "border-amber-500/40 bg-amber-500/10",
+        color: "border-amber-500/40 bg-amber-50",
       });
     }
     return alerts;
@@ -307,7 +307,7 @@ export default function CustodyPage() {
         <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
           Evidence Integrity & Chain of Custody
         </h1>
-        <p className="text-sm text-gray-400 mt-1">
+        <p className="text-sm text-slate-500 mt-1">
           Track, verify, and audit evidence handling across all cases.
         </p>
       </motion.div>
@@ -319,17 +319,17 @@ export default function CustodyPage() {
         className="grid grid-cols-2 md:grid-cols-4 gap-4"
       >
         {[
-          { label: "Total Evidence", value: evidenceStats.total, color: "text-cyan-400" },
-          { label: "Secured", value: evidenceStats.secured, color: "text-green-400" },
-          { label: "In Lab / Transit", value: evidenceStats.inLab + evidenceStats.inTransit, color: "text-amber-400" },
-          { label: "Compromised", value: evidenceStats.compromised, color: "text-red-400" },
+          { label: "Total Evidence", value: evidenceStats.total, color: "text-violet-600" },
+          { label: "Secured", value: evidenceStats.secured, color: "text-green-600" },
+          { label: "In Lab / Transit", value: evidenceStats.inLab + evidenceStats.inTransit, color: "text-amber-600" },
+          { label: "Compromised", value: evidenceStats.compromised, color: "text-red-600" },
         ].map((stat) => (
           <motion.div
             key={stat.label}
             variants={itemVariants}
-            className="backdrop-blur-md bg-white/5 border border-cyan-500/20 rounded-2xl p-4"
+            className="backdrop-blur-md bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-4"
           >
-            <p className="text-xs text-gray-400 uppercase tracking-wider">{stat.label}</p>
+            <p className="text-xs text-slate-500 uppercase tracking-wider">{stat.label}</p>
             <p className={cn("text-2xl font-bold mt-1 font-sans", stat.color)}>{stat.value}</p>
           </motion.div>
         ))}
@@ -340,11 +340,11 @@ export default function CustodyPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="backdrop-blur-md bg-white/5 border border-cyan-500/20 rounded-2xl p-4 md:p-6"
+            className="backdrop-blur-md bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-4 md:p-6"
           >
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">Evidence Items</h2>
-              <Search className="w-4 h-4 text-gray-500" />
+              <h2 className="text-sm font-semibold text-slate-700 uppercase tracking-wider">Evidence Items</h2>
+              <Search className="w-4 h-4 text-slate-400" />
             </div>
             <motion.div
               variants={containerVariants}
@@ -371,14 +371,14 @@ export default function CustodyPage() {
                 key={selectedId}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="backdrop-blur-md bg-white/5 border border-cyan-500/20 rounded-2xl p-4 md:p-6"
+                className="backdrop-blur-md bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-4 md:p-6"
               >
                   <div className="flex items-center justify-between mb-4">
                     <div>
-                      <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">
+                      <h2 className="text-sm font-semibold text-slate-700 uppercase tracking-wider">
                         Chain of Custody
                       </h2>
-                      <p className="text-xs text-gray-500 mt-0.5">
+                      <p className="text-xs text-slate-400 mt-0.5">
                         {selectedEvidence.name} &middot; {selectedEvidence.id}
                       </p>
                     </div>
@@ -386,8 +386,8 @@ export default function CustodyPage() {
                       <button
                         onClick={() => setShowAddForm(!showAddForm)}
                         className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-medium
-                          bg-cyan-500/10 text-cyan-400 border border-cyan-500/20
-                          hover:bg-cyan-500/20 transition-colors"
+                          bg-violet-50 text-violet-600 border border-slate-200
+                          hover:bg-violet-100 transition-colors"
                       >
                         Add Record
                       </button>
@@ -404,37 +404,37 @@ export default function CustodyPage() {
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: "auto" }}
                       exit={{ opacity: 0, height: 0 }}
-                      className="mb-4 p-4 rounded-xl bg-white/[0.03] border border-white/10 space-y-3"
+                      className="mb-4 p-4 rounded-xl bg-white/[0.03] border border-slate-200 space-y-3"
                     >
                       <input
                         type="text"
                         placeholder="Person name"
                         value={formPerson}
                         onChange={(e) => setFormPerson(e.target.value)}
-                        className="w-full px-3 py-2 rounded-lg text-sm bg-white/5 border border-white/10
-                          text-gray-200 placeholder-gray-600 focus:outline-none focus:border-cyan-500/50"
+                        className="w-full px-3 py-2 rounded-lg text-sm bg-slate-50 hover:bg-slate-100 border border-slate-200
+                          text-gray-200 placeholder-gray-600 focus:outline-none focus:border-slate-400"
                       />
                       <input
                         type="text"
                         placeholder="Action (e.g. Transferred to Lab)"
                         value={formAction}
                         onChange={(e) => setFormAction(e.target.value)}
-                        className="w-full px-3 py-2 rounded-lg text-sm bg-white/5 border border-white/10
-                          text-gray-200 placeholder-gray-600 focus:outline-none focus:border-cyan-500/50"
+                        className="w-full px-3 py-2 rounded-lg text-sm bg-slate-50 hover:bg-slate-100 border border-slate-200
+                          text-gray-200 placeholder-gray-600 focus:outline-none focus:border-slate-400"
                       />
                       <input
                         type="text"
                         placeholder="Location"
                         value={formLocation}
                         onChange={(e) => setFormLocation(e.target.value)}
-                        className="w-full px-3 py-2 rounded-lg text-sm bg-white/5 border border-white/10
-                          text-gray-200 placeholder-gray-600 focus:outline-none focus:border-cyan-500/50"
+                        className="w-full px-3 py-2 rounded-lg text-sm bg-slate-50 hover:bg-slate-100 border border-slate-200
+                          text-gray-200 placeholder-gray-600 focus:outline-none focus:border-slate-400"
                       />
                       <select
                         value={formRole}
                         onChange={(e) => setFormRole(e.target.value as Role)}
-                        className="w-full px-3 py-2 rounded-lg text-sm bg-white/5 border border-white/10
-                          text-gray-200 focus:outline-none focus:border-cyan-500/50"
+                        className="w-full px-3 py-2 rounded-lg text-sm bg-slate-50 hover:bg-slate-100 border border-slate-200
+                          text-gray-200 focus:outline-none focus:border-slate-400"
                       >
                         <option value="Investigator">Investigator</option>
                         <option value="Forensic Analyst">Forensic Analyst</option>
@@ -444,8 +444,8 @@ export default function CustodyPage() {
                       <div className="flex gap-2">
                         <button
                           onClick={() => setShowAddForm(false)}
-                          className="flex-1 px-3 py-2 rounded-lg text-xs font-medium border border-white/10
-                            text-gray-400 hover:bg-white/5 transition-colors"
+                          className="flex-1 px-3 py-2 rounded-lg text-xs font-medium border border-slate-200
+                            text-slate-500 hover:bg-slate-50 hover:bg-slate-100 transition-colors"
                         >
                           Cancel
                         </button>
@@ -453,8 +453,8 @@ export default function CustodyPage() {
                           onClick={handleAddRecord}
                           disabled={!formPerson.trim() || !formAction.trim() || !formLocation.trim()}
                           className="flex-1 px-3 py-2 rounded-lg text-xs font-medium
-                            bg-cyan-500/20 text-cyan-400 border border-cyan-500/30
-                            hover:bg-cyan-500/30 transition-colors
+                            bg-violet-100 text-violet-600 border border-slate-300
+                            hover:bg-violet-200 transition-colors
                             disabled:opacity-40 disabled:cursor-not-allowed"
                         >
                           Save Record
@@ -468,13 +468,13 @@ export default function CustodyPage() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="backdrop-blur-md bg-white/5 border border-cyan-500/20 rounded-2xl p-4 md:p-6"
+                className="backdrop-blur-md bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-4 md:p-6"
               >
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">
+                  <h2 className="text-sm font-semibold text-slate-700 uppercase tracking-wider">
                     Access Logs
                   </h2>
-                  <FileDigit className="w-4 h-4 text-gray-500" />
+                  <FileDigit className="w-4 h-4 text-slate-400" />
                 </div>
                 <AccessLogsTable records={custodyRecords} />
               </motion.div>
@@ -485,7 +485,7 @@ export default function CustodyPage() {
                   animate={{ opacity: 1, y: 0 }}
                   className="space-y-3"
                 >
-                  <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">
+                  <h2 className="text-sm font-semibold text-slate-700 uppercase tracking-wider">
                     Alerts
                   </h2>
                   <motion.div

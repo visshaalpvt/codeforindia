@@ -15,9 +15,9 @@ const dashboards = [
     description: "Field operations, evidence management, and real-time situational awareness.",
     icon: Shield,
     color: "cyan",
-    accent: "text-cyan-400",
-    bg: "bg-cyan-500/10",
-    border: "border-cyan-500/20",
+    accent: "text-violet-600",
+    bg: "bg-violet-50",
+    border: "border-slate-200",
     glow: "shadow-[0_0_20px_rgba(6,182,212,0.15)]",
     modules: "11 Modules",
     tags: ["Field Ops", "Evidence", "Real-time"],
@@ -29,8 +29,8 @@ const dashboards = [
     description: "AI-powered autopsy analysis, TOD estimation, and laboratory sciences.",
     icon: Microscope,
     color: "amber",
-    accent: "text-amber-400",
-    bg: "bg-amber-500/10",
+    accent: "text-amber-600",
+    bg: "bg-amber-50",
     border: "border-amber-500/20",
     glow: "shadow-[0_0_20px_rgba(245,158,11,0.15)]",
     modules: "11 Modules",
@@ -43,9 +43,9 @@ const dashboards = [
     description: "Pattern recognition, risk engine, behavioral profiling, and link analysis.",
     icon: Brain,
     color: "purple",
-    accent: "text-purple-400",
-    bg: "bg-purple-500/10",
-    border: "border-purple-500/20",
+    accent: "text-violet-600",
+    bg: "bg-violet-50",
+    border: "border-slate-200",
     glow: "shadow-[0_0_20px_rgba(139,92,246,0.15)]",
     modules: "11 Modules",
     tags: ["Patterns", "Risk Engine", "AI Summary"],
@@ -67,7 +67,7 @@ export default function SelectDashboardPage() {
   const activeAlerts = anomalies.filter(a => a.status === "Unresolved").length;
 
   return (
-    <div className="min-h-screen bg-[#0B1020] flex flex-col items-center justify-center p-6 relative overflow-hidden">
+    <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6 relative overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(6,182,212,0.05),transparent_50%)]" />
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -83,15 +83,15 @@ export default function SelectDashboardPage() {
         className="text-center mb-12 relative z-10"
       >
         <div className="flex items-center justify-center gap-3 mb-4">
-          <div className="w-12 h-12 rounded-xl bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.3)]">
-            <Shield className="w-7 h-7 text-cyan-400" />
+          <div className="w-12 h-12 rounded-xl bg-violet-100 border border-slate-300 flex items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.3)]">
+            <Shield className="w-7 h-7 text-violet-600" />
           </div>
-          <h1 className="text-4xl font-bold text-white tracking-tighter font-['Space_Grotesk']">
+          <h1 className="text-4xl font-bold text-slate-900 tracking-tighter font-['Space_Grotesk']">
             AIVENTRA
           </h1>
         </div>
-        <p className="text-gray-400 text-lg max-w-lg mx-auto">
-          Welcome back, <span className="text-cyan-400 font-semibold">{user?.name || "Officer"}</span>. 
+        <p className="text-slate-500 text-lg max-w-lg mx-auto">
+          Welcome back, <span className="text-violet-600 font-semibold">{user?.name || "Officer"}</span>. 
           Select your specialized workspace to begin analysis.
         </p>
       </motion.div>
@@ -115,16 +115,16 @@ export default function SelectDashboardPage() {
               <dash.icon className={cn("w-8 h-8", dash.accent)} />
             </div>
 
-            <h2 className="text-2xl font-bold text-white mb-3 font-['Space_Grotesk'] tracking-tight group-hover:text-cyan-400 transition-colors">
+            <h2 className="text-2xl font-bold text-slate-900 mb-3 font-['Space_Grotesk'] tracking-tight group-hover:text-violet-600 transition-colors">
               {dash.title}
             </h2>
-            <p className="text-gray-400 text-sm leading-relaxed mb-8 h-12 overflow-hidden">
+            <p className="text-slate-500 text-sm leading-relaxed mb-8 h-12 overflow-hidden">
               {dash.description}
             </p>
 
             <div className="flex flex-wrap gap-2 mb-8">
               {dash.tags.map(tag => (
-                <span key={tag} className={cn("text-[10px] uppercase tracking-widest font-bold px-2 py-1 rounded-md bg-white/5 border border-white/10 text-gray-400")}>
+                <span key={tag} className={cn("text-[10px] uppercase tracking-widest font-bold px-2 py-1 rounded-md bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-500")}>
                   {tag}
                 </span>
               ))}
@@ -144,7 +144,7 @@ export default function SelectDashboardPage() {
               (dash.id === "D2" && user?.role === "Lab Scientist") ||
               (dash.id === "D3" && user?.role === "Intelligence Analyst") ||
               (user?.role === "Admin")) && (
-              <div className="absolute -top-3 -right-3 px-3 py-1 rounded-full bg-cyan-500 text-[10px] font-bold text-white shadow-lg border border-white/20">
+              <div className="absolute -top-3 -right-3 px-3 py-1 rounded-full bg-cyan-500 text-[10px] font-bold text-slate-900 shadow-lg border border-slate-300">
                 RECOMMENDED
               </div>
             )}
@@ -157,27 +157,27 @@ export default function SelectDashboardPage() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
-        className="mt-16 w-full max-w-4xl px-8 py-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md flex flex-wrap items-center justify-between gap-6"
+        className="mt-16 w-full max-w-4xl px-8 py-4 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200 backdrop-blur-md flex flex-wrap items-center justify-between gap-6"
       >
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 text-red-400" />
-            <span className="text-xs text-gray-400"><span className="text-white font-bold">{activeAlerts}</span> Active Alerts</span>
+            <AlertCircle className="w-4 h-4 text-red-600" />
+            <span className="text-xs text-slate-500"><span className="text-slate-900 font-bold">{activeAlerts}</span> Active Alerts</span>
           </div>
-          <div className="h-4 w-px bg-white/10" />
+          <div className="h-4 w-px bg-slate-100" />
           <div className="flex items-center gap-2">
-            <Activity className="w-4 h-4 text-green-400" />
-            <span className="text-xs text-gray-400"><span className="text-white font-bold">82/100</span> Risk Score</span>
+            <Activity className="w-4 h-4 text-green-600" />
+            <span className="text-xs text-slate-500"><span className="text-slate-900 font-bold">82/100</span> Risk Score</span>
           </div>
-          <div className="h-4 w-px bg-white/10" />
+          <div className="h-4 w-px bg-slate-100" />
           <div className="flex items-center gap-2">
-            <Zap className="w-4 h-4 text-cyan-400" />
-            <span className="text-xs text-gray-400"><span className="text-white font-bold">{activeSensors}/{sensors.length}</span> Sensors Online</span>
+            <Zap className="w-4 h-4 text-violet-600" />
+            <span className="text-xs text-slate-500"><span className="text-slate-900 font-bold">{activeSensors}/{sensors.length}</span> Sensors Online</span>
           </div>
         </div>
         
-        <div className="text-[10px] font-mono text-gray-500 tracking-widest uppercase">
-          AIVENTRA System Status: <span className="text-green-400">Stable</span>
+        <div className="text-[10px] font-mono text-slate-400 tracking-widest uppercase">
+          AIVENTRA System Status: <span className="text-green-600">Stable</span>
         </div>
       </motion.div>
     </div>

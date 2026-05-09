@@ -20,10 +20,10 @@ const FORENSIC_TERMS = [
 
 
 const SEVERITY_COLORS: Record<string, { border: string; bg: string; text: string; accent: string }> = {
-  critical: { border: "border-red-500/30", bg: "bg-red-500/5", text: "text-red-400", accent: "bg-red-500/20" },
-  high: { border: "border-amber-500/30", bg: "bg-amber-500/5", text: "text-amber-400", accent: "bg-amber-500/20" },
+  critical: { border: "border-red-500/30", bg: "bg-red-500/5", text: "text-red-600", accent: "bg-red-100" },
+  high: { border: "border-amber-500/30", bg: "bg-amber-500/5", text: "text-amber-600", accent: "bg-amber-100" },
   medium: { border: "border-yellow-500/30", bg: "bg-yellow-500/5", text: "text-yellow-400", accent: "bg-yellow-500/20" },
-  low: { border: "border-green-500/30", bg: "bg-green-500/5", text: "text-green-400", accent: "bg-green-500/20" },
+  low: { border: "border-green-500/30", bg: "bg-green-500/5", text: "text-green-600", accent: "bg-green-100" },
 };
 
 function highlightTerms(text: string, searchQuery: string): React.ReactNode[] {
@@ -64,7 +64,7 @@ function highlightTerms(text: string, searchQuery: string): React.ReactNode[] {
           key={`${li}-h${h.index}`}
           className={cn(
             "rounded px-0.5",
-            h.type === "forensic" ? "bg-yellow-500/30 text-yellow-200" : "bg-cyan-500/30 text-cyan-200",
+            h.type === "forensic" ? "bg-yellow-500/30 text-yellow-200" : "bg-violet-200 text-cyan-200",
           )}
         >
           {highlighted}
@@ -80,9 +80,9 @@ function highlightTerms(text: string, searchQuery: string): React.ReactNode[] {
 }
 
 function ConfidenceBadge({ confidence }: { confidence: number }) {
-  const color = confidence >= 90 ? "text-green-400 border-green-500/30 bg-green-500/10"
-    : confidence >= 75 ? "text-amber-400 border-amber-500/30 bg-amber-500/10"
-    : "text-red-400 border-red-500/30 bg-red-500/10";
+  const color = confidence >= 90 ? "text-green-600 border-green-500/30 bg-green-500/10"
+    : confidence >= 75 ? "text-amber-600 border-amber-500/30 bg-amber-50"
+    : "text-red-600 border-red-500/30 bg-red-500/10";
   return (
     <span className={cn("px-2 py-0.5 rounded-full text-[10px] font-bold border", color)}>
       {confidence}% confidence
@@ -109,7 +109,7 @@ function InsightCard({
         <div className={cn("p-1.5 rounded-lg", s.accent)}>
           <Icon className={cn("w-4 h-4", s.text)} />
         </div>
-        <span className="text-[10px] font-bold tracking-[0.15em] uppercase text-gray-400">{title}</span>
+        <span className="text-[10px] font-bold tracking-[0.15em] uppercase text-slate-500">{title}</span>
       </div>
       <div className="text-sm text-gray-200 leading-relaxed">{children}</div>
     </motion.div>
@@ -264,17 +264,17 @@ function AutopsyPageInner() {
   return (
     <div className="space-y-6">
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-        <h1 className="text-2xl font-bold text-white tracking-tight">Autopsy Analysis</h1>
-        <p className="text-sm text-gray-400 mt-1">AI-powered forensic report intelligence extraction</p>
+        <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Autopsy Analysis</h1>
+        <p className="text-sm text-slate-500 mt-1">AI-powered forensic report intelligence extraction</p>
       </motion.div>
 
       {/* Case Selector */}
       <div className="flex items-center gap-3">
-        <FolderKanban className="w-4 h-4 text-cyan-400" />
+        <FolderKanban className="w-4 h-4 text-violet-600" />
         <select
           value={selectedCaseId}
           onChange={(e) => { setSelectedCaseId(e.target.value); setAnalyzed(false); setResult(null); }}
-          className="px-4 py-2 rounded-xl bg-white/5 border border-cyan-500/20 text-white focus:outline-none focus:border-cyan-500/50 text-sm min-w-[200px]"
+          className="px-4 py-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-900 focus:outline-none focus:border-slate-400 text-sm min-w-[200px]"
         >
           <option value="">Select a case...</option>
           {cases.map((c) => (
@@ -282,7 +282,7 @@ function AutopsyPageInner() {
           ))}
         </select>
         {selectedCase && (
-          <span className="text-xs text-gray-400">
+          <span className="text-xs text-slate-500">
             Victim: {selectedCase.victim} | Officer: {selectedCase.officer}
           </span>
         )}
@@ -293,7 +293,7 @@ function AutopsyPageInner() {
           <button
             onClick={startAnalysis}
             disabled={!selectedCase}
-            className="group relative px-8 py-4 rounded-2xl bg-cyan-500/20 border border-cyan-500/40 text-cyan-400 font-semibold text-lg hover:bg-cyan-500/30 transition-all overflow-hidden disabled:opacity-40 disabled:cursor-not-allowed"
+            className="group relative px-8 py-4 rounded-2xl bg-violet-100 border border-slate-300 text-violet-600 font-semibold text-lg hover:bg-violet-200 transition-all overflow-hidden disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <span className="relative z-10 flex items-center gap-3">
               <Microscope className="w-6 h-6" />
@@ -301,7 +301,7 @@ function AutopsyPageInner() {
             </span>
             {selectedCase && (
               <motion.div
-                className="absolute inset-0 bg-cyan-500/10"
+                className="absolute inset-0 bg-violet-50"
                 animate={{ scale: [1, 1.05, 1] }}
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
               />
@@ -316,20 +316,20 @@ function AutopsyPageInner() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="backdrop-blur-md bg-white/5 border border-cyan-500/20 rounded-2xl p-8 text-center"
+            className="backdrop-blur-md bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-8 text-center"
           >
-            <Microscope className="w-12 h-12 text-cyan-400 mx-auto mb-4 animate-pulse" />
-            <p className="text-lg font-semibold text-white mb-2">Analyzing Forensic Report...</p>
-            <p className="text-sm text-gray-400 mb-6">Extracting patterns, classifying injuries, detecting anomalies</p>
+            <Microscope className="w-12 h-12 text-violet-600 mx-auto mb-4 animate-pulse" />
+            <p className="text-lg font-semibold text-slate-900 mb-2">Analyzing Forensic Report...</p>
+            <p className="text-sm text-slate-500 mb-6">Extracting patterns, classifying injuries, detecting anomalies</p>
             <div className="max-w-md mx-auto">
-              <div className="h-2 rounded-full bg-white/10 overflow-hidden">
+              <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
                 <motion.div
                   className="h-full rounded-full bg-gradient-to-r from-cyan-500 to-blue-500"
                   style={{ width: `${Math.min(progress, 100)}%` }}
                   transition={{ duration: 0.3 }}
                 />
               </div>
-              <p className="text-xs text-gray-500 mt-2 font-mono">{Math.round(progress)}%</p>
+              <p className="text-xs text-slate-400 mt-2 font-mono">{Math.round(progress)}%</p>
             </div>
           </motion.div>
         )}
@@ -347,21 +347,21 @@ function AutopsyPageInner() {
             <motion.div variants={itemVariants} className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <FileText className="w-4 h-4 text-cyan-400" />
-                  <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">Original Report</h2>
+                  <FileText className="w-4 h-4 text-violet-600" />
+                  <h2 className="text-sm font-semibold text-slate-700 uppercase tracking-wider">Original Report</h2>
                 </div>
-                <span className="text-[10px] text-gray-500 font-mono">Case {selectedCase?.id || "N/A"}</span>
+                <span className="text-[10px] text-slate-400 font-mono">Case {selectedCase?.id || "N/A"}</span>
               </div>
 
               {/* Search */}
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input
                   type="text"
                   placeholder="Search in document..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-white/5 border border-cyan-500/20 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500/50 text-sm"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-900 placeholder-gray-500 focus:outline-none focus:border-slate-400 text-sm"
                 />
               </div>
 
@@ -371,19 +371,19 @@ function AutopsyPageInner() {
                 onChange={(e) => setUserReport(e.target.value)}
                 placeholder="Paste your autopsy report text here...&#10;&#10;The AI will automatically highlight forensic terms like cause of death, blunt force, contusion, toxicology, rigor mortis, livor mortis, defensive wounds, etc."
                 rows={6}
-                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-cyan-500/20 text-white placeholder-gray-600 text-sm focus:outline-none focus:border-cyan-500/50 resize-none font-mono"
+                className="w-full px-4 py-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-900 placeholder-gray-600 text-sm focus:outline-none focus:border-slate-400 resize-none font-mono"
               />
 
               {/* Highlighted Report Display */}
-              <div className="relative backdrop-blur-md bg-white/[0.03] border border-cyan-500/15 rounded-2xl overflow-hidden">
+              <div className="relative backdrop-blur-md bg-white/[0.03] border border-slate-200 rounded-2xl overflow-hidden">
                 <div className="absolute inset-0 opacity-[0.03]" style={{
                   backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='g' patternUnits='userSpaceOnUse' width='60' height='60'%3E%3Cpath d='M0 60 L60 0' stroke='white' stroke-width='0.5' fill='none' /%3E%3C/pattern%3E%3C/defs%3E%3Crect width='60' height='60' fill='url(%23g)' /%3E%3C/svg%3E")`,
                 }} />
-                <div className="relative p-6 min-h-[200px] max-h-[400px] overflow-y-auto font-mono text-xs leading-relaxed text-gray-300 whitespace-pre-wrap">
+                <div className="relative p-6 min-h-[200px] max-h-[400px] overflow-y-auto font-mono text-xs leading-relaxed text-slate-700 whitespace-pre-wrap">
                   {reportContent}
                 </div>
-                <div className="relative px-4 py-2 border-t border-cyan-500/10 bg-white/[0.02]">
-                  <span className="text-[10px] text-gray-500 font-mono">
+                <div className="relative px-4 py-2 border-t border-slate-200 bg-slate-50">
+                  <span className="text-[10px] text-slate-400 font-mono">
                     {userReport ? `${userReport.split(/\s+/).length} words — forensic terms highlighted` : "No report entered"}
                   </span>
                 </div>
@@ -394,10 +394,10 @@ function AutopsyPageInner() {
             <motion.div variants={itemVariants} className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Microscope className="w-4 h-4 text-cyan-400" />
-                  <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">AI Forensic Intelligence Extract</h2>
+                  <Microscope className="w-4 h-4 text-violet-600" />
+                  <h2 className="text-sm font-semibold text-slate-700 uppercase tracking-wider">AI Forensic Intelligence Extract</h2>
                 </div>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold border border-green-500/30 bg-green-500/10 text-green-400">
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold border border-green-500/30 bg-green-500/10 text-green-600">
                   Processed
                 </span>
               </div>
@@ -406,7 +406,7 @@ function AutopsyPageInner() {
               <div className="space-y-3">
                 <InsightCard title="Cause of Death" severity="critical" icon={AlertTriangle}>
                   <div className="flex items-center justify-between">
-                    <span className="font-semibold text-white">{result.causeOfDeath}</span>
+                    <span className="font-semibold text-slate-900">{result.causeOfDeath}</span>
                     <ConfidenceBadge confidence={result.causeConfidence} />
                   </div>
                 </InsightCard>
@@ -440,7 +440,7 @@ function AutopsyPageInner() {
                         transition={{ delay: i * 0.05 }}
                         className="flex items-start gap-2 text-xs"
                       >
-                        <span className="text-cyan-400 mt-0.5">•</span>
+                        <span className="text-violet-600 mt-0.5">•</span>
                         {obs}
                       </motion.li>
                     ))}
@@ -453,7 +453,7 @@ function AutopsyPageInner() {
               <div className="flex flex-wrap gap-3 pt-2">
                 <button
                   onClick={startAnalysis}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-cyan-500/20 border border-cyan-500/40 text-cyan-400 hover:bg-cyan-500/30 text-xs font-medium transition-all"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-violet-100 border border-slate-300 text-violet-600 hover:bg-violet-200 text-xs font-medium transition-all"
                 >
                   <Microscope className="w-3.5 h-3.5" />
                   Re-analyze
@@ -470,7 +470,7 @@ function AutopsyPageInner() {
                       confidence: result.causeConfidence,
                     });
                   }}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-blue-500/20 border border-blue-500/40 text-blue-400 hover:bg-blue-500/30 text-xs font-medium transition-all"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-blue-100 border border-slate-300 text-blue-600 hover:bg-blue-200 text-xs font-medium transition-all"
                 >
                   <CheckCircle className="w-3.5 h-3.5" />
                   Add to Case Timeline
@@ -481,7 +481,7 @@ function AutopsyPageInner() {
                     "flex items-center gap-1.5 px-4 py-2 rounded-lg border text-xs font-medium transition-all",
                     flagged
                       ? "bg-red-500/30 border-red-500/60 text-red-300"
-                      : "bg-red-500/20 border-red-500/40 text-red-400 hover:bg-red-500/30",
+                      : "bg-red-100 border-slate-300 text-red-600 hover:bg-red-200",
                   )}
                 >
                   <AlertTriangle className="w-3.5 h-3.5" />
@@ -490,10 +490,10 @@ function AutopsyPageInner() {
               </div>
 
               {/* Raw Extracted Text */}
-              <div className="backdrop-blur-md bg-white/5 border border-cyan-500/20 rounded-xl overflow-hidden">
+              <div className="backdrop-blur-md bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl overflow-hidden">
                 <button
                   onClick={() => setRawOpen(!rawOpen)}
-                  className="w-full flex items-center justify-between px-4 py-3 text-xs text-gray-400 hover:text-white transition-colors"
+                  className="w-full flex items-center justify-between px-4 py-3 text-xs text-slate-500 hover:text-slate-900 transition-colors"
                 >
                   <span className="font-semibold uppercase tracking-wider">Raw Extracted Text</span>
                   {rawOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
@@ -506,7 +506,7 @@ function AutopsyPageInner() {
                       exit={{ height: 0, opacity: 0 }}
                       className="overflow-hidden"
                     >
-                      <pre className="p-4 text-[10px] text-gray-500 font-mono whitespace-pre-wrap border-t border-cyan-500/10 max-h-48 overflow-y-auto">
+                      <pre className="p-4 text-[10px] text-slate-400 font-mono whitespace-pre-wrap border-t border-slate-200 max-h-48 overflow-y-auto">
                         {JSON.stringify(result!, null, 2)}
                       </pre>
                     </motion.div>
@@ -523,7 +523,7 @@ function AutopsyPageInner() {
 
 export default function AutopsyPage() {
   return (
-    <Suspense fallback={<div className="flex items-center justify-center py-20"><div className="w-8 h-8 rounded-full border-2 border-cyan-500/30 border-t-cyan-400 animate-spin" /></div>}>
+    <Suspense fallback={<div className="flex items-center justify-center py-20"><div className="w-8 h-8 rounded-full border-2 border-slate-300 border-t-cyan-400 animate-spin" /></div>}>
       <AutopsyPageInner />
     </Suspense>
   );

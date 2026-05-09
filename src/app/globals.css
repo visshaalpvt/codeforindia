@@ -1,17 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  --bg-primary: #0B1020;
-  --bg-secondary: #111827;
-  --bg-card: rgba(17, 24, 39, 0.8);
-  --accent-cyan: #00F5FF;
-  --accent-blue: #3B82F6;
-  --accent-red: #EF4444;
-  --accent-amber: #F59E0B;
-  --accent-green: #10B981;
-  --text-primary: #F9FAFB;
-  --text-secondary: #9CA3AF;
-  --text-muted: #4B5563;
+  --bg-primary: #f8fafc; /* slate-50 */
+  --bg-secondary: #ffffff; /* white */
+  --bg-card: rgba(255, 255, 255, 0.9);
+  --accent-cyan: #8b5cf6; /* violet-500, renamed for simplicity but used as primary */
+  --accent-blue: #2563eb; /* blue-600 */
+  --accent-red: #dc2626; /* red-600 */
+  --accent-amber: #d97706; /* amber-600 */
+  --accent-green: #059669; /* green-600 */
+  --text-primary: #0f172a; /* slate-900 */
+  --text-secondary: #475569; /* slate-600 */
+  --text-muted: #64748b; /* slate-500 */
 }
 
 @theme inline {
@@ -29,26 +29,27 @@ body {
 
 .glass {
   backdrop-filter: blur(12px);
-  background: rgba(17, 24, 39, 0.8);
-  border: 1px solid rgba(0, 245, 255, 0.15);
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(226, 232, 240, 1); /* slate-200 */
   border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
 }
 
 .animate-grid-bg {
   background-image:
-    linear-gradient(rgba(0, 245, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 245, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(rgba(148, 163, 184, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.1) 1px, transparent 1px);
   background-size: 40px 40px;
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 5px rgba(0, 245, 255, 0.2); }
-  50% { box-shadow: 0 0 20px rgba(0, 245, 255, 0.6); }
+  0%, 100% { box-shadow: 0 0 5px rgba(139, 92, 246, 0.1); }
+  50% { box-shadow: 0 0 15px rgba(139, 92, 246, 0.3); }
 }
 
 @keyframes pulse-red {
-  0%, 100% { box-shadow: 0 0 5px rgba(239, 68, 68, 0.2); }
-  50% { box-shadow: 0 0 25px rgba(239, 68, 68, 0.6); }
+  0%, 100% { box-shadow: 0 0 5px rgba(220, 38, 38, 0.1); }
+  50% { box-shadow: 0 0 15px rgba(220, 38, 38, 0.3); }
 }
 
 @keyframes slide-in {
@@ -58,34 +59,6 @@ body {
 
 .animate-slide-in {
   animation: slide-in 0.3s ease-out;
-}
-
-/* ========== DARK MODE GLOBAL OVERRIDES ========== */
-/* Fix white backgrounds on all native form elements */
-select,
-select option,
-input,
-textarea {
-  background-color: #111827 !important;
-  color: #F9FAFB !important;
-  border-color: rgba(255, 255, 255, 0.1) !important;
-}
-
-select option {
-  background-color: #1F2937 !important;
-  color: #F9FAFB !important;
-  padding: 8px;
-}
-
-select option:hover,
-select option:checked {
-  background-color: #0E7490 !important;
-  color: white !important;
-}
-
-/* Fix any default white backgrounds on interactive elements */
-button, a, div, span, p, h1, h2, h3, h4, h5, h6, li, ul, ol {
-  color: inherit;
 }
 
 /* Scrollbar styling */
@@ -98,15 +71,15 @@ button, a, div, span, p, h1, h2, h3, h4, h5, h6, li, ul, ol {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(148, 163, 184, 0.3);
   border-radius: 4px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(148, 163, 184, 0.5);
 }
 
 /* Ensure no white flash on page load */
 html, body {
-  background-color: #0B1020;
+  background-color: #f8fafc;
 }

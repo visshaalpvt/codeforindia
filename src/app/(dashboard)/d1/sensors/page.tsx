@@ -52,10 +52,10 @@ function SensorSparkline({ data, color }: { data: { value: number; timestamp: st
 
 function StatusBadge({ status }: { status: string }) {
   const colors: Record<string, string> = {
-    Online: "bg-green-500/20 text-green-400 border-green-500/30",
-    Offline: "bg-red-500/20 text-red-400 border-red-500/30",
-    Alert: "bg-red-500/20 text-red-400 border-red-500/30 animate-pulse",
-    Threshold: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+    Online: "bg-green-100 text-green-600 border-green-500/30",
+    Offline: "bg-red-100 text-red-600 border-red-500/30",
+    Alert: "bg-red-100 text-red-600 border-red-500/30 animate-pulse",
+    Threshold: "bg-amber-100 text-amber-600 border-amber-500/30",
   };
   const dotColors: Record<string, string> = {
     Online: "bg-green-500",
@@ -64,7 +64,7 @@ function StatusBadge({ status }: { status: string }) {
     Threshold: "bg-amber-500",
   };
   return (
-    <span className={cn("inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold border", colors[status] || "bg-gray-500/20 text-gray-400 border-gray-500/30")}>
+    <span className={cn("inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold border", colors[status] || "bg-gray-500/20 text-slate-500 border-gray-500/30")}>
       <span className={cn("w-1.5 h-1.5 rounded-full", dotColors[status] || "bg-gray-500")} />
       {status}
     </span>
@@ -107,8 +107,8 @@ function SensorCard({ sensor, time }: { sensor: SensorDevice; time: number }) {
       }}
       transition={{ duration: 0.3 }}
       className={cn(
-        "backdrop-blur-md bg-white/5 border rounded-2xl p-4 transition-colors",
-        isMotionDetected ? "border-red-500/60" : "border-cyan-500/20",
+        "backdrop-blur-md bg-slate-50 hover:bg-slate-100 border rounded-2xl p-4 transition-colors",
+        isMotionDetected ? "border-red-500/60" : "border-slate-200",
       )}
     >
       {/* Card Header */}
@@ -118,8 +118,8 @@ function SensorCard({ sensor, time }: { sensor: SensorDevice; time: number }) {
             <Icon className="w-4 h-4" style={{ color }} />
           </div>
           <div>
-            <p className="text-xs font-semibold text-white">{sensor.name}</p>
-            <p className="text-[10px] text-gray-500 font-mono">{sensor.type}</p>
+            <p className="text-xs font-semibold text-slate-900">{sensor.name}</p>
+            <p className="text-[10px] text-slate-400 font-mono">{sensor.type}</p>
           </div>
         </div>
         <StatusBadge status={sensor.status} />
@@ -129,7 +129,7 @@ function SensorCard({ sensor, time }: { sensor: SensorDevice; time: number }) {
       <p className="font-mono font-bold text-3xl md:text-4xl tracking-tight mb-1" style={{ color }}>
         {displayValue}
         {sensorUnits[sensor.name] && (
-          <span className="text-lg text-gray-500 ml-1">{sensorUnits[sensor.name]}</span>
+          <span className="text-lg text-slate-400 ml-1">{sensorUnits[sensor.name]}</span>
         )}
       </p>
 
@@ -140,11 +140,11 @@ function SensorCard({ sensor, time }: { sensor: SensorDevice; time: number }) {
 
       {/* Threshold Progress Bar */}
       <div className="space-y-1">
-        <div className="flex justify-between text-[10px] text-gray-500">
+        <div className="flex justify-between text-[10px] text-slate-400">
           <span>Threshold</span>
           <span className="font-mono">{Math.round(thresholdPercent)}%</span>
         </div>
-        <div className="h-1.5 rounded-full bg-white/10 overflow-hidden">
+        <div className="h-1.5 rounded-full bg-slate-100 overflow-hidden">
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${thresholdPercent}%` }}
@@ -155,7 +155,7 @@ function SensorCard({ sensor, time }: { sensor: SensorDevice; time: number }) {
       </div>
 
       {/* Last Updated */}
-      <p className="text-[10px] text-gray-500 mt-3 font-mono">
+      <p className="text-[10px] text-slate-400 mt-3 font-mono">
         Updated {timeAgo(sensor.lastUpdated)}
       </p>
     </motion.div>
@@ -211,10 +211,10 @@ function HardwareStatusPanel({ lastReading, onSimulate }: { lastReading: SensorR
     : JSON.stringify({ status: "awaiting data", timestamp: new Date().toISOString() }, null, 2);
 
   return (
-    <div className="backdrop-blur-md bg-white/5 border border-cyan-500/20 rounded-2xl p-4 md:p-6 space-y-4">
+    <div className="backdrop-blur-md bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-4 md:p-6 space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">Hardware Status</h2>
-        <Cpu className="w-4 h-4 text-cyan-400" />
+        <h2 className="text-sm font-semibold text-slate-700 uppercase tracking-wider">Hardware Status</h2>
+        <Cpu className="w-4 h-4 text-violet-600" />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -226,16 +226,16 @@ function HardwareStatusPanel({ lastReading, onSimulate }: { lastReading: SensorR
           </div>
           <div>
             <p className="text-xs font-semibold">ESP32</p>
-            <p className="text-[10px] text-green-400">Connected</p>
+            <p className="text-[10px] text-green-600">Connected</p>
           </div>
         </div>
 
         {/* Last Heartbeat */}
         <div className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/5">
-          <Wifi className="w-4 h-4 text-gray-400" />
+          <Wifi className="w-4 h-4 text-slate-500" />
           <div>
             <p className="text-xs font-semibold">Last Heartbeat</p>
-            <p className="text-[10px] text-gray-400 font-mono">{timeAgo(new Date(heartbeatTime - 2000).toISOString())}</p>
+            <p className="text-[10px] text-slate-500 font-mono">{timeAgo(new Date(heartbeatTime - 2000).toISOString())}</p>
           </div>
         </div>
 
@@ -243,7 +243,7 @@ function HardwareStatusPanel({ lastReading, onSimulate }: { lastReading: SensorR
         <div className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/5">
           <button
             onClick={onSimulate}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-500/20 border border-amber-500/40 text-amber-400 hover:bg-amber-500/30 text-xs font-medium transition-all"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-100 border border-amber-500/40 text-amber-600 hover:bg-amber-500/30 text-xs font-medium transition-all"
           >
             <Zap className="w-3.5 h-3.5" />
             Simulate Sensor Trigger
@@ -254,25 +254,25 @@ function HardwareStatusPanel({ lastReading, onSimulate }: { lastReading: SensorR
       {/* JSON Payload */}
       <div>
         <div className="flex items-center gap-2 mb-2">
-          <Radio className="w-3.5 h-3.5 text-gray-400" />
-          <span className="text-xs text-gray-400 font-medium">Live JSON Payload</span>
+          <Radio className="w-3.5 h-3.5 text-slate-500" />
+          <span className="text-xs text-slate-500 font-medium">Live JSON Payload</span>
           <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse ml-auto" />
         </div>
-        <pre className="p-3 rounded-xl bg-black/40 border border-cyan-500/10 overflow-x-auto text-[11px] font-mono leading-relaxed">
+        <pre className="p-3 rounded-xl bg-black/40 border border-slate-200 overflow-x-auto text-[11px] font-mono leading-relaxed">
           <code>
             {jsonPayload.split("\n").map((line, i) => {
               const isKey = /"[^"]+":/.test(line);
               const isString = /"[^"]*"/.test(line);
               const isNum = /:\s*[\d.]+/.test(line);
               const isBool = /:\s*(true|false)/.test(line);
-              let color = "text-gray-300";
-              if (isKey) color = "text-cyan-400";
-              else if (isString) color = "text-green-400";
-              else if (isNum) color = "text-amber-400";
-              else if (isBool) color = "text-purple-400";
+              let color = "text-slate-700";
+              if (isKey) color = "text-violet-600";
+              else if (isString) color = "text-green-600";
+              else if (isNum) color = "text-amber-600";
+              else if (isBool) color = "text-violet-600";
               return (
                 <span key={i} className="block">
-                  <span className="text-gray-600 select-none mr-4">{String(i + 1).padStart(2, " ")}</span>
+                  <span className="text-slate-400 select-none mr-4">{String(i + 1).padStart(2, " ")}</span>
                   <span className={color}>{line}</span>
                 </span>
               );
@@ -286,7 +286,7 @@ function HardwareStatusPanel({ lastReading, onSimulate }: { lastReading: SensorR
 
 function LiveIndicator() {
   return (
-    <div className="flex items-center gap-2 text-xs font-mono text-green-400">
+    <div className="flex items-center gap-2 text-xs font-mono text-green-600">
       <span className="relative flex h-2.5 w-2.5">
         <span className="absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75 animate-ping" />
         <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-500" />
@@ -419,7 +419,7 @@ export default function SensorsPage() {
             initial={{ opacity: 0, y: -20, x: 20 }}
             animate={{ opacity: 1, y: 0, x: 0 }}
             exit={{ opacity: 0, y: -20, x: 20 }}
-            className="fixed top-4 right-4 z-50 flex items-center gap-2 px-4 py-3 rounded-xl bg-red-500/20 border border-red-500/40 text-red-400 text-sm font-semibold shadow-lg backdrop-blur-md"
+            className="fixed top-4 right-4 z-50 flex items-center gap-2 px-4 py-3 rounded-xl bg-red-100 border border-slate-300 text-red-600 text-sm font-semibold shadow-lg backdrop-blur-md"
           >
             <AlertTriangle className="w-4 h-4" />
             {notification}
@@ -431,7 +431,7 @@ export default function SensorsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Live Sensors</h1>
-          <p className="text-sm text-gray-400 mt-1">Real-time IoT sensor monitoring</p>
+          <p className="text-sm text-slate-500 mt-1">Real-time IoT sensor monitoring</p>
         </div>
         <LiveIndicator />
       </div>
@@ -454,11 +454,11 @@ export default function SensorsPage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="backdrop-blur-md bg-white/5 border border-cyan-500/20 rounded-2xl p-4 md:p-6"
+        className="backdrop-blur-md bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-4 md:p-6"
       >
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-sm font-semibold text-gray-300 uppercase tracking-wider">Live Sensor Data (30 min)</h2>
-          <RefreshCw className="w-4 h-4 text-cyan-400 animate-spin" />
+          <h2 className="text-sm font-semibold text-slate-700 uppercase tracking-wider">Live Sensor Data (30 min)</h2>
+          <RefreshCw className="w-4 h-4 text-violet-600 animate-spin" />
         </div>
         <LiveDataChart sensors={sensors} time={renderTick} />
       </motion.div>

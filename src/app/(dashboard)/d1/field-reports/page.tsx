@@ -50,34 +50,34 @@ export default function FieldReportsPage() {
     <div className="space-y-6 p-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-white font-['Space_Grotesk'] tracking-tight">Field Reports</h1>
-          <p className="text-gray-400">Standardized incident reporting and downloadable field documentation.</p>
+          <h1 className="text-3xl font-bold text-slate-900 font-['Space_Grotesk'] tracking-tight">Field Reports</h1>
+          <p className="text-slate-500">Standardized incident reporting and downloadable field documentation.</p>
         </div>
         <div className="flex items-center gap-3">
           {reports.length > 0 && (
             <button onClick={() => {
               const content = generateForensicReport("All Field Reports", reports.map(r => ({ heading: `${r.id}: ${r.title}`, content: `  Officer: ${r.officer}\n  Date: ${r.date} ${r.time}\n  Location: ${r.location}\n  Type: ${r.type}\n  Priority: ${r.priority}\n\n${r.body}` })));
               downloadReport("All_Field_Reports.txt", content);
-            }} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-gray-400 font-bold text-sm hover:text-white transition-all">
+            }} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-500 font-bold text-sm hover:text-slate-900 transition-all">
               <Download className="w-4 h-4" /> Export All
             </button>
           )}
-          <button onClick={() => setShowAdd(true)} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-cyan-500 text-white font-bold text-sm hover:bg-cyan-400 transition-all shadow-[0_0_15px_rgba(6,182,212,0.3)]">
+          <button onClick={() => setShowAdd(true)} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-cyan-500 text-slate-900 font-bold text-sm hover:bg-cyan-400 transition-all shadow-[0_0_15px_rgba(6,182,212,0.3)]">
             <Plus className="w-4 h-4" /> New Field Report
           </button>
         </div>
       </div>
 
       <div className="relative">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
-        <input type="text" placeholder="Search reports by ID, title, or officer..." className="w-full pl-12 pr-4 py-3 rounded-2xl bg-[#111827] border border-white/5 text-white focus:outline-none focus:border-cyan-500/50" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+        <input type="text" placeholder="Search reports by ID, title, or officer..." className="w-full pl-12 pr-4 py-3 rounded-2xl bg-white border border-white/5 text-slate-900 focus:outline-none focus:border-slate-400" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
       </div>
 
       {filtered.length > 0 ? (
         <div className="grid grid-cols-1 gap-4">
           {filtered.map((report, i) => (
             <motion.div key={report.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
-              <Card className="bg-[#111827] border-white/5 hover:border-cyan-500/20 transition-all group overflow-hidden">
+              <Card className="bg-white border-white/5 hover:border-slate-200 transition-all group overflow-hidden">
                 <CardContent className="p-0">
                   <div className="flex items-stretch">
                     <div className={cn("w-2",
@@ -89,20 +89,20 @@ export default function FieldReportsPage() {
                       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-3 mb-2">
-                            <span className="text-[10px] font-mono text-cyan-400 font-bold bg-cyan-500/5 px-2 py-0.5 rounded border border-cyan-500/10">{report.id}</span>
-                            <span className={cn("text-[10px] font-bold uppercase tracking-widest", report.priority === "Critical" ? "text-red-400" : "text-gray-500")}>{report.priority}</span>
-                            <span className="text-[10px] text-gray-600 font-mono">{report.caseId}</span>
+                            <span className="text-[10px] font-mono text-violet-600 font-bold bg-cyan-500/5 px-2 py-0.5 rounded border border-slate-200">{report.id}</span>
+                            <span className={cn("text-[10px] font-bold uppercase tracking-widest", report.priority === "Critical" ? "text-red-600" : "text-slate-400")}>{report.priority}</span>
+                            <span className="text-[10px] text-slate-400 font-mono">{report.caseId}</span>
                           </div>
-                          <h3 className="text-lg font-bold text-white font-['Space_Grotesk'] group-hover:text-cyan-400 transition-colors mb-1">{report.title}</h3>
-                          <p className="text-xs text-gray-500 line-clamp-1 mb-3">{report.body}</p>
+                          <h3 className="text-lg font-bold text-slate-900 font-['Space_Grotesk'] group-hover:text-violet-600 transition-colors mb-1">{report.title}</h3>
+                          <p className="text-xs text-slate-400 line-clamp-1 mb-3">{report.body}</p>
                           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-                            <div className="flex items-center gap-1.5 text-xs text-gray-500"><User className="w-3.5 h-3.5" /> {report.officer}</div>
-                            <div className="flex items-center gap-1.5 text-xs text-gray-500"><MapPin className="w-3.5 h-3.5" /> {report.location}</div>
-                            <div className="flex items-center gap-1.5 text-xs text-gray-500"><Clock className="w-3.5 h-3.5" /> {report.date} at {report.time}</div>
-                            <div className="flex items-center gap-1.5 text-xs text-cyan-500 font-bold"><FileText className="w-3.5 h-3.5" /> {report.type}</div>
+                            <div className="flex items-center gap-1.5 text-xs text-slate-400"><User className="w-3.5 h-3.5" /> {report.officer}</div>
+                            <div className="flex items-center gap-1.5 text-xs text-slate-400"><MapPin className="w-3.5 h-3.5" /> {report.location}</div>
+                            <div className="flex items-center gap-1.5 text-xs text-slate-400"><Clock className="w-3.5 h-3.5" /> {report.date} at {report.time}</div>
+                            <div className="flex items-center gap-1.5 text-xs text-violet-600 font-bold"><FileText className="w-3.5 h-3.5" /> {report.type}</div>
                           </div>
                         </div>
-                        <button onClick={() => exportReport(report)} className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-xs font-bold text-cyan-400 hover:bg-cyan-500/20 transition-all shrink-0">
+                        <button onClick={() => exportReport(report)} className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-violet-50 border border-slate-200 text-xs font-bold text-violet-600 hover:bg-violet-100 transition-all shrink-0">
                           <Download className="w-4 h-4" /> Download
                         </button>
                       </div>
@@ -116,36 +116,36 @@ export default function FieldReportsPage() {
       ) : (
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <FileText className="w-16 h-16 text-gray-700 mb-4" />
-          <h3 className="text-lg font-medium text-gray-400">No field reports yet</h3>
-          <p className="text-sm text-gray-600 mt-1">Click "New Field Report" to file your first report.</p>
+          <h3 className="text-lg font-medium text-slate-500">No field reports yet</h3>
+          <p className="text-sm text-slate-400 mt-1">Click "New Field Report" to file your first report.</p>
         </div>
       )}
 
       {/* Add Report Modal */}
       <AnimatePresence>
         {showAdd && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => setShowAdd(false)}>
-            <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} onClick={(e) => e.stopPropagation()} className="bg-[#111827] border border-cyan-500/30 rounded-2xl p-6 w-full max-w-lg shadow-2xl max-h-[90vh] overflow-y-auto">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm" onClick={() => setShowAdd(false)}>
+            <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} onClick={(e) => e.stopPropagation()} className="bg-white border border-slate-300 rounded-2xl p-6 w-full max-w-lg shadow-2xl max-h-[90vh] overflow-y-auto">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-bold text-white flex items-center gap-2"><FileText className="w-5 h-5 text-cyan-400" />New Field Report</h3>
-                <button onClick={() => setShowAdd(false)} className="text-gray-400 hover:text-white"><X className="w-5 h-5" /></button>
+                <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2"><FileText className="w-5 h-5 text-violet-600" />New Field Report</h3>
+                <button onClick={() => setShowAdd(false)} className="text-slate-500 hover:text-slate-900"><X className="w-5 h-5" /></button>
               </div>
               <div className="space-y-4">
-                <div><label className="text-xs font-medium text-gray-400 block mb-1">Report Title *</label><input value={newReport.title} onChange={(e) => setNewReport(p => ({ ...p, title: e.target.value }))} placeholder="e.g. Night Patrol Incident #42" className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-600 text-sm focus:outline-none focus:border-cyan-500/50" /></div>
+                <div><label className="text-xs font-medium text-slate-500 block mb-1">Report Title *</label><input value={newReport.title} onChange={(e) => setNewReport(p => ({ ...p, title: e.target.value }))} placeholder="e.g. Night Patrol Incident #42" className="w-full px-4 py-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-900 placeholder-gray-600 text-sm focus:outline-none focus:border-slate-400" /></div>
                 <div className="grid grid-cols-2 gap-4">
-                  <div><label className="text-xs font-medium text-gray-400 block mb-1">Reporting Officer *</label><input value={newReport.officer} onChange={(e) => setNewReport(p => ({ ...p, officer: e.target.value }))} placeholder="Officer name" className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-600 text-sm focus:outline-none focus:border-cyan-500/50" /></div>
-                  <div><label className="text-xs font-medium text-gray-400 block mb-1">Linked Case</label><select value={newReport.caseId} onChange={(e) => setNewReport(p => ({ ...p, caseId: e.target.value }))} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none"><option value="">Select case...</option>{cases.map(c => <option key={c.id} value={c.id}>{c.id}</option>)}</select></div>
+                  <div><label className="text-xs font-medium text-slate-500 block mb-1">Reporting Officer *</label><input value={newReport.officer} onChange={(e) => setNewReport(p => ({ ...p, officer: e.target.value }))} placeholder="Officer name" className="w-full px-4 py-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-900 placeholder-gray-600 text-sm focus:outline-none focus:border-slate-400" /></div>
+                  <div><label className="text-xs font-medium text-slate-500 block mb-1">Linked Case</label><select value={newReport.caseId} onChange={(e) => setNewReport(p => ({ ...p, caseId: e.target.value }))} className="w-full px-4 py-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-900 text-sm focus:outline-none"><option value="">Select case...</option>{cases.map(c => <option key={c.id} value={c.id}>{c.id}</option>)}</select></div>
                 </div>
                 <div className="grid grid-cols-3 gap-4">
-                  <div><label className="text-xs font-medium text-gray-400 block mb-1">Type</label><select value={newReport.type} onChange={(e) => setNewReport(p => ({ ...p, type: e.target.value }))} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none"><option>Incident</option><option>Search & Seizure</option><option>Interview</option><option>Hazard</option><option>Surveillance</option></select></div>
-                  <div><label className="text-xs font-medium text-gray-400 block mb-1">Priority</label><select value={newReport.priority} onChange={(e) => setNewReport(p => ({ ...p, priority: e.target.value }))} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white text-sm focus:outline-none"><option>Low</option><option>Medium</option><option>High</option><option>Critical</option></select></div>
-                  <div><label className="text-xs font-medium text-gray-400 block mb-1">Location</label><input value={newReport.location} onChange={(e) => setNewReport(p => ({ ...p, location: e.target.value }))} placeholder="Location" className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-600 text-sm focus:outline-none" /></div>
+                  <div><label className="text-xs font-medium text-slate-500 block mb-1">Type</label><select value={newReport.type} onChange={(e) => setNewReport(p => ({ ...p, type: e.target.value }))} className="w-full px-4 py-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-900 text-sm focus:outline-none"><option>Incident</option><option>Search & Seizure</option><option>Interview</option><option>Hazard</option><option>Surveillance</option></select></div>
+                  <div><label className="text-xs font-medium text-slate-500 block mb-1">Priority</label><select value={newReport.priority} onChange={(e) => setNewReport(p => ({ ...p, priority: e.target.value }))} className="w-full px-4 py-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-900 text-sm focus:outline-none"><option>Low</option><option>Medium</option><option>High</option><option>Critical</option></select></div>
+                  <div><label className="text-xs font-medium text-slate-500 block mb-1">Location</label><input value={newReport.location} onChange={(e) => setNewReport(p => ({ ...p, location: e.target.value }))} placeholder="Location" className="w-full px-4 py-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-900 placeholder-gray-600 text-sm focus:outline-none" /></div>
                 </div>
-                <div><label className="text-xs font-medium text-gray-400 block mb-1">Report Body *</label><textarea value={newReport.body} onChange={(e) => setNewReport(p => ({ ...p, body: e.target.value }))} placeholder="Detailed report of the field incident..." rows={5} className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-600 text-sm focus:outline-none focus:border-cyan-500/50 resize-none" /></div>
+                <div><label className="text-xs font-medium text-slate-500 block mb-1">Report Body *</label><textarea value={newReport.body} onChange={(e) => setNewReport(p => ({ ...p, body: e.target.value }))} placeholder="Detailed report of the field incident..." rows={5} className="w-full px-4 py-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-900 placeholder-gray-600 text-sm focus:outline-none focus:border-slate-400 resize-none" /></div>
               </div>
               <div className="flex gap-3 mt-6">
-                <button onClick={() => setShowAdd(false)} className="flex-1 py-2.5 rounded-xl border border-white/10 text-gray-400 hover:text-white text-sm font-medium transition-all">Cancel</button>
-                <button disabled={!newReport.title || !newReport.officer || !newReport.body} onClick={addReport} className="flex-1 py-2.5 rounded-xl bg-cyan-500 text-white font-bold text-sm hover:bg-cyan-400 transition-all disabled:opacity-40">Submit Report</button>
+                <button onClick={() => setShowAdd(false)} className="flex-1 py-2.5 rounded-xl border border-slate-200 text-slate-500 hover:text-slate-900 text-sm font-medium transition-all">Cancel</button>
+                <button disabled={!newReport.title || !newReport.officer || !newReport.body} onClick={addReport} className="flex-1 py-2.5 rounded-xl bg-cyan-500 text-slate-900 font-bold text-sm hover:bg-cyan-400 transition-all disabled:opacity-40">Submit Report</button>
               </div>
             </motion.div>
           </motion.div>

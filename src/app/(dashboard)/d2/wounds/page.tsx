@@ -69,34 +69,34 @@ Provide a forensic wound analysis for this region including:
     <div className="space-y-6 p-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-white font-['Space_Grotesk'] tracking-tight">Wound Analysis</h1>
-          <p className="text-gray-400">Interactive body map with AI-powered force and direction diagnostics.</p>
+          <h1 className="text-3xl font-bold text-slate-900 font-['Space_Grotesk'] tracking-tight">Wound Analysis</h1>
+          <p className="text-slate-500">Interactive body map with AI-powered force and direction diagnostics.</p>
         </div>
-        <button onClick={addWound} disabled={!selectedRegion} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500 text-white font-bold text-sm hover:bg-amber-400 transition-all disabled:opacity-50 shadow-[0_0_15px_rgba(245,158,11,0.3)]">
+        <button onClick={addWound} disabled={!selectedRegion} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500 text-slate-900 font-bold text-sm hover:bg-amber-400 transition-all disabled:opacity-50 shadow-[0_0_15px_rgba(245,158,11,0.3)]">
           <Plus className="w-4 h-4" /> Log Wound
         </button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Body Map */}
-        <Card className="bg-[#111827] border-white/5">
+        <Card className="bg-white border-white/5">
           <CardHeader>
-            <CardTitle className="text-lg text-white flex items-center gap-2 font-['Space_Grotesk']">
-              <Activity className="w-5 h-5 text-amber-400" />
+            <CardTitle className="text-lg text-slate-900 flex items-center gap-2 font-['Space_Grotesk']">
+              <Activity className="w-5 h-5 text-amber-600" />
               Body Map — Click a Region
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="relative w-full aspect-[3/5] bg-white/[0.02] rounded-2xl border border-white/5 overflow-hidden">
+            <div className="relative w-full aspect-[3/5] bg-slate-50 rounded-2xl border border-white/5 overflow-hidden">
               {/* Body silhouette outline */}
               <div className="absolute inset-0 flex items-center justify-center opacity-10">
                 <svg viewBox="0 0 200 400" className="w-48 h-full">
-                  <ellipse cx="100" cy="35" rx="25" ry="30" fill="none" stroke="currentColor" strokeWidth="1" className="text-gray-500" />
-                  <rect x="75" y="65" width="50" height="80" rx="10" fill="none" stroke="currentColor" strokeWidth="1" className="text-gray-500" />
-                  <rect x="45" y="70" width="20" height="60" rx="8" fill="none" stroke="currentColor" strokeWidth="1" className="text-gray-500" />
-                  <rect x="135" y="70" width="20" height="60" rx="8" fill="none" stroke="currentColor" strokeWidth="1" className="text-gray-500" />
-                  <rect x="78" y="150" width="20" height="90" rx="8" fill="none" stroke="currentColor" strokeWidth="1" className="text-gray-500" />
-                  <rect x="102" y="150" width="20" height="90" rx="8" fill="none" stroke="currentColor" strokeWidth="1" className="text-gray-500" />
+                  <ellipse cx="100" cy="35" rx="25" ry="30" fill="none" stroke="currentColor" strokeWidth="1" className="text-slate-400" />
+                  <rect x="75" y="65" width="50" height="80" rx="10" fill="none" stroke="currentColor" strokeWidth="1" className="text-slate-400" />
+                  <rect x="45" y="70" width="20" height="60" rx="8" fill="none" stroke="currentColor" strokeWidth="1" className="text-slate-400" />
+                  <rect x="135" y="70" width="20" height="60" rx="8" fill="none" stroke="currentColor" strokeWidth="1" className="text-slate-400" />
+                  <rect x="78" y="150" width="20" height="90" rx="8" fill="none" stroke="currentColor" strokeWidth="1" className="text-slate-400" />
+                  <rect x="102" y="150" width="20" height="90" rx="8" fill="none" stroke="currentColor" strokeWidth="1" className="text-slate-400" />
                 </svg>
               </div>
 
@@ -110,10 +110,10 @@ Provide a forensic wound analysis for this region including:
                     className={cn(
                       "absolute rounded-xl border-2 transition-all duration-300 flex items-center justify-center group",
                       selectedRegion === region.id
-                        ? "bg-amber-500/20 border-amber-500/60"
+                        ? "bg-amber-100 border-amber-500/60"
                         : woundCount > 0
-                        ? "bg-red-500/10 border-red-500/30 hover:bg-red-500/20"
-                        : "bg-white/[0.02] border-transparent hover:bg-white/5 hover:border-white/10"
+                        ? "bg-red-500/10 border-red-500/30 hover:bg-red-100"
+                        : "bg-slate-50 border-transparent hover:bg-slate-50 hover:bg-slate-100 hover:border-slate-200"
                     )}
                     style={{
                       left: `calc(${region.x} - ${region.w} / 2)`,
@@ -124,9 +124,9 @@ Provide a forensic wound analysis for this region including:
                     title={region.label}
                   >
                     {woundCount > 0 && (
-                      <span className="text-[10px] font-bold text-red-400 bg-red-500/20 px-1.5 py-0.5 rounded">{woundCount}</span>
+                      <span className="text-[10px] font-bold text-red-600 bg-red-100 px-1.5 py-0.5 rounded">{woundCount}</span>
                     )}
-                    <span className="absolute -bottom-5 text-[8px] font-bold text-gray-600 uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                    <span className="absolute -bottom-5 text-[8px] font-bold text-slate-400 uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                       {region.label}
                     </span>
                   </button>
@@ -137,11 +137,11 @@ Provide a forensic wound analysis for this region including:
             {/* Logged Wounds Summary */}
             {wounds.length > 0 && (
               <div className="mt-4 space-y-2">
-                <p className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Logged Wounds ({wounds.length})</p>
+                <p className="text-[10px] text-slate-400 uppercase font-bold tracking-widest">Logged Wounds ({wounds.length})</p>
                 {wounds.map((w, i) => (
                   <div key={i} className="flex items-center justify-between px-3 py-2 rounded-lg bg-red-500/5 border border-red-500/10">
-                    <span className="text-xs text-red-400 font-bold">{bodyRegions.find(r => r.id === w.region)?.label}</span>
-                    <span className="text-[10px] text-gray-500">{w.type}</span>
+                    <span className="text-xs text-red-600 font-bold">{bodyRegions.find(r => r.id === w.region)?.label}</span>
+                    <span className="text-[10px] text-slate-400">{w.type}</span>
                   </div>
                 ))}
               </div>
@@ -150,30 +150,30 @@ Provide a forensic wound analysis for this region including:
         </Card>
 
         {/* AI Analysis Output */}
-        <Card className="bg-[#111827] border-white/5">
+        <Card className="bg-white border-white/5">
           <CardHeader>
-            <CardTitle className="text-lg text-white flex items-center gap-2 font-['Space_Grotesk']">
-              <Brain className="w-5 h-5 text-amber-400" />
+            <CardTitle className="text-lg text-slate-900 flex items-center gap-2 font-['Space_Grotesk']">
+              <Brain className="w-5 h-5 text-amber-600" />
               Gemma AI Wound Assessment
-              {loading && <Loader2 className="w-4 h-4 animate-spin text-amber-400 ml-2" />}
+              {loading && <Loader2 className="w-4 h-4 animate-spin text-amber-600 ml-2" />}
             </CardTitle>
           </CardHeader>
           <CardContent>
             {loading ? (
               <div className="flex flex-col items-center justify-center py-16 gap-4">
-                <Loader2 className="w-8 h-8 animate-spin text-amber-400" />
-                <p className="text-sm text-gray-500">Analyzing {bodyRegions.find(r => r.id === selectedRegion)?.label}...</p>
+                <Loader2 className="w-8 h-8 animate-spin text-amber-600" />
+                <p className="text-sm text-slate-400">Analyzing {bodyRegions.find(r => r.id === selectedRegion)?.label}...</p>
               </div>
             ) : analysis ? (
               <div className="space-y-4">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/20">
-                  <Activity className="w-3 h-3 text-amber-400" />
-                  <span className="text-xs font-bold text-amber-400">{bodyRegions.find(r => r.id === selectedRegion)?.label}</span>
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-amber-50 border border-amber-500/20">
+                  <Activity className="w-3 h-3 text-amber-600" />
+                  <span className="text-xs font-bold text-amber-600">{bodyRegions.find(r => r.id === selectedRegion)?.label}</span>
                 </div>
                 <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/10">
-                  <p className="text-sm text-gray-300 leading-relaxed whitespace-pre-wrap">{analysis}</p>
+                  <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">{analysis}</p>
                 </div>
-                <div className="flex items-center gap-2 text-[10px] text-gray-600">
+                <div className="flex items-center gap-2 text-[10px] text-slate-400">
                   <AlertTriangle className="w-3 h-3" />
                   <span>AI-generated assessment — requires validation by certified forensic pathologist.</span>
                 </div>
@@ -181,7 +181,7 @@ Provide a forensic wound analysis for this region including:
             ) : (
               <div className="flex flex-col items-center justify-center py-16 gap-3">
                 <Activity className="w-12 h-12 text-amber-500/20" />
-                <p className="text-sm text-gray-600">Click a body region to analyze</p>
+                <p className="text-sm text-slate-400">Click a body region to analyze</p>
               </div>
             )}
           </CardContent>

@@ -43,16 +43,16 @@ Use a professional forensic psychology tone.`;
   return (
     <div className="space-y-6 p-6">
       <div>
-        <h1 className="text-3xl font-bold text-white font-['Space_Grotesk'] tracking-tight">Behavioral Profiler</h1>
-        <p className="text-gray-400">AI-generated psychological trait mapping and predictive analysis.</p>
+        <h1 className="text-3xl font-bold text-slate-900 font-['Space_Grotesk'] tracking-tight">Behavioral Profiler</h1>
+        <p className="text-slate-500">AI-generated psychological trait mapping and predictive analysis.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Case Selector */}
-        <Card className="bg-[#111827] border-white/5">
+        <Card className="bg-white border-white/5">
           <CardHeader>
-            <CardTitle className="text-lg text-white flex items-center gap-2 font-['Space_Grotesk']">
-              <User className="w-5 h-5 text-purple-400" />
+            <CardTitle className="text-lg text-slate-900 flex items-center gap-2 font-['Space_Grotesk']">
+              <User className="w-5 h-5 text-violet-600" />
               Select Case
             </CardTitle>
           </CardHeader>
@@ -64,44 +64,44 @@ Use a professional forensic psychology tone.`;
                 className={cn(
                   "w-full text-left p-4 rounded-xl border transition-all flex items-center justify-between group",
                   selectedCase === c.id
-                    ? "bg-purple-500/10 border-purple-500/30"
-                    : "bg-white/[0.02] border-white/5 hover:border-white/15"
+                    ? "bg-violet-50 border-purple-500/30"
+                    : "bg-slate-50 border-white/5 hover:border-white/15"
                 )}
               >
                 <div>
-                  <p className={cn("text-xs font-mono font-bold", selectedCase === c.id ? "text-purple-400" : "text-gray-500")}>{c.id}</p>
-                  <p className="text-sm text-white font-medium">{c.title}</p>
-                  <p className="text-[10px] text-gray-600 uppercase">{c.priority} Priority</p>
+                  <p className={cn("text-xs font-mono font-bold", selectedCase === c.id ? "text-violet-600" : "text-slate-400")}>{c.id}</p>
+                  <p className="text-sm text-slate-900 font-medium">{c.title}</p>
+                  <p className="text-[10px] text-slate-400 uppercase">{c.priority} Priority</p>
                 </div>
-                <ChevronRight className={cn("w-4 h-4", selectedCase === c.id ? "text-purple-400" : "text-gray-700")} />
+                <ChevronRight className={cn("w-4 h-4", selectedCase === c.id ? "text-violet-600" : "text-gray-700")} />
               </button>
             )) : (
-              <p className="text-sm text-gray-600 text-center py-8">No cases in system. Create cases in D1.</p>
+              <p className="text-sm text-slate-400 text-center py-8">No cases in system. Create cases in D1.</p>
             )}
           </CardContent>
         </Card>
 
         {/* Profile Output */}
-        <Card className="lg:col-span-2 bg-[#111827] border-white/5">
+        <Card className="lg:col-span-2 bg-white border-white/5">
           <CardHeader>
-            <CardTitle className="text-lg text-white flex items-center gap-2 font-['Space_Grotesk']">
-              <Brain className="w-5 h-5 text-purple-400" />
+            <CardTitle className="text-lg text-slate-900 flex items-center gap-2 font-['Space_Grotesk']">
+              <Brain className="w-5 h-5 text-violet-600" />
               Gemma AI Behavioral Assessment
-              {loading && <Loader2 className="w-4 h-4 animate-spin text-purple-400 ml-2" />}
+              {loading && <Loader2 className="w-4 h-4 animate-spin text-violet-600 ml-2" />}
             </CardTitle>
           </CardHeader>
           <CardContent>
             {loading ? (
               <div className="flex flex-col items-center justify-center py-16 gap-4">
-                <Loader2 className="w-8 h-8 animate-spin text-purple-400" />
-                <p className="text-sm text-gray-500">Generating behavioral profile...</p>
+                <Loader2 className="w-8 h-8 animate-spin text-violet-600" />
+                <p className="text-sm text-slate-400">Generating behavioral profile...</p>
               </div>
             ) : profile ? (
               <div className="space-y-4">
                 <div className="p-4 rounded-xl bg-purple-500/5 border border-purple-500/10">
-                  <p className="text-sm text-gray-300 leading-relaxed whitespace-pre-wrap">{profile}</p>
+                  <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">{profile}</p>
                 </div>
-                <div className="flex items-center gap-2 text-[10px] text-gray-600">
+                <div className="flex items-center gap-2 text-[10px] text-slate-400">
                   <AlertTriangle className="w-3 h-3" />
                   <span>AI-generated assessment — must be reviewed by qualified forensic psychologist before use in proceedings.</span>
                 </div>
@@ -109,7 +109,7 @@ Use a professional forensic psychology tone.`;
             ) : (
               <div className="flex flex-col items-center justify-center py-16 gap-3">
                 <Brain className="w-12 h-12 text-purple-500/20" />
-                <p className="text-sm text-gray-600">Select a case to generate behavioral profile</p>
+                <p className="text-sm text-slate-400">Select a case to generate behavioral profile</p>
               </div>
             )}
           </CardContent>
