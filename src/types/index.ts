@@ -78,7 +78,7 @@ export interface SensorReading {
 export interface SensorDevice {
   id: string;
   name: string;
-  type: "DHT22" | "PIR" | "MQ-135" | "Vibration" | "GPS";
+  type: "DHT22" | "PIR" | "MQ-135" | "Vibration" | "GPS" | "Camera";
   value: number | string | boolean;
   unit?: string;
   status: SensorStatus;

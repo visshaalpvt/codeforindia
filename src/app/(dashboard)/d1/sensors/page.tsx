@@ -3,8 +3,8 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Thermometer, Droplets, Wind, Activity, Vibrate, MapPin,
-  Radio, Cpu, Wifi, Zap, AlertTriangle, RefreshCw,
+  Thermometer, Droplets, Wind, Activity, Video, MapPin,
+  Radio, Cpu, Wifi, Zap, AlertTriangle, RefreshCw, Camera,
 } from "lucide-react";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -17,25 +17,22 @@ import type { SensorDevice, SensorReading } from "@/types";
 
 const sensorIcons: Record<string, React.ElementType> = {
   DHT22: Thermometer,
-  PIR: Activity,
   "MQ-135": Wind,
-  Vibration: Vibrate,
+  Camera: Video,
   GPS: MapPin,
 };
 const sensorColors: Record<string, string> = {
   "Temperature Sensor": "#00F5FF",
   "Humidity Sensor": "#3B82F6",
   "Air Quality Monitor": "#F59E0B",
-  "Motion Detector": "#EF4444",
-  "Vibration Sensor": "#8B5CF6",
+  "Live Camera Feed": "#8B5CF6",
   "GPS Tracker": "#10B981",
 };
 const sensorUnits: Record<string, string> = {
   "Temperature Sensor": "°C",
   "Humidity Sensor": "%",
   "Air Quality Monitor": "AQI",
-  "Motion Detector": "",
-  "Vibration Sensor": "",
+  "Live Camera Feed": "",
   "GPS Tracker": "",
 };
 
@@ -76,7 +73,7 @@ function SensorCard({ sensor, time }: { sensor: SensorDevice; time: number }) {
   const color = sensorColors[sensor.name] || "#00F5FF";
   const Icon = icon;
   const isAlert = sensor.status === "Alert";
-  const isMotionDetected = sensor.name === "Motion Detector" && sensor.value === "DETECTED";
+  const isCamera = sensor.type === "Camera";
   const { innerWidth: winW } = typeof window !== "undefined" ? window : { innerWidth: 1200 };
   const isCompact = winW < 640;
 
@@ -102,13 +99,10 @@ function SensorCard({ sensor, time }: { sensor: SensorDevice; time: number }) {
       animate={{
         opacity: 1,
         scale: 1,
-        borderColor: isMotionDetected ? "rgba(239,68,68,0.6)" : undefined,
-        boxShadow: isMotionDetected ? "0 0 25px rgba(239,68,68,0.4)" : undefined,
       }}
       transition={{ duration: 0.3 }}
       className={cn(
-        "backdrop-blur-md bg-slate-50 hover:bg-slate-100 border rounded-2xl p-4 transition-colors",
-        isMotionDetected ? "border-red-500/60" : "border-slate-200",
+        "backdrop-blur-md bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-2xl p-4 transition-colors",
       )}
     >
       {/* Card Header */}
@@ -125,34 +119,52 @@ function SensorCard({ sensor, time }: { sensor: SensorDevice; time: number }) {
         <StatusBadge status={sensor.status} />
       </div>
 
-      {/* Large Value */}
-      <p className="font-mono font-bold text-3xl md:text-4xl tracking-tight mb-1" style={{ color }}>
-        {displayValue}
-        {sensorUnits[sensor.name] && (
-          <span className="text-lg text-slate-400 ml-1">{sensorUnits[sensor.name]}</span>
-        )}
-      </p>
-
-      {/* Sparkline */}
-      <div className="my-3">
-        <SensorSparkline data={sensor.history} color={color} />
-      </div>
-
-      {/* Threshold Progress Bar */}
-      <div className="space-y-1">
-        <div className="flex justify-between text-[10px] text-slate-400">
-          <span>Threshold</span>
-          <span className="font-mono">{Math.round(thresholdPercent)}%</span>
-        </div>
-        <div className="h-1.5 rounded-full bg-slate-100 overflow-hidden">
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: `${thresholdPercent}%` }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-            className={cn("h-full rounded-full", thresholdColor)}
+      {/* Data Visualization */}
+      {isCamera ? (
+        <div className="relative mt-2 rounded-xl overflow-hidden border border-white/10 aspect-video bg-black">
+          <img 
+            src="/live_security_camera_feed_placeholder_1778365536252.png" 
+            alt="Live Feed" 
+            className="w-full h-full object-cover opacity-80"
           />
+          <div className="absolute top-3 left-3 flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+            <span className="text-[10px] font-bold text-white tracking-widest uppercase">REC • CAM-01</span>
+          </div>
+          <div className="absolute bottom-3 right-3 text-[10px] font-mono text-white/60">
+            {new Date().toISOString().slice(0, 19).replace("T", " ")}
+          </div>
+          <div className="absolute inset-0 border-[20px] border-transparent group-hover:border-white/5 transition-all pointer-events-none" />
         </div>
-      </div>
+      ) : (
+        <>
+          <p className="font-mono font-bold text-3xl md:text-4xl tracking-tight mb-1" style={{ color }}>
+            {displayValue}
+            {sensorUnits[sensor.name] && (
+              <span className="text-lg text-slate-400 ml-1">{sensorUnits[sensor.name]}</span>
+            )}
+          </p>
+
+          <div className="my-3">
+            <SensorSparkline data={sensor.history} color={color} />
+          </div>
+
+          <div className="space-y-1">
+            <div className="flex justify-between text-[10px] text-slate-400">
+              <span>Threshold</span>
+              <span className="font-mono">{Math.round(thresholdPercent)}%</span>
+            </div>
+            <div className="h-1.5 rounded-full bg-slate-100 overflow-hidden">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${thresholdPercent}%` }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                className={cn("h-full rounded-full", thresholdColor)}
+              />
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Last Updated */}
       <p className="text-[10px] text-slate-400 mt-3 font-mono">
@@ -341,30 +353,16 @@ export default function SensorsPage() {
       });
     }
 
-    const motionSensor = currentSensors.find((s) => s.name === "Motion Detector");
-    if (motionSensor) {
-      const v = reading.motion ? "DETECTED" : "CLEAR";
-      const newStatus: SensorDevice["status"] = reading.motion ? "Alert" : "Online";
-      if (reading.motion) {
-        setNotification("Motion: DETECTED");
-        setTimeout(() => setNotification(null), 4000);
-      }
-      updateSensor(motionSensor.id, { value: v, status: newStatus, lastUpdated: reading.timestamp });
-    }
-
-    const vibSensor = currentSensors.find((s) => s.name === "Vibration Sensor");
-    if (vibSensor) {
-      updateSensor(vibSensor.id, {
-        value: reading.vibration,
-        lastUpdated: reading.timestamp,
-        history: [...vibSensor.history.slice(-59), { value: typeof reading.vibration === "number" ? reading.vibration : 0, timestamp: reading.timestamp }],
-      });
-    }
-
     const gpsSensor = currentSensors.find((s) => s.name === "GPS Tracker");
     if (gpsSensor) {
       const gpsStr = `${reading.gps.lat.toFixed(4)}°N, ${reading.gps.lng.toFixed(4)}°E`;
       updateSensor(gpsSensor.id, { value: gpsStr, lastUpdated: reading.timestamp });
+    }
+
+    // Camera feed is constant "LIVE"
+    const cameraSensor = currentSensors.find((s) => s.name === "Live Camera Feed");
+    if (cameraSensor) {
+      updateSensor(cameraSensor.id, { lastUpdated: reading.timestamp });
     }
 
     setRenderTick((t) => t + 1);
