@@ -13,15 +13,16 @@ export async function POST(request: Request) {
       model: DEFAULT_MODEL,
       messages,
       max_tokens: max_tokens || 1024,
+      temperature: 0.7,
     });
 
     return NextResponse.json({
       response: response.choices[0].message.content,
     });
   } catch (error: any) {
-    console.error("Gemma API Error:", error);
+    console.error("Groq API Error:", error);
     return NextResponse.json(
-      { error: error.message || "Gemma AI processing failed" },
+      { error: error.message || "Groq AI processing failed" },
       { status: 500 }
     );
   }

@@ -1,8 +1,9 @@
 import OpenAI from "openai";
 
+// Groq uses an OpenAI-compatible API
 export const aiClient = new OpenAI({
-  apiKey: process.env.FEATHERLESS_API_KEY || "placeholder",
-  baseURL: process.env.FEATHERLESS_BASE_URL || "https://api.featherless.ai/v1",
+  apiKey: process.env.GROQ_API_KEY || "",
+  baseURL: "https://api.groq.com/openai/v1",
 });
 
-export const DEFAULT_MODEL = process.env.FEATHERLESS_MODEL || "google/gemma-4-31B-it";
+export const DEFAULT_MODEL = "llama-3.3-70b-versatile";

@@ -12,7 +12,8 @@ export async function POST(request: Request) {
     const response = await aiClient.chat.completions.create({
       model: DEFAULT_MODEL,
       messages: messages,
-      max_tokens: 4096,
+      max_tokens: 2048,
+      temperature: 0.7,
     });
 
     return NextResponse.json({
