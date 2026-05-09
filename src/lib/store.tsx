@@ -7,6 +7,7 @@ import type {
   ChatMessage,
 } from "@/types";
 import { mockSensors, generateMockSensorReading, mockChatMessages } from "./mock-data";
+import { getDefaultEnabledModules } from "./module-config";
 import { database } from "./firebase";
 import { ref, onValue, set, update, remove } from "firebase/database";
 
@@ -22,6 +23,7 @@ interface DataState {
   correlationNodes: CorrelationNode[];
   correlationEdges: CorrelationEdge[];
   activeDashboard: "D1" | "D2" | "D3";
+  enabledModules: Record<string, boolean>;
 }
 
 interface DataContextValue extends DataState {
@@ -49,6 +51,9 @@ interface DataContextValue extends DataState {
   addCorrelationEdge: (data: Omit<CorrelationEdge, "id">) => void;
   deleteCorrelationEdge: (id: string) => void;
   updateCorrelationEdge: (id: string, data: Partial<CorrelationEdge>) => void;
+  toggleModule: (key: string) => void;
+  setModuleEnabled: (key: string, enabled: boolean) => void;
+  isModuleEnabled: (key: string) => boolean;
   setDashboard: (id: "D1" | "D2" | "D3") => void;
 }
 
@@ -71,6 +76,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     correlationNodes: [],
     correlationEdges: [],
     activeDashboard: "D1",
+    enabledModules: getDefaultEnabledModules(),
   });
 
   useEffect(() => {
@@ -183,6 +189,58 @@ export function DataProvider({ children }: { children: ReactNode }) {
     localStorage.setItem("aiventra_active_dashboard", id);
   }, []);
 
+  // ─── Module Preferences ──────────────────────────────────
+  const getModulePrefKey = useCallback(() => {
+    try {
+      const saved = localStorage.getItem("aiventra_user");
+      if (saved) {
+        const u = JSON.parse(saved);
+        return u.email ? u.email.replace(/[.@]/g, "_") : "guest";
+      }
+    } catch {}
+    return "guest";
+  }, []);
+
+  const toggleModule = useCallback((key: string) => {
+    setState(prev => {
+      const next = { ...prev.enabledModules, [key]: !prev.enabledModules[key] };
+      const prefKey = getModulePrefKey();
+      fbSet(`modulePreferences/${prefKey}/${key}`, next[key]);
+      localStorage.setItem("aiventra_modules", JSON.stringify(next));
+      return { ...prev, enabledModules: next };
+    });
+  }, [getModulePrefKey]);
+
+  const setModuleEnabled = useCallback((key: string, enabled: boolean) => {
+    setState(prev => {
+      const next = { ...prev.enabledModules, [key]: enabled };
+      const prefKey = getModulePrefKey();
+      fbSet(`modulePreferences/${prefKey}/${key}`, enabled);
+      localStorage.setItem("aiventra_modules", JSON.stringify(next));
+      return { ...prev, enabledModules: next };
+    });
+  }, [getModulePrefKey]);
+
+  const isModuleEnabled = useCallback((key: string) => {
+    return !!state.enabledModules[key];
+  }, [state.enabledModules]);
+
+  // Load module preferences from Firebase on mount
+  useEffect(() => {
+    const prefKey = getModulePrefKey();
+    const prefRef = ref(database, `modulePreferences/${prefKey}`);
+    const unsub = onValue(prefRef, (snapshot) => {
+      const val = snapshot.val();
+      if (val && typeof val === "object") {
+        setState(prev => ({
+          ...prev,
+          enabledModules: { ...getDefaultEnabledModules(), ...val },
+        }));
+      }
+    });
+    return () => unsub();
+  }, [getModulePrefKey]);
+
   useEffect(() => {
     const saved = localStorage.getItem("aiventra_active_dashboard") as "D1" | "D2" | "D3";
     if (saved && ["D1", "D2", "D3"].includes(saved)) {
@@ -241,6 +299,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
       addNotification, markNotificationRead, markAllNotificationsRead, deleteNotification,
       addChatMessage,
       addCorrelationNode, addCorrelationEdge, deleteCorrelationEdge, updateCorrelationEdge,
+      toggleModule, setModuleEnabled, isModuleEnabled,
       setDashboard
     }}>
       {children}
