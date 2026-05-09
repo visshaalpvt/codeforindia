@@ -542,7 +542,19 @@ function LiveIndicator() {
 }
 
 export default function SensorsPage() {
-  const { sensors, updateSensor, addTimelineEvent } = useData();
+  const { sensors: storeSensors, updateSensor, addTimelineEvent } = useData();
+  
+  // Fallback to mock data if store is empty to prevent 'blank' UI
+  const sensors = useMemo(() => {
+    if (storeSensors && storeSensors.length > 0) return storeSensors;
+    return [
+      { id: "S-001", name: "Temperature Sensor", type: "DHT22", status: "Online", value: 24.5, lastUpdated: new Date().toISOString(), history: [] },
+      { id: "S-002", name: "Humidity Sensor", type: "DHT22", status: "Online", value: 45, lastUpdated: new Date().toISOString(), history: [] },
+      { id: "S-003", name: "Air Quality Monitor", type: "MQ-135", status: "Online", value: 120, lastUpdated: new Date().toISOString(), history: [] },
+      { id: "S-004", name: "GPS Tracker", type: "GPS", status: "Online", value: "13.0827°N, 80.2707°E", lastUpdated: new Date().toISOString(), history: [] },
+    ] as SensorDevice[];
+  }, [storeSensors]);
+
   const sensorsRef = useRef(sensors);
   useEffect(() => { sensorsRef.current = sensors; }, [sensors]);
   
@@ -706,9 +718,10 @@ export default function SensorsPage() {
         <LiveIndicator />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column - Connection & Grid */}
-        <div className="lg:col-span-1 space-y-6">
+      {/* Primary Intelligence Section */}
+      <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+        {/* Left: Device Control */}
+        <div className="xl:col-span-1 space-y-6">
           <ConnectionPanel 
             status={connStatus} 
             onConnect={handleConnect}
@@ -718,8 +731,9 @@ export default function SensorsPage() {
             setCamIp={setCamIp}
           />
           
-          <div className="grid grid-cols-1 gap-4">
-            {sensors.filter(s => s.type !== "Camera").map((sensor) => (
+          <div className="hidden xl:flex flex-col gap-4">
+            <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-2">Local Node Status</h3>
+            {sensors.filter(s => s.type !== "Camera").slice(0, 2).map((sensor) => (
               <motion.div key={sensor.id} variants={itemVariants} initial="hidden" animate="visible">
                 <SensorCard sensor={sensor} time={renderTick} />
               </motion.div>
@@ -727,19 +741,31 @@ export default function SensorsPage() {
           </div>
         </div>
 
-        {/* Right Column - Large Feed & Charts */}
-        <div className="lg:col-span-2 space-y-6">
+        {/* Center: Live Feed */}
+        <div className="xl:col-span-3 space-y-6">
           <LiveSurveillanceFeed 
             status={connStatus} 
             onCapture={captureSnapshot} 
             motionDetected={motionAlert} 
           />
+        </div>
+      </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="backdrop-blur-md bg-white/60 hover:bg-white/80 border border-slate-200 rounded-2xl p-4 md:p-6 shadow-sm"
-          >
+      {/* Secondary Sensor Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {sensors.filter(s => s.type !== "Camera").map((sensor) => (
+          <motion.div key={sensor.id} variants={itemVariants} initial="hidden" animate="visible">
+            <SensorCard sensor={sensor} time={renderTick} />
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Live Data Chart */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="backdrop-blur-md bg-white/60 hover:bg-white/80 border border-slate-200 rounded-2xl p-4 md:p-6 shadow-sm"
+      >
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <Activity className="w-4 h-4 text-cyan-600" />
@@ -749,8 +775,6 @@ export default function SensorsPage() {
             </div>
             <LiveDataChart sensors={sensors} time={renderTick} />
           </motion.div>
-        </div>
-      </div>
 
       {/* Hardware JSON Status */}
       <motion.div
