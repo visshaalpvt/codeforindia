@@ -242,15 +242,19 @@ export default function EvidencePage() {
             {dragOver ? "Drop files here" : "Drag & drop evidence files"}
           </h3>
           <p className="text-sm text-gray-400 mb-4">
-            or <label className="text-cyan-400 cursor-pointer hover:underline">browse files</label> to upload
-            <input
-              type="file"
-              multiple
-              className="hidden"
-              onChange={(e) => {
-                if (e.target.files) setUploadQueue((prev) => [...prev, ...Array.from(e.target.files!)]);
-              }}
-            />
+            or{" "}
+            <label className="text-cyan-400 cursor-pointer hover:underline">
+              browse files
+              <input
+                type="file"
+                multiple
+                className="hidden"
+                onChange={(e) => {
+                  if (e.target.files) setUploadQueue((prev) => [...prev, ...Array.from(e.target.files!)]);
+                }}
+              />
+            </label>{" "}
+            to upload
           </p>
 
           {/* Supported Types Chips */}
