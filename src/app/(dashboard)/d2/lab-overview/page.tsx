@@ -24,8 +24,8 @@ export default function LabOverviewPage() {
     { href: "/d2/lab-samples", title: "Lab Sample Pipeline", desc: "Sample processing tracker", icon: Database, count: 0, color: "text-indigo-400", bg: "bg-indigo-500/10", border: "border-indigo-500/20" },
   ];
 
-  const tempSensor = sensors.find(s => s.type === "Temperature");
-  const humiditySensor = sensors.find(s => s.type === "Humidity");
+  const tempSensor = sensors.find(s => s.name === "Temperature Sensor");
+  const humiditySensor = sensors.find(s => s.name === "Humidity Sensor");
 
   return (
     <div className="space-y-6 p-6">
@@ -50,13 +50,13 @@ export default function LabOverviewPage() {
         <Card className="bg-[#111827] border-white/5">
           <CardContent className="p-6">
             <p className="text-xs text-gray-500 uppercase font-bold mb-1">Lab Temp</p>
-            <p className="text-3xl font-bold text-white font-mono">{tempSensor?.readings?.[tempSensor.readings.length - 1]?.value?.toFixed(1) || "—"}°C</p>
+            <p className="text-3xl font-bold text-white font-mono">{tempSensor ? Number(tempSensor.value).toFixed(1) : "—"}°C</p>
           </CardContent>
         </Card>
         <Card className="bg-[#111827] border-white/5">
           <CardContent className="p-6">
             <p className="text-xs text-gray-500 uppercase font-bold mb-1">Humidity</p>
-            <p className="text-3xl font-bold text-white font-mono">{humiditySensor?.readings?.[humiditySensor.readings.length - 1]?.value?.toFixed(0) || "—"}%</p>
+            <p className="text-3xl font-bold text-white font-mono">{humiditySensor ? Number(humiditySensor.value).toFixed(0) : "—"}%</p>
           </CardContent>
         </Card>
       </div>

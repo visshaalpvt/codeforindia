@@ -248,7 +248,7 @@ export default function ReportsPage() {
     const sections: { heading: string; content: string }[] = [];
 
     sections.push({ heading: "Case Details", content: `  Case ID: ${c.id}\n  Title: ${c.title}\n  Victim: ${c.victim}\n  Officer: ${c.officer}\n  Type: ${c.type}\n  Priority: ${c.priority}\n  Status: ${c.status}\n  Risk Score: ${c.riskScore}/100\n  Location: ${c.location}\n  Created: ${c.createdAt}` });
-    sections.push({ heading: "Evidence Summary", content: caseEvidence.length > 0 ? caseEvidence.map(e => `  [${e.id}] ${e.name} — Type: ${e.type} — Status: ${e.status}`).join("\n") : "  No evidence items linked to this case." });
+    sections.push({ heading: "Evidence Summary", content: caseEvidence.length > 0 ? caseEvidence.map(e => `  [${e.id}] ${e.name} — Type: ${e.type} — Status: ${e.custodyStatus}`).join("\n") : "  No evidence items linked to this case." });
     sections.push({ heading: "Anomalies", content: caseAnomalies.length > 0 ? caseAnomalies.map(a => `  [${a.severity}] ${a.title} — ${a.description}`).join("\n") : "  No anomalies detected for this case." });
     sections.push({ heading: "Risk Assessment", content: `  Composite Risk Score: ${c.riskScore}/100\n  Evidence Count: ${c.evidenceCount}\n  Flagged Anomalies: ${c.anomalies}\n  Assessment: ${c.riskScore > 75 ? "CRITICAL — Immediate escalation recommended" : c.riskScore > 50 ? "ELEVATED — Enhanced monitoring required" : "NORMAL — Standard protocols sufficient"}` });
 
@@ -258,7 +258,7 @@ export default function ReportsPage() {
 
   const handleCSVExport = () => {
     const headers = ["Case ID", "Title", "Victim", "Officer", "Type", "Priority", "Status", "Risk Score", "Location"];
-    const rows = cases.map(c => [c.id, c.title, c.victim, c.officer, c.type, c.priority, c.status, String(c.riskScore), c.location]);
+    const rows = cases.map(c => [c.id, c.title, c.victim, c.officer, c.type, c.priority, c.status, String(c.riskScore), c.location || ""]);
     downloadCSV("AIVENTRA_Cases_Export.csv", headers, rows);
   };
 

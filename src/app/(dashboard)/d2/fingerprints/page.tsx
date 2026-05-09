@@ -27,7 +27,7 @@ export default function FingerprintVaultPage() {
 
 Linked case: ${ev?.caseId || "Unknown"}
 Evidence type: ${ev?.type || "Unknown"}
-Evidence status: ${ev?.status || "Pending"}
+Evidence status: ${ev?.custodyStatus || "Pending"}
 All cases in system: ${cases.map(c => `${c.id}: ${c.title}`).join(", ")}
 
 Provide a professional AFIS fingerprint analysis including:
@@ -61,7 +61,7 @@ Provide a professional AFIS fingerprint analysis including:
         {[
           { label: "Total Prints", value: String(fingerprintEvidence.length + 24), icon: Database, color: "text-amber-400" },
           { label: "AFIS Matches", value: "12", icon: CheckCircle2, color: "text-green-400" },
-          { label: "Pending Analysis", value: String(fingerprintEvidence.filter(e => e.status !== "Analyzed").length + 3), icon: Search, color: "text-blue-400" },
+          { label: "Pending Analysis", value: String(fingerprintEvidence.filter(e => e.custodyStatus !== "In Lab").length + 3), icon: Search, color: "text-blue-400" },
           { label: "AI Engine", value: "Gemma", icon: Brain, color: "text-purple-400" },
         ].map((stat, i) => (
           <Card key={i} className="bg-[#111827] border-white/5">

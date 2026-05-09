@@ -25,8 +25,8 @@ export default function DecompTrackerPage() {
 
   const tempSensor = sensors.find(s => s.name === "Temperature Sensor");
   const humiditySensor = sensors.find(s => s.name === "Humidity Sensor");
-  const currentTemp = tempSensor?.readings?.[tempSensor.readings.length - 1]?.value || 28;
-  const currentHumidity = humiditySensor?.readings?.[humiditySensor.readings.length - 1]?.value || 65;
+  const currentTemp = Number(tempSensor?.value) || 28;
+  const currentHumidity = Number(humiditySensor?.value) || 65;
 
   const analyzeDecomp = async (stageId: number) => {
     setSelectedStage(stageId);
@@ -81,7 +81,7 @@ Provide forensic decomposition analysis:
           <CardContent className="p-6 flex items-center justify-between">
             <div>
               <p className="text-xs text-gray-500 font-bold uppercase mb-1">Scene Temperature</p>
-              <p className="text-3xl font-bold text-white font-mono">{currentTemp.toFixed(1)}°C</p>
+              <p className="text-3xl font-bold text-white font-mono">{Number(currentTemp).toFixed(1)}°C</p>
               <p className="text-[10px] text-gray-600 mt-1">From IoT sensor feed</p>
             </div>
             <Thermometer className="w-10 h-10 opacity-20 text-amber-400" />
@@ -91,7 +91,7 @@ Provide forensic decomposition analysis:
           <CardContent className="p-6 flex items-center justify-between">
             <div>
               <p className="text-xs text-gray-500 font-bold uppercase mb-1">Relative Humidity</p>
-              <p className="text-3xl font-bold text-white font-mono">{currentHumidity.toFixed(0)}%</p>
+              <p className="text-3xl font-bold text-white font-mono">{Number(currentHumidity).toFixed(0)}%</p>
               <p className="text-[10px] text-gray-600 mt-1">From IoT sensor feed</p>
             </div>
             <Droplets className="w-10 h-10 opacity-20 text-blue-400" />

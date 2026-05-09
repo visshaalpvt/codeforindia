@@ -116,7 +116,7 @@ export default function Sidebar({ collapsed, onToggle }: { collapsed: boolean; o
               {!collapsed && (
                 <div className="flex items-center justify-between flex-1">
                   <span className="text-sm whitespace-nowrap">{item.label}</span>
-                  {item.isNew && (
+                  {(item as any).isNew && (
                     <span className={cn("text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-white/10 border border-white/20", accentClass)}>
                       NEW
                     </span>

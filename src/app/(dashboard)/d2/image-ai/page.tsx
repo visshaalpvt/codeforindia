@@ -91,7 +91,7 @@ Perform a comprehensive forensic image analysis including:
                 <Image className={cn("w-5 h-5 shrink-0", fileName === e.name ? "text-amber-400" : "text-gray-600")} />
                 <div className="overflow-hidden">
                   <p className="text-xs font-bold text-white truncate">{e.name}</p>
-                  <p className="text-[10px] text-gray-600">{e.caseId} • {e.status}</p>
+                  <p className="text-[10px] text-gray-600">{e.caseId} • {e.custodyStatus}</p>
                 </div>
               </button>
             )) : (

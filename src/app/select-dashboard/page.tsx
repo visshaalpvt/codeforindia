@@ -141,7 +141,8 @@ export default function SelectDashboardPage() {
 
             {/* Role indicator if applicable */}
             {((dash.id === "D1" && user?.role === "Investigator") || 
-              (dash.id === "D2" && (user?.role === "Forensic Analyst" || user?.role === "Medical Officer")) ||
+              (dash.id === "D2" && user?.role === "Lab Scientist") ||
+              (dash.id === "D3" && user?.role === "Intelligence Analyst") ||
               (user?.role === "Admin")) && (
               <div className="absolute -top-3 -right-3 px-3 py-1 rounded-full bg-cyan-500 text-[10px] font-bold text-white shadow-lg border border-white/20">
                 RECOMMENDED

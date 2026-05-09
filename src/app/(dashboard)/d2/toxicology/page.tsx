@@ -65,7 +65,7 @@ Provide a professional forensic toxicology assessment including:
           { label: "Active Screens", value: String(activeScreens).padStart(2, "0"), icon: FlaskConical, color: "text-amber-400" },
           { label: "Critical Findings", value: String(criticalFindings).padStart(2, "0"), icon: ShieldAlert, color: "text-red-400" },
           { label: "Pending Labs", value: String(cases.filter(c => c.status === "Active").length), icon: Clock, color: "text-blue-400" },
-          { label: "Completed (24h)", value: String(evidence.filter(e => e.status === "Analyzed").length), icon: CheckCircle2, color: "text-green-400" },
+          { label: "Completed (24h)", value: String(evidence.filter(e => e.custodyStatus === "In Lab").length), icon: CheckCircle2, color: "text-green-400" },
         ].map((stat, i) => (
           <Card key={i} className="bg-[#111827] border-white/5">
             <CardContent className="p-6 flex items-center justify-between">
@@ -122,10 +122,10 @@ Provide a professional forensic toxicology assessment including:
                     <td className="px-6 py-4 text-sm text-gray-300">{item.type}</td>
                     <td className="px-6 py-4">
                       <span className={cn("text-[10px] font-bold px-2 py-0.5 rounded-full border",
-                        item.status === "Analyzed" ? "bg-green-500/10 text-green-400 border-green-500/20" :
+                        item.custodyStatus === "In Lab" ? "bg-green-500/10 text-green-400 border-green-500/20" :
                         "bg-amber-500/10 text-amber-400 border-amber-500/20"
                       )}>
-                        {item.status}
+                        {item.custodyStatus}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-xs font-bold text-gray-400">{item.caseId}</td>

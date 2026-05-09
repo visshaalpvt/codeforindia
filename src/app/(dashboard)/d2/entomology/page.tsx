@@ -25,21 +25,23 @@ export default function EntomologyPage() {
   const [loading, setLoading] = useState(false);
   const [selectedCase, setSelectedCase] = useState("");
 
-  const tempSensor = sensors.find(s => s.type === "Temperature");
-  const humiditySensor = sensors.find(s => s.type === "Humidity");
+  const tempSensor = sensors.find(s => s.name === "Temperature Sensor");
+  const humiditySensor = sensors.find(s => s.name === "Humidity Sensor");
 
   const analyzeStage = async (stageIndex: number) => {
     setSelectedStage(stageIndex);
     setLoading(true);
     const stage = insectStages[stageIndex];
     const caseData = cases.find(c => c.id === selectedCase);
+    const currentTemp = Number(tempSensor?.value) || 28;
+    const currentHumidity = Number(humiditySensor?.value) || 65;
 
     const prompt = `Perform forensic entomological analysis for PMI (Post-Mortem Interval) estimation:
 
 Selected insect development stage: ${stage.name} (${stage.duration})
 Case: ${caseData ? `${caseData.id}: ${caseData.title}` : "No case selected"}
-Ambient temperature: ${tempSensor?.readings?.[tempSensor.readings.length - 1]?.value || 28}°C
-Humidity: ${humiditySensor?.readings?.[humiditySensor.readings.length - 1]?.value || 65}%
+Ambient temperature: ${currentTemp}°C
+Humidity: ${currentHumidity}%
 
 Provide forensic entomology analysis:
 - Estimated PMI range based on this developmental stage
@@ -77,7 +79,7 @@ Provide forensic entomology analysis:
           <CardContent className="p-6 flex items-center justify-between">
             <div>
               <p className="text-xs text-gray-500 font-bold uppercase mb-1">Ambient Temp</p>
-              <p className="text-2xl font-bold text-white font-mono">{tempSensor?.readings?.[tempSensor.readings.length - 1]?.value?.toFixed(1) || "28.0"}°C</p>
+              <p className="text-2xl font-bold text-white font-mono">{Number(tempSensor?.value || 28).toFixed(1)}°C</p>
             </div>
             <Thermometer className="w-8 h-8 opacity-20 text-amber-400" />
           </CardContent>
@@ -86,7 +88,7 @@ Provide forensic entomology analysis:
           <CardContent className="p-6 flex items-center justify-between">
             <div>
               <p className="text-xs text-gray-500 font-bold uppercase mb-1">Humidity</p>
-              <p className="text-2xl font-bold text-white font-mono">{humiditySensor?.readings?.[humiditySensor.readings.length - 1]?.value?.toFixed(0) || "65"}%</p>
+              <p className="text-2xl font-bold text-white font-mono">{Number(humiditySensor?.value || 65).toFixed(0)}%</p>
             </div>
             <Bug className="w-8 h-8 opacity-20 text-green-400" />
           </CardContent>

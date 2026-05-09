@@ -283,7 +283,7 @@ export default function ChatPage() {
         <div className="mt-auto p-3 border-t border-white/5">
           <div className="backdrop-blur-md bg-cyan-500/5 border border-cyan-500/20 rounded-xl p-3">
             <p className="text-[10px] text-gray-500 uppercase tracking-wider">Active Case</p>
-            <p className="text-xs font-medium text-cyan-300 mt-0.5 truncate">{caseData.id}</p>
+            <p className="text-xs font-medium text-cyan-300 mt-0.5 truncate">{caseData?.id || "No Active Case"}</p>
           </div>
         </div>
       </motion.div>
@@ -407,16 +407,16 @@ export default function ChatPage() {
             <div className="p-3 space-y-3 overflow-y-auto">
               <div className="backdrop-blur-md bg-white/5 border border-cyan-500/20 rounded-xl p-3">
                 <p className="text-[10px] text-gray-500 uppercase tracking-wider">Current Case</p>
-                <p className="text-sm font-semibold mt-1">{caseData.id}</p>
-                <p className="text-xs text-gray-400 truncate">{caseData.title}</p>
+                <p className="text-sm font-semibold mt-1">{caseData?.id || "No Active Case"}</p>
+                <p className="text-xs text-gray-400 truncate">{caseData?.title || "Pending Selection"}</p>
                 <div className="mt-2 flex items-center gap-2">
                   <span className={cn(
                     "px-1.5 py-0.5 rounded text-[9px] font-bold",
                     "text-red-400 border border-red-500/40 bg-red-500/10",
                   )}>
-                    {caseData.priority}
+                    {caseData?.priority || "None"}
                   </span>
-                  <span className="text-[10px] text-gray-500">{caseData.status}</span>
+                  <span className="text-[10px] text-gray-500">{caseData?.status || "None"}</span>
                 </div>
               </div>
               <div className="space-y-2">
@@ -425,22 +425,22 @@ export default function ChatPage() {
                     <FileText className="w-3.5 h-3.5 text-cyan-400" />
                     <span className="text-xs text-gray-400">Evidence Items</span>
                   </div>
-                  <p className="text-lg font-bold text-cyan-300 mt-1">{caseData.evidenceCount}</p>
+                  <p className="text-lg font-bold text-cyan-300 mt-1">{caseData?.evidenceCount || 0}</p>
                 </div>
                 <div className="backdrop-blur-md bg-white/5 border border-white/10 rounded-xl p-3">
                   <div className="flex items-center gap-2">
                     <Activity className="w-3.5 h-3.5 text-amber-400" />
                     <span className="text-xs text-gray-400">Anomalies</span>
                   </div>
-                  <p className="text-lg font-bold text-amber-300 mt-1">{caseData.anomalies}</p>
+                  <p className="text-lg font-bold text-amber-300 mt-1">{caseData?.anomalies || 0}</p>
                 </div>
                 <div className="backdrop-blur-md bg-white/5 border border-white/10 rounded-xl p-3">
                   <div className="flex items-center gap-2">
                     <Shield className="w-3.5 h-3.5" />
                     <span className="text-xs text-gray-400">Risk Score</span>
                   </div>
-                  <p className={cn("text-lg font-bold mt-1", riskColor(caseData.riskScore))}>
-                    {caseData.riskScore}
+                  <p className={cn("text-lg font-bold mt-1", riskColor(caseData?.riskScore || 0))}>
+                    {caseData?.riskScore || 0}
                   </p>
                 </div>
               </div>
