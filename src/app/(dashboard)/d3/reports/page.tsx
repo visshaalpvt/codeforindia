@@ -198,11 +198,14 @@ function GeneratedPreview({
 
                 <div className="grid grid-cols-2 gap-0 divide-x divide-gray-200">
                   <div className="relative p-4 flex items-center justify-center bg-white min-h-[220px]">
-                    <img 
-                      src="/medical_body_silhouette_forensic_1778365451602.png" 
-                      alt="Autopsy Map" 
-                      className="h-48 object-contain opacity-90"
-                    />
+                    <svg viewBox="0 0 120 260" className="w-24 h-48 text-gray-300">
+                      <ellipse cx="60" cy="22" rx="16" ry="20" fill="none" stroke="currentColor" strokeWidth="1.5"/>
+                      <rect x="40" y="44" width="40" height="55" rx="8" fill="none" stroke="currentColor" strokeWidth="1.5"/>
+                      <rect x="20" y="48" width="14" height="45" rx="5" fill="none" stroke="currentColor" strokeWidth="1.5"/>
+                      <rect x="86" y="48" width="14" height="45" rx="5" fill="none" stroke="currentColor" strokeWidth="1.5"/>
+                      <rect x="43" y="102" width="15" height="60" rx="5" fill="none" stroke="currentColor" strokeWidth="1.5"/>
+                      <rect x="62" y="102" width="15" height="60" rx="5" fill="none" stroke="currentColor" strokeWidth="1.5"/>
+                    </svg>
                     {[
                       { id: "A", x: "52%", y: "5%", color: "bg-red-500" },
                       { id: "B", x: "72%", y: "22%", color: "bg-red-500" },
