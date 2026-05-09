@@ -542,7 +542,7 @@ function HardwareStatusPanel({ lastReading, onSimulate }: { lastReading: SensorR
           <span className="text-xs text-slate-500 font-medium">Live JSON Payload</span>
           <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse ml-auto" />
         </div>
-        <pre className="p-3 rounded-xl bg-black/40 border border-slate-200 overflow-x-auto text-[11px] font-mono leading-relaxed">
+        <pre className="p-3 rounded-xl bg-black/40 border border-slate-200 overflow-x-auto text-[11px] font-mono leading-relaxed" suppressHydrationWarning>
           <code>
             {jsonPayload.split("\n").map((line, i) => {
               const isKey = /"[^"]+":/.test(line);
