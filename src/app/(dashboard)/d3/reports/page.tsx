@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FileText,
@@ -21,7 +21,7 @@ import {
 import { cn, formatDate } from "@/lib/utils";
 import { useData } from "@/lib/store";
 import { generateForensicReport, downloadReport, downloadCSV } from "@/lib/download";
-import type { Case } from "@/types";
+import type { Case, EvidenceItem, Anomaly } from "@/types";
 
 interface ReportType {
   id: string;
@@ -114,13 +114,21 @@ function GeneratedPreview({
   caseId,
   watermark,
   cases,
+  evidence,
+  anomalies,
+  selectedSections,
 }: {
   reportType: ReportType;
   caseId: string;
   watermark: string;
   cases: Case[];
+  evidence: EvidenceItem[];
+  anomalies: Anomaly[];
+  selectedSections: Set<string>;
 }) {
-  const selectedCase = cases.find((c) => c.id === caseId);
+  const selectedCase = cases.find((c) => c.id.trim() === caseId.trim());
+  const caseEvidence = evidence.filter((e) => e.caseId === caseId);
+  const caseAnomalies = anomalies.filter((a) => a.caseId === caseId);
   const ReportIcon = reportType.icon;
 
   return (
@@ -152,29 +160,32 @@ function GeneratedPreview({
         </div>
 
         {selectedCase && (
-          <div className="space-y-3">
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <p className="text-[10px] text-slate-400 uppercase tracking-wider">Case Title</p>
-                <p className="text-xs font-semibold text-gray-900">{selectedCase.title}</p>
+          <div className="space-y-4">
+            {/* Case Details Section */}
+            {selectedSections.has("details") && (
+              <div className="grid grid-cols-2 gap-3 bg-slate-50/50 p-3 rounded-lg border border-gray-100">
+                <div>
+                  <p className="text-[10px] text-slate-400 uppercase tracking-wider">Case Title</p>
+                  <p className="text-xs font-semibold text-gray-900">{selectedCase.title}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] text-slate-400 uppercase tracking-wider">Victim</p>
+                  <p className="text-xs text-gray-800">{selectedCase.victim}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] text-slate-400 uppercase tracking-wider">Officer</p>
+                  <p className="text-xs text-gray-800">{selectedCase.officer}</p>
+                </div>
+                <div>
+                  <p className="text-[10px] text-slate-400 uppercase tracking-wider">Priority</p>
+                  <p className="text-xs font-semibold text-gray-900">{selectedCase.priority}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-[10px] text-slate-400 uppercase tracking-wider">Victim</p>
-                <p className="text-xs text-gray-800">{selectedCase.victim}</p>
-              </div>
-              <div>
-                <p className="text-[10px] text-slate-400 uppercase tracking-wider">Officer</p>
-                <p className="text-xs text-gray-800">{selectedCase.officer}</p>
-              </div>
-              <div>
-                <p className="text-[10px] text-slate-400 uppercase tracking-wider">Priority</p>
-                <p className="text-xs font-semibold text-gray-900">{selectedCase.priority}</p>
-              </div>
-            </div>
+            )}
 
             {/* Autopsy Body Diagram — Full Case & Risk Analysis */}
-            {(reportType.id === "full-case" || reportType.id === "risk-analysis") && (
-              <div className="border border-gray-300 rounded-lg overflow-hidden mt-2">
+            {(reportType.id === "full-case" || reportType.id === "risk-analysis") && selectedSections.has("risk") && (
+              <div className="border border-gray-300 rounded-lg overflow-hidden">
                 <div className="bg-slate-800 text-white px-3 py-1.5 flex items-center justify-between">
                   <span className="text-[10px] font-bold tracking-wider">FORENSIC AUTOPSY REPORT — BODY DIAGRAM</span>
                 </div>
@@ -186,7 +197,6 @@ function GeneratedPreview({
                 </div>
 
                 <div className="grid grid-cols-2 gap-0 divide-x divide-gray-200">
-                  {/* Body diagram (Image) */}
                   <div className="relative p-4 flex items-center justify-center bg-white min-h-[220px]">
                     <img 
                       src="/medical_body_silhouette_forensic_1778365451602.png" 
@@ -207,7 +217,6 @@ function GeneratedPreview({
                     ))}
                   </div>
 
-                  {/* Findings */}
                   <div className="p-3 space-y-2 bg-white">
                     <p className="text-[9px] font-bold text-gray-700 uppercase tracking-wider">Injury Findings</p>
                     {[
@@ -226,40 +235,85 @@ function GeneratedPreview({
                     ))}
                   </div>
                 </div>
+              </div>
+            )}
 
-                {/* Autopsy notes */}
-                <div className="p-3 border-t border-gray-200 bg-gray-50 grid grid-cols-2 gap-2 text-[9px]">
-                  <div><span className="font-semibold text-gray-600">COD:</span> <span className="text-gray-800">Blunt Force Trauma</span></div>
-                  <div><span className="font-semibold text-gray-600">Weapon:</span> <span className="text-gray-800">Heavy blunt object</span></div>
-                  <div><span className="font-semibold text-gray-600">Est. TOD:</span> <span className="text-gray-800">~18-24 hrs PMI</span></div>
-                  <div><span className="font-semibold text-gray-600">Confidence:</span> <span className="text-green-700 font-bold">89%</span></div>
+            {/* Evidence List Section */}
+            {selectedSections.has("evidence") && (
+              <div>
+                <p className="text-[10px] text-slate-400 uppercase tracking-wider mb-1">Evidence Summary</p>
+                <div className="border border-gray-100 rounded-lg overflow-hidden">
+                  <table className="w-full text-[10px]">
+                    <thead className="bg-gray-50 border-b border-gray-100 text-slate-500 font-medium">
+                      <tr>
+                        <th className="text-left px-3 py-1.5">Item</th>
+                        <th className="text-left px-3 py-1.5">Type</th>
+                        <th className="text-left px-3 py-1.5">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100">
+                      {caseEvidence.length > 0 ? caseEvidence.map(e => (
+                        <tr key={e.id}>
+                          <td className="px-3 py-1.5 text-gray-700 font-medium">{e.name}</td>
+                          <td className="px-3 py-1.5 text-slate-500">{e.type}</td>
+                          <td className="px-3 py-1.5 text-slate-500">{e.custodyStatus}</td>
+                        </tr>
+                      )) : (
+                        <tr><td colSpan={3} className="px-3 py-3 text-center text-slate-400 italic">No evidence linked</td></tr>
+                      )}
+                    </tbody>
+                  </table>
                 </div>
               </div>
             )}
 
-            <div>
-              <p className="text-[10px] text-slate-400 uppercase tracking-wider mb-1">Description</p>
-              <p className="text-xs text-gray-700 leading-relaxed">
-                This report provides a comprehensive analysis of {selectedCase.title}. The investigation
-                involves {selectedCase.evidenceCount} evidence items with {selectedCase.anomalies} flagged
-                anomalies. Risk assessment score: {selectedCase.riskScore}/100.
-              </p>
-            </div>
+            {/* Anomalies Section */}
+            {selectedSections.has("anomalies") && caseAnomalies.length > 0 && (
+              <div>
+                <p className="text-[10px] text-slate-400 uppercase tracking-wider mb-1">Flagged Anomalies</p>
+                <div className="space-y-2">
+                  {caseAnomalies.map(a => (
+                    <div key={a.id} className="p-2 rounded-lg bg-red-50 border border-red-100">
+                      <div className="flex items-center gap-2 mb-1">
+                        <AlertTriangle className="w-3 h-3 text-red-600" />
+                        <span className="text-[10px] font-bold text-red-700">{a.title}</span>
+                        <span className="ml-auto text-[8px] font-mono text-red-400 uppercase">{a.severity}</span>
+                      </div>
+                      <p className="text-[9px] text-red-600/80 leading-tight">{a.description}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
-            <div>
-              <p className="text-[10px] text-slate-400 uppercase tracking-wider mb-1">Key Findings</p>
-              <ul className="text-xs text-gray-700 space-y-1 list-disc list-inside">
-                <li>Evidence tampering detected in chain of custody logs</li>
-                <li>GPS data shows unexplained location discrepancies</li>
-                <li>Witness statements conflict with forensic timeline</li>
-                <li>AI analysis recommends further investigation</li>
-              </ul>
-            </div>
+            {/* AI Summary Section */}
+            {selectedSections.has("ai") && (
+              <div>
+                <p className="text-[10px] text-slate-400 uppercase tracking-wider mb-1">AI Forensic Synthesis</p>
+                <p className="text-xs text-gray-700 leading-relaxed bg-cyan-50/30 p-3 rounded-lg border border-cyan-100/50">
+                  This report provides a comprehensive analysis of {selectedCase.title}. The investigation
+                  involves {selectedCase.evidenceCount} evidence items with {selectedCase.anomalies} flagged
+                  anomalies. Risk assessment score: {selectedCase.riskScore}/100. AI analysis recommends 
+                  further investigation into timeline discrepancies and witness statement corroboration.
+                </p>
+              </div>
+            )}
 
-            <div className="pt-3 border-t border-gray-200">
+            {/* Footer */}
+            <div className="pt-3 border-t border-gray-200 flex justify-between items-center">
               <p className="text-[10px] text-slate-500 font-mono">
                 Generated: {formatDate(new Date().toISOString())} | {watermark || "No watermark"}
               </p>
+              <div className="flex gap-4">
+                <div className="text-center">
+                  <div className="w-16 h-px bg-gray-300 mb-1" />
+                  <p className="text-[8px] text-slate-400">Investigator Signature</p>
+                </div>
+                <div className="text-center">
+                  <div className="w-16 h-px bg-gray-300 mb-1" />
+                  <p className="text-[8px] text-slate-400">Officer Seal</p>
+                </div>
+              </div>
             </div>
           </div>
         )}
@@ -272,12 +326,18 @@ export default function ReportsPage() {
   const { cases, evidence, anomalies, addNotification } = useData();
   const recentExports = useRecentExports();
   const [selectedReport, setSelectedReport] = useState<string>("full-case");
-  const [selectedCase, setSelectedCase] = useState(cases[0]?.id ?? "");
+  const [selectedCase, setSelectedCase] = useState("");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [selectedSections, setSelectedSections] = useState<Set<string>>(
     new Set(sections.map((s) => s.id))
   );
+
+  useEffect(() => {
+    if (!selectedCase && cases.length > 0) {
+      setSelectedCase(cases[0].id);
+    }
+  }, [cases, selectedCase]);
   const [redact, setRedact] = useState(false);
   const [watermark, setWatermark] = useState("CONFIDENTIAL");
   const [generating, setGenerating] = useState(false);
@@ -576,6 +636,9 @@ export default function ReportsPage() {
                   caseId={selectedCase}
                   watermark={watermark}
                   cases={cases}
+                  evidence={evidence}
+                  anomalies={anomalies}
+                  selectedSections={selectedSections}
                 />
               ) : (
                 <PreviewPlaceholder />
