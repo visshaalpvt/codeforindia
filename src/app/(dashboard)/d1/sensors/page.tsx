@@ -131,7 +131,7 @@ function SensorCard({ sensor, time }: { sensor: SensorDevice; time: number }) {
             <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
             <span className="text-[10px] font-bold text-white tracking-widest uppercase">REC • CAM-01</span>
           </div>
-          <div className="absolute bottom-3 right-3 text-[10px] font-mono text-white/60">
+          <div className="absolute bottom-3 right-3 text-[10px] font-mono text-white/60" suppressHydrationWarning>
             {new Date().toISOString().slice(0, 19).replace("T", " ")}
           </div>
           <div className="absolute inset-0 border-[20px] border-transparent group-hover:border-white/5 transition-all pointer-events-none" />
@@ -167,7 +167,7 @@ function SensorCard({ sensor, time }: { sensor: SensorDevice; time: number }) {
       )}
 
       {/* Last Updated */}
-      <p className="text-[10px] text-slate-400 mt-3 font-mono">
+      <p className="text-[10px] text-slate-400 mt-3 font-mono" suppressHydrationWarning>
         Updated {timeAgo(sensor.lastUpdated)}
       </p>
     </motion.div>
@@ -330,7 +330,7 @@ function LiveSurveillanceFeed({
                 <div className="text-[10px] font-mono text-white/60 bg-black/40 px-2 py-1 rounded backdrop-blur-sm">
                   ZONE: EVIDENCE_STORAGE_A
                 </div>
-                <div className="text-[10px] font-mono text-white/60 bg-black/40 px-2 py-1 rounded backdrop-blur-sm">
+                <div className="text-[10px] font-mono text-white/60 bg-black/40 px-2 py-1 rounded backdrop-blur-sm" suppressHydrationWarning>
                   {new Date().toISOString().slice(0, 19).replace("T", " ")}
                 </div>
               </div>
@@ -480,7 +480,7 @@ function HardwareStatusPanel({ lastReading, onSimulate }: { lastReading: SensorR
           <Wifi className="w-4 h-4 text-slate-500" />
           <div>
             <p className="text-xs font-semibold">Last Heartbeat</p>
-            <p className="text-[10px] text-slate-500 font-mono">{timeAgo(new Date(heartbeatTime - 2000).toISOString())}</p>
+            <p className="text-[10px] text-slate-500 font-mono" suppressHydrationWarning>{timeAgo(new Date(heartbeatTime - 2000).toISOString())}</p>
           </div>
         </div>
 
