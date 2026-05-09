@@ -2,6 +2,7 @@
  * Shared AI helper — calls Groq API for forensic analysis.
  * Used by all modules that need AI-generated insights.
  */
+import { retrieveKnowledge, formatKnowledgeContext } from "./rag-engine";
 
 const GROQ_BASE_URL = "https://api.groq.com/openai/v1/chat/completions";
 const GROQ_MODEL = "llama-3.3-70b-versatile";
@@ -12,14 +13,14 @@ export async function askGemma(prompt: string, systemPrompt?: string): Promise<s
 
     const messages: { role: string; content: string }[] = [];
 
-    if (systemPrompt) {
-      messages.push({ role: "system", content: systemPrompt });
-    } else {
-      messages.push({
-        role: "system",
-        content: "You are AIVENTRA, a professional forensic AI assistant. Provide detailed, accurate forensic analysis with confidence levels. Be concise but thorough.",
-      });
-    }
+    // --- RAG Knowledge Retrieval ---
+    const retrievedRecords = retrieveKnowledge(prompt, 5);
+    const knowledgeContext = formatKnowledgeContext(retrievedRecords);
+
+    let finalSystemPrompt = systemPrompt || "You are AIVENTRA, a professional forensic AI assistant. Provide detailed, accurate forensic analysis with confidence levels. Be concise but thorough.";
+    finalSystemPrompt += knowledgeContext;
+
+    messages.push({ role: "system", content: finalSystemPrompt });
 
     messages.push({ role: "user", content: prompt });
 

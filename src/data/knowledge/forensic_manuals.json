@@ -1,0 +1,12 @@
+[
+  {
+    "id": "M1",
+    "title": "Standard Autopsy Procedure",
+    "content": "The standard autopsy involves an external examination, Y-incision, organ removal (Virchow or Letulle), weighing, sectioning, and sampling for histology and toxicology."
+  },
+  {
+    "id": "M2",
+    "title": "Digital Evidence Handling SOP",
+    "content": "Devices must be isolated from networks (Faraday bags), documented, imaged using write-blockers, and hashes verified before analysis."
+  }
+]
