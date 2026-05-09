@@ -89,7 +89,7 @@ export default function EvidencePage() {
   const [uploadCaseId, setUploadCaseId] = useState(cases[0]?.id ?? "");
   const [viewEvidence, setViewEvidence] = useState<EvidenceItem | null>(null);
 
-  const allTags = useMemo(() => Array.from(new Set(evidence.flatMap((e) => e.tags))), [evidence]);
+  const allTags = useMemo(() => Array.from(new Set(evidence.flatMap((e) => e.tags || []).filter(Boolean))), [evidence]);
   const allClassifications = useMemo(
     () => Array.from(new Set(evidence.map((e) => e.aiClassification).filter(Boolean))) as string[],
     [evidence]
