@@ -438,7 +438,7 @@ export default function EvidencePage() {
                 </div>
 
                 {/* AI Tags */}
-                {item.tags.length > 0 && (
+                {item.tags && item.tags.length > 0 && (
                   <div className="flex flex-wrap gap-1 mb-3">
                     {item.tags.slice(0, 3).map((tag) => (
                       <span
@@ -607,7 +607,7 @@ export default function EvidencePage() {
                 {viewEvidence.aiClassification && (
                   <div className="flex justify-between"><span className="text-slate-500">AI Classification</span><span className="text-violet-700">{viewEvidence.aiClassification}</span></div>
                 )}
-                {viewEvidence.tags.length > 0 && (
+                {viewEvidence.tags && viewEvidence.tags.length > 0 && (
                   <div className="flex justify-between items-start gap-2">
                     <span className="text-slate-500 shrink-0">Tags</span>
                     <div className="flex flex-wrap gap-1 justify-end">
