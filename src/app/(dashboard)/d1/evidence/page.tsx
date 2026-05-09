@@ -193,7 +193,9 @@ export default function EvidencePage() {
         });
         
         const data = await res.json();
-        const aiResult = JSON.parse(data.content.replace(/```json|```/g, "").trim());
+        const match = data.content.match(/\{[\s\S]*\}/);
+        if (!match) throw new Error("No JSON object found in AI response");
+        const aiResult = JSON.parse(match[0]);
         
         // Find the newly added evidence and update it (hacky since we don't have the ID yet, but we can find by name)
         // In a real app, addEvidence would return the ID.
