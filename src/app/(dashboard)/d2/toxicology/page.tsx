@@ -15,9 +15,9 @@ export default function ToxicologyPage() {
   const [aiLoading, setAiLoading] = useState(false);
 
   // Derive toxicology data from real evidence in the store
-  const toxEvidence = evidence.filter(e => e.tags.some(t => t.toLowerCase().includes("toxicolog") || t.toLowerCase().includes("chemical") || t.toLowerCase().includes("blood")));
+  const toxEvidence = evidence.filter(e => (e.tags || []).some(t => t.toLowerCase().includes("toxicolog") || t.toLowerCase().includes("chemical") || t.toLowerCase().includes("blood")));
   const activeScreens = toxEvidence.length;
-  const criticalFindings = toxEvidence.filter(e => e.tags.includes("critical")).length;
+  const criticalFindings = toxEvidence.filter(e => (e.tags || []).includes("critical")).length;
 
   const runAIAnalysis = async () => {
     setAiLoading(true);

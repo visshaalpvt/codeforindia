@@ -34,7 +34,7 @@ export default function WoundAnalysisPage() {
     setLoading(true);
 
     const relevantEvidence = evidence.filter(e =>
-      e.tags.some(t => t.toLowerCase().includes("wound") || t.toLowerCase().includes("injury") || t.toLowerCase().includes("trauma"))
+      (e.tags || []).some(t => t.toLowerCase().includes("wound") || t.toLowerCase().includes("injury") || t.toLowerCase().includes("trauma"))
     );
 
     const prompt = `Analyze wounds in the ${region.label} region for a forensic autopsy:

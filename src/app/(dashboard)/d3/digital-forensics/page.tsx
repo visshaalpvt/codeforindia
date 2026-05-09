@@ -27,7 +27,7 @@ export default function DigitalForensicsPage() {
     const device = deviceTypes.find(d => d.id === deviceId);
 
     const digitalEvidence = evidence.filter(e =>
-      e.tags.some(t => ["digital", "device", "phone", "laptop", "usb", "network", "cyber"].includes(t.toLowerCase()))
+      (e.tags || []).some(t => ["digital", "device", "phone", "laptop", "usb", "network", "cyber"].includes(t.toLowerCase()))
     );
 
     const prompt = `Perform a digital forensic analysis for a ${device?.label} device seizure:
@@ -110,7 +110,7 @@ Provide a comprehensive digital forensic report including:
           <CardContent className="p-6">
             <p className="text-xs text-slate-400 font-bold uppercase mb-1">Digital Evidence</p>
             <p className="text-2xl font-bold text-slate-900 font-mono">
-              {evidence.filter(e => e.tags.some(t => ["digital", "device", "phone", "laptop"].includes(t.toLowerCase()))).length}
+              {evidence.filter(e => (e.tags || []).some(t => ["digital", "device", "phone", "laptop"].includes(t.toLowerCase()))).length}
             </p>
             <p className="text-[10px] text-slate-400 mt-1">Items in system</p>
           </CardContent>

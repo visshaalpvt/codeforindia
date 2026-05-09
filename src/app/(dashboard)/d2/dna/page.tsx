@@ -71,7 +71,7 @@ Provide a comprehensive forensic DNA report including:
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {[
-          { label: "DNA Profiles", value: String(evidence.filter(e => e.tags.some(t => t.toLowerCase().includes("dna"))).length + 18), icon: Database, color: "text-amber-600" },
+          { label: "DNA Profiles", value: String(evidence.filter(e => (e.tags || []).some(t => t.toLowerCase().includes("dna"))).length + 18), icon: Database, color: "text-amber-600" },
           { label: "CODIS Hits", value: "7", icon: CheckCircle2, color: "text-green-600" },
           { label: "Pending Analysis", value: "4", icon: Activity, color: "text-blue-600" },
           { label: "AI Engine", value: "Gemma", icon: Brain, color: "text-violet-600" },

@@ -109,7 +109,7 @@ export default function EvidencePage() {
           e.name.toLowerCase().includes(q) ||
           e.id.toLowerCase().includes(q) ||
           e.caseId.toLowerCase().includes(q) ||
-          e.tags.some((t) => t.toLowerCase().includes(q))
+          (e.tags || []).some((t) => t.toLowerCase().includes(q))
       );
     }
     if (typeFilter) list = list.filter((e) => e.type === typeFilter);

@@ -15,7 +15,7 @@ export default function FingerprintVaultPage() {
   const [selectedPrint, setSelectedPrint] = useState<string | null>(null);
 
   const fingerprintEvidence = evidence.filter(e =>
-    e.tags.some(t => ["fingerprint", "print", "biometric", "latent"].includes(t.toLowerCase()))
+    (e.tags || []).some(t => ["fingerprint", "print", "biometric", "latent"].includes(t.toLowerCase()))
   );
 
   const analyzePrint = async (evidenceId: string) => {
