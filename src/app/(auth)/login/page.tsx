@@ -103,7 +103,7 @@ export default function LoginPage() {
       return;
     }
     setDashboard(selectedRole.dashboard as "D1" | "D2" | "D3");
-    router.push(dashboardPaths[selectedRole.dashboard]);
+    router.push("/select-dashboard");
   }
 
   return (

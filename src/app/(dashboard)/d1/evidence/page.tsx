@@ -150,6 +150,15 @@ export default function EvidencePage() {
     setShowUploadDialog(true);
   };
 
+  const readFileAsBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
   const confirmUpload = async () => {
     if (!uploadCaseId) return;
     const currentQueue = [...uploadQueue];
@@ -158,8 +167,18 @@ export default function EvidencePage() {
 
     for (const file of currentQueue) {
       const type = getEvidenceTypeFromFile(file);
+
+      // Read image/video files under 5MB as Base64 Data URLs
+      let fileUrl: string | undefined = undefined;
+      if ((type === "Image" || type === "Video") && file.size < 5 * 1024 * 1024) {
+        try {
+          fileUrl = await readFileAsBase64(file);
+        } catch (e) {
+          console.error("Failed to read file as base64", file.name, e);
+        }
+      }
       
-      // Initial upload with mock data
+      // Initial upload with data URL
       addEvidence({
         caseId: uploadCaseId,
         name: file.name,
@@ -168,6 +187,7 @@ export default function EvidencePage() {
         tags: ["Analyzing..."],
         aiClassification: "AI Analyzing...",
         custodyStatus: "Secured",
+        fileUrl,
       });
 
       // Background AI Classification

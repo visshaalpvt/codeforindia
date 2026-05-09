@@ -112,8 +112,17 @@ export default function CreateCasePage() {
     setFiles((prev) => prev.filter((_, i) => i !== index));
   }, []);
 
-  const createCaseAndEvidence = (data: CaseFormData) => {
-    addCase({
+  const readFileAsBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const createCaseAndEvidence = async (data: CaseFormData) => {
+    const createdCaseId = addCase({
       title: data.title,
       victim: data.victimName,
       victimAge: data.victimAge ? parseInt(data.victimAge) : undefined,
@@ -132,33 +141,42 @@ export default function CreateCasePage() {
     });
 
     for (const file of files) {
+      let fileUrl = undefined;
+      const type = getEvidenceTypeFromFile(file);
+      if ((type === "Image" || type === "Video") && file.size < 5 * 1024 * 1024) {
+        try {
+          fileUrl = await readFileAsBase64(file);
+        } catch (e) {
+          console.error("Failed to read file", e);
+        }
+      }
+
       addEvidence({
-        caseId: data.caseId,
+        caseId: createdCaseId,
         name: file.name,
-        type: getEvidenceTypeFromFile(file),
+        type,
         size: `${(file.size / 1024 / 1024).toFixed(1)} MB`,
         tags: [],
         custodyStatus: "Secured",
+        fileUrl,
       });
     }
   };
 
   const onSubmit = async (data: CaseFormData) => {
     setSaving(true);
-    await new Promise((r) => setTimeout(r, 1200));
-    createCaseAndEvidence(data);
+    await createCaseAndEvidence(data);
     setSaving(false);
     setShowSuccess(true);
-    setTimeout(() => router.push("/cases"), 2000);
+    setTimeout(() => router.push("/d1/cases"), 2000);
   };
 
   const onSaveDraft = async (data: CaseFormData) => {
     setSaving(true);
-    await new Promise((r) => setTimeout(r, 600));
-    createCaseAndEvidence(data);
+    await createCaseAndEvidence(data);
     setSaving(false);
     setShowSuccess(true);
-    setTimeout(() => router.push("/cases"), 2000);
+    setTimeout(() => router.push("/d1/cases"), 2000);
   };
 
   return (

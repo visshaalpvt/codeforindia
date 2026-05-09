@@ -28,7 +28,7 @@ interface DataState {
 
 interface DataContextValue extends DataState {
   dispatch: any;
-  addCase: (data: Omit<Case, "id" | "createdAt">) => void;
+  addCase: (data: Omit<Case, "id" | "createdAt">) => string;
   updateCase: (id: string, data: Partial<Case>) => void;
   deleteCase: (id: string) => void;
   addEvidence: (data: Omit<EvidenceItem, "id" | "uploadedAt">) => void;
@@ -111,6 +111,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     fbSet(`timelineEvents/${tlId}`, { id: tlId, caseId: newCase.id, timestamp: new Date().toISOString(), type: "Evidence Upload", title: `Case created: ${newCase.title}`, description: `New case opened by ${newCase.officer}`, confidence: 100 });
     const nId = genId("N");
     fbSet(`notifications/${nId}`, { id: nId, type: "system", title: "New Case Created", description: `Case ${newCase.id} — ${newCase.title}`, timestamp: new Date().toISOString(), read: false });
+    return newCase.id;
   }, []);
 
   const updateCase = useCallback((id: string, data: Partial<Case>) => fbUpdate(`cases/${id}`, data), []);

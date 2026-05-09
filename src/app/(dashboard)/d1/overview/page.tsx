@@ -98,7 +98,7 @@ function SensorCard({ sensor }: { sensor: SensorDevice }) {
         <span className={cn("w-2 h-2 rounded-full animate-pulse", statusColor)} />
       </div>
       <p className="text-lg font-bold font-mono">{displayValue}<span className="text-xs text-slate-400 ml-0.5">{sensor.unit}</span></p>
-      <p className="text-[10px] text-slate-400 mt-0.5">{formatTime(sensor.lastUpdated)}</p>
+      <p className="text-[10px] text-slate-400 mt-0.5" suppressHydrationWarning>{formatTime(sensor.lastUpdated)}</p>
     </motion.div>
   );
 }
@@ -409,7 +409,7 @@ export default function DashboardPage() {
                       </div>
                       <p className="text-sm font-semibold leading-tight">{event.title}</p>
                       <p className="text-xs text-slate-500 mt-0.5 line-clamp-1">{event.description}</p>
-                      <p className="text-[10px] text-slate-400 mt-0.5 font-mono">{timeAgo(event.timestamp)}</p>
+                      <p className="text-[10px] text-slate-400 mt-0.5 font-mono" suppressHydrationWarning>{timeAgo(event.timestamp)}</p>
                     </motion.div>
                   );
                 })}
@@ -473,7 +473,7 @@ export default function DashboardPage() {
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold leading-tight">{alert.title}</p>
                     <p className="text-xs text-slate-500 mt-0.5 line-clamp-1">{alert.description}</p>
-                    <p className="text-[10px] text-slate-400 mt-0.5 font-mono">{timeAgo(alert.timestamp)}</p>
+                    <p className="text-[10px] text-slate-400 mt-0.5 font-mono" suppressHydrationWarning>{timeAgo(alert.timestamp)}</p>
                   </div>
                 </motion.div>
               ))}

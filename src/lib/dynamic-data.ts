@@ -3,8 +3,8 @@ import type { AIAnalysisResult, TODResult, AISummary, Case, EvidenceItem, Timeli
 export function generateAIAnalysis(evidence: EvidenceItem[], caseData?: Case): AIAnalysisResult {
   const pdfEvidence = evidence.filter(e => e.type === "PDF" || e.type === "DOCX");
   const imageEvidence = evidence.filter(e => e.type === "Image");
-  const hasToxicology = evidence.some(e => e.tags.includes("toxicology"));
-  const hasWeapon = evidence.some(e => e.tags.includes("weapon"));
+  const hasToxicology = evidence.some(e => (e.tags || []).includes("toxicology"));
+  const hasWeapon = evidence.some(e => (e.tags || []).includes("weapon"));
 
   return {
     causeOfDeath: pdfEvidence.length > 0
@@ -159,7 +159,7 @@ export function generateChatResponse(message: string, cases: Case[], evidence: E
 
   if (lower.includes("e-007") || lower.includes("access")) {
     const eid = evidence.find(e => lower.includes(e.id.toLowerCase()));
-    if (eid) return `**Evidence ${eid.id} — ${eid.name}**\n\n**Type:** ${eid.type} | **Size:** ${eid.size}\n**Tags:** ${eid.tags.join(", ")}\n**Custody:** ${eid.custodyStatus}\n**AI Classification:** ${eid.aiClassification || "Not classified"}\n\nChain of custody records are available in the Custody Tracker (/custody).`;
+    if (eid) return `**Evidence ${eid.id} — ${eid.name}**\n\n**Type:** ${eid.type} | **Size:** ${eid.size}\n**Tags:** ${(eid.tags || []).join(", ")}\n**Custody:** ${eid.custodyStatus}\n**AI Classification:** ${eid.aiClassification || "Not classified"}\n\nChain of custody records are available in the Custody Tracker (/custody).`;
     return "No evidence matching that ID was found. Check the Evidence page to browse all items.";
   }
 
