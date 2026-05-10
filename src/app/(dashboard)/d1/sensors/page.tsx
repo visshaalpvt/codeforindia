@@ -199,20 +199,33 @@ function SnapshotBoard({ snapshots }: { snapshots: { id: string; url: string; ti
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="relative group rounded-xl overflow-hidden border border-slate-200 shadow-sm bg-slate-100 aspect-video"
+                className="relative group rounded-xl overflow-hidden border border-slate-200 shadow-sm bg-slate-900 aspect-video flex items-center justify-center"
               >
                 <img 
                   src={snap.url} 
                   alt="Capture" 
-                  className="w-full h-full object-cover transition-opacity"
+                  className="w-full h-full object-cover transition-opacity duration-500"
+                  onLoad={(e) => (e.currentTarget.style.opacity = "1")}
                   onError={(e) => {
                     const img = e.target as HTMLImageElement;
-                    if (!img.src.includes(":81") && img.src.includes("/capture")) {
-                      img.src = img.src.replace("/capture", ":81/capture");
+                    img.style.display = "none";
+                    const parent = img.parentElement;
+                    if (parent) {
+                      const errorMsg = parent.querySelector(".snap-error");
+                      if (errorMsg) (errorMsg as HTMLElement).style.display = "flex";
                     }
                   }}
+                  style={{ opacity: 0 }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent p-2 flex flex-col justify-end">
+                
+                {/* Error Placeholder */}
+                <div className="snap-error absolute inset-0 hidden flex-col items-center justify-center bg-slate-900 p-4 text-center">
+                  <AlertTriangle className="w-5 h-5 text-red-500 mb-1" />
+                  <p className="text-[8px] font-bold text-red-400 uppercase">Link Failed</p>
+                  <p className="text-[7px] text-slate-500 mt-1 line-clamp-1">{snap.url}</p>
+                </div>
+
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent p-2 flex flex-col justify-end pointer-events-none">
                   <div className="flex items-center justify-between">
                     <span className="text-[8px] font-mono text-cyan-400 font-bold">{snap.id}</span>
                     <span className="text-[8px] font-mono text-slate-300">{snap.time}</span>
@@ -779,7 +792,10 @@ export default function SensorsPage() {
     
     const now = new Date();
     const snapId = `SNAP-${now.getTime().toString().slice(-6)}`;
-    const snapUrl = `http://${camIp}/capture?t=${now.getTime()}`; // standard ESP32-CAM capture endpoint
+    
+    // Many ESP32-CAMs use /capture, but some use /jpg or /still. 
+    // We'll try the one configured but adding a timestamp to bust cache.
+    const snapUrl = `http://${camIp}/capture?t=${now.getTime()}`;
     
     setSnapshots(prev => [{
       id: snapId,
