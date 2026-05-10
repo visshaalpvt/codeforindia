@@ -6,7 +6,7 @@ import type {
   CustodyRecord, Notification, CorrelationNode, CorrelationEdge,
   ChatMessage,
 } from "@/types";
-import { mockSensors, generateMockSensorReading, mockChatMessages } from "./mock-data";
+import { mockSensors, mockChatMessages } from "./mock-data";
 import { getDefaultEnabledModules } from "./module-config";
 import { database } from "./firebase";
 import { ref, onValue, set, update, remove } from "firebase/database";

@@ -1,4 +1,4 @@
-import { generateMockSensorReading } from "./mock-data";
+// import { generateMockSensorReading } from "./mock-data";
 
 type EventCallback = (...args: unknown[]) => void;
 
