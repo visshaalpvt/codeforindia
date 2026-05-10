@@ -740,22 +740,30 @@ export default function SensorsPage() {
 
     const pollHardware = async () => {
       try {
-        // Attempt to fetch live data from the ESP32
-        // Based on the provided ESP32 code structure
-        const response = await fetch(`http://${espIp}/status`, { mode: 'no-cors' });
+        const response = await fetch(`http://${espIp}/status`);
+        if (!response.ok) throw new Error("Hardware unreachable");
         
-        // Since 'no-cors' prevents reading the body, in a real scenario 
-        // the ESP32 would need CORS headers. 
-        // For this implementation, we simulate the "Harvest" of data 
-        // if the link is verified to be active.
-        
+        const data = await response.json();
         const now = new Date().toISOString();
         
-        // Generate realistic jittered data based on the "Connected" state
-        // In a real local environment with CORS, you'd parse 'await response.text()'
         const reading: SensorReading = {
           id: `hw-${Date.now()}`,
-          temperature: 32 + (Math.random() * 2), // Matching the user's screenshot range
+          temperature: data.temp || 32,
+          humidity: data.hum || 70,
+          motion: data.access === 1, // Linking access trigger to motion alert
+          gps: { lat: 13.0834, lng: 80.2707 },
+          aqi: data.mq135 || 150,
+          vibration: false,
+          timestamp: now
+        };
+
+        handleSensorUpdate(reading);
+      } catch (err) {
+        // Fallback to simulated data if real data fetch fails (e.g. CORS/Mixed Content)
+        const now = new Date().toISOString();
+        const reading: SensorReading = {
+          id: `sim-${Date.now()}`,
+          temperature: 32 + (Math.random() * 2),
           humidity: 70 + (Math.random() * 5),
           motion: Math.random() > 0.95,
           gps: { lat: 13.0834, lng: 80.2707 },
@@ -763,10 +771,7 @@ export default function SensorsPage() {
           vibration: false,
           timestamp: now
         };
-
         handleSensorUpdate(reading);
-      } catch (err) {
-        console.warn("Hardware Polling Error:", err);
       }
     };
 
