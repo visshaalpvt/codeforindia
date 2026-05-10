@@ -15,6 +15,8 @@ export class MockWebSocket {
     this._connected = true;
     this.emit("connected", { status: "live", timestamp: new Date().toISOString() });
 
+    // Mock data intervals disabled as per user request to use real-time data only
+    /*
     this.intervals.push(setInterval(() => {
       this.emit("sensor-update", generateMockSensorReading());
     }, 3000));
@@ -49,6 +51,7 @@ export class MockWebSocket {
         read: false,
       });
     }, 15000));
+    */
   }
 
   disconnect() {

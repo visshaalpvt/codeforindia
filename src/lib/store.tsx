@@ -250,6 +250,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
+    // Sensor mock interval disabled as per user request
+    /*
     const sensorInterval = setInterval(() => {
       const reading = generateMockSensorReading();
       setState(prev => {
@@ -275,6 +277,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
       });
     }, 3000);
     return () => clearInterval(sensorInterval);
+    */
   }, []);
 
   const dispatch = useCallback((action: any) => {
