@@ -2,6 +2,8 @@
 
 import React, { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
+import { auth, googleProvider } from "./firebase";
+import { signInWithPopup } from "firebase/auth";
 
 interface User {
   name: string;
@@ -15,6 +17,7 @@ interface AuthContextValue {
   user: User | null;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  loginWithGoogle: () => Promise<{ success: boolean; error?: string }>;
   register: (data: { name: string; email: string; password: string; role: string; badgeId: string }) => Promise<void>;
   forgotPassword: (email: string) => Promise<void>;
   logout: () => void;
@@ -76,6 +79,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { success: true };
   }, []);
 
+  const loginWithGoogle = useCallback(async (): Promise<{ success: boolean; error?: string }> => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const googleUser = result.user;
+      
+      // Map Google user to AIVENTRA user type
+      const u: User = {
+        name: googleUser.displayName || "Google User",
+        email: googleUser.email || "",
+        role: "Investigator", // Default role
+        badgeId: `G-${googleUser.uid.slice(0, 5).toUpperCase()}`,
+        dashboard: "D1",
+      };
+
+      setUser(u);
+      localStorage.setItem("aiventra_user", JSON.stringify(u));
+      return { success: true };
+    } catch (error: any) {
+      console.error("Google Login Error:", error);
+      return { success: false, error: error.message || "Google sign-in failed" };
+    }
+  }, []);
+
   const register = useCallback(async (data: { name: string; email: string; password: string; role: string; badgeId: string }) => {
     await new Promise(r => setTimeout(r, 800));
     const u: User = {
@@ -99,7 +125,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, login, register, forgotPassword, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated: !!user, login, loginWithGoogle, register, forgotPassword, logout }}>
       {children}
     </AuthContext.Provider>
   );
