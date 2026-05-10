@@ -199,9 +199,19 @@ function SnapshotBoard({ snapshots }: { snapshots: { id: string; url: string; ti
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="relative group rounded-xl overflow-hidden border border-slate-200 shadow-sm bg-black aspect-video"
+                className="relative group rounded-xl overflow-hidden border border-slate-200 shadow-sm bg-slate-100 aspect-video"
               >
-                <img src={snap.url} alt="Capture" className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+                <img 
+                  src={snap.url} 
+                  alt="Capture" 
+                  className="w-full h-full object-cover transition-opacity"
+                  onError={(e) => {
+                    const img = e.target as HTMLImageElement;
+                    if (!img.src.includes(":81") && img.src.includes("/capture")) {
+                      img.src = img.src.replace("/capture", ":81/capture");
+                    }
+                  }}
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent p-2 flex flex-col justify-end">
                   <div className="flex items-center justify-between">
                     <span className="text-[8px] font-mono text-cyan-400 font-bold">{snap.id}</span>
