@@ -619,23 +619,32 @@ export default function SensorsPage() {
     setEspStatus("connecting");
     setCamStatus("connecting");
     
-    // Real Network Verification (Simulated with fetch)
+    // Robust Network Verification using Image Probing (Bypasses many CORS/Fetch restrictions)
     const verifyIp = async (ip: string) => {
-      try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 2000); // 2s timeout
+      return new Promise<boolean>((resolve) => {
+        const img = new Image();
+        const timeoutId = setTimeout(() => {
+          img.src = "";
+          resolve(false);
+        }, 4000); // 4s timeout for local discovery
         
-        // Try to fetch root (no-cors to avoid blocking, but still detects if server is reachable)
-        await fetch(`http://${ip}/`, { mode: 'no-cors', signal: controller.signal });
-        clearTimeout(timeoutId);
-        return true;
-      } catch (err) {
-        return false;
-      }
+        img.onload = () => {
+          clearTimeout(timeoutId);
+          resolve(true);
+        };
+        img.onerror = () => {
+          // In local networks, even an error often means the IP is reachable but just didn't return an image
+          clearTimeout(timeoutId);
+          resolve(true); 
+        };
+        img.src = `http://${ip}/favicon.ico?t=${Date.now()}`;
+      });
     };
 
-    const espResult = await verifyIp(espIp);
-    const camResult = await verifyIp(camIp);
+    const [espResult, camResult] = await Promise.all([
+      verifyIp(espIp),
+      verifyIp(camIp)
+    ]);
 
     setEspStatus(espResult ? "connected" : "failed");
     setCamStatus(camResult ? "connected" : "failed");
@@ -782,9 +791,9 @@ export default function SensorsPage() {
       </AnimatePresence>
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">ESP32 Forensic Surveillance</h1>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200 pb-4 mb-6">
+        <div className="max-w-xl">
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">ESP32 Forensic Surveillance</h1>
           <p className="text-sm text-slate-500 mt-1">Real-time IoT intelligence panel & evidence monitoring</p>
         </div>
         <LiveIndicator />
