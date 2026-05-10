@@ -21,8 +21,8 @@ export default function IntroWrapper({ children }: { children: React.ReactNode }
       return;
     }
 
-    // Always play on every session — no sessionStorage check
-    const isLoggedIn = !!localStorage.getItem('aiventra_token');
+    // Check if user is logged in using correct key
+    const isLoggedIn = !!localStorage.getItem('aiventra_user');
     if (isLoggedIn) {
       setShowIntro(true);
     } else {
