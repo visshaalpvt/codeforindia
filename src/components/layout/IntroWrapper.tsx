@@ -8,36 +8,47 @@ export default function IntroWrapper({ children }: { children: React.ReactNode }
   const router = useRouter();
   const pathname = usePathname();
   const [showIntro, setShowIntro] = useState(false);
+  const [appReady, setAppReady] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Check if intro already played this session
-    const played = sessionStorage.getItem('introPlayed');
-    
-    // Only show intro on root or dashboard paths, not on login/register
-    const isMainPath = pathname === '/' || pathname.startsWith('/d');
-    
-    // Check if user is logged in (simulated check)
-    // Replace with your actual auth check if needed
-    const isLoggedIn = true; 
+    setMounted(true);
 
-    if (!played && isMainPath && isLoggedIn) {
+    // Skip intro on login/register/auth pages
+    const isAuthPage = ['/login', '/register', '/forgot-password'].includes(pathname);
+    if (isAuthPage) {
+      setAppReady(true);
+      return;
+    }
+
+    // Always play on every session — no sessionStorage check
+    const isLoggedIn = !!localStorage.getItem('aiventra_token');
+    if (isLoggedIn) {
       setShowIntro(true);
+    } else {
+      setAppReady(true);
     }
   }, [pathname]);
 
   const handleIntroComplete = () => {
-    sessionStorage.setItem('introPlayed', 'true');
     setShowIntro(false);
-    // If we are at root, go to select-dashboard
-    if (pathname === '/') {
-      router.push('/select-dashboard');
-    }
+    setAppReady(true);
+    // NO sessionStorage.setItem — plays every login
+    router.push('/select-dashboard');
   };
+
+  if (!mounted) return <>{children}</>;
 
   return (
     <>
       {showIntro && <CinematicIntro onComplete={handleIntroComplete} />}
-      <div className={showIntro ? 'invisible opacity-0' : 'visible opacity-100 transition-opacity duration-1000'}>
+      <div
+        style={{
+          visibility: showIntro ? 'hidden' : 'visible',
+          opacity: appReady ? 1 : 0,
+          transition: 'opacity 0.4s ease',
+        }}
+      >
         {children}
       </div>
     </>
