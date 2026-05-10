@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Thermometer, Droplets, Wind, Activity, Video, MapPin,
-  Radio, Cpu, Wifi, Zap, AlertTriangle, RefreshCw, Camera, CheckCircle, ShieldCheck
+  Radio, Cpu, Wifi, Zap, AlertTriangle, RefreshCw, Camera, CheckCircle, ShieldCheck, Image as ImageIcon
 } from "lucide-react";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -171,6 +171,49 @@ function SensorCard({ sensor, time }: { sensor: SensorDevice; time: number }) {
         Updated {timeAgo(sensor.lastUpdated)}
       </p>
     </motion.div>
+  );
+}
+
+function SnapshotBoard({ snapshots }: { snapshots: { id: string; url: string; time: string }[] }) {
+  return (
+    <div className="backdrop-blur-md bg-white/40 border border-slate-200 rounded-2xl p-4 flex flex-col h-full overflow-hidden">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <ImageIcon className="w-4 h-4 text-cyan-600" />
+          <h2 className="text-xs font-bold text-slate-700 uppercase tracking-widest">Evidence Board</h2>
+        </div>
+        <span className="text-[10px] font-bold text-slate-400">{snapshots.length} CAPTURES</span>
+      </div>
+
+      <div className="flex-1 overflow-y-auto pr-1 space-y-3 custom-scrollbar">
+        {snapshots.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-40 border-2 border-dashed border-slate-100 rounded-xl bg-slate-50/30 text-slate-400">
+            <Camera className="w-8 h-8 mb-2 opacity-20" />
+            <p className="text-[10px] font-bold uppercase tracking-tighter text-center px-4">No Forensic Snapshots Archived</p>
+          </div>
+        ) : (
+          <AnimatePresence initial={false}>
+            {snapshots.map((snap) => (
+              <motion.div
+                key={snap.id}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                className="relative group rounded-xl overflow-hidden border border-slate-200 shadow-sm bg-black aspect-video"
+              >
+                <img src={snap.url} alt="Capture" className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent p-2 flex flex-col justify-end">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[8px] font-mono text-cyan-400 font-bold">{snap.id}</span>
+                    <span className="text-[8px] font-mono text-slate-300">{snap.time}</span>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -608,10 +651,11 @@ export default function SensorsPage() {
   const [notification, setNotification] = useState<string | null>(null);
   const [renderTick, setRenderTick] = useState(0);
   const [espIp, setEspIp] = useState("192.168.4.1");
-  const [camIp, setCamIp] = useState("192.168.1.20");
+  const [camIp, setCamIp] = useState("10.93.138.8");
   const [espStatus, setEspStatus] = useState<"idle" | "connecting" | "connected" | "failed">("idle");
   const [camStatus, setCamStatus] = useState<"idle" | "connecting" | "connected" | "failed">("idle");
   const [motionAlert, setMotionAlert] = useState(false);
+  const [snapshots, setSnapshots] = useState<{ id: string; url: string; time: string }[]>([]);
   
   const initialized = useRef(false);
 
@@ -722,14 +766,25 @@ export default function SensorsPage() {
     if (camStatus !== "connected") return;
     
     setNotification("Surveillance Snapshot Captured");
+    
+    const now = new Date();
+    const snapId = `SNAP-${now.getTime().toString().slice(-6)}`;
+    const snapUrl = `http://${camIp}/capture?t=${now.getTime()}`; // standard ESP32-CAM capture endpoint
+    
+    setSnapshots(prev => [{
+      id: snapId,
+      url: snapUrl,
+      time: now.toLocaleTimeString()
+    }, ...prev].slice(0, 8)); // keep last 8
+
     setTimeout(() => setNotification(null), 3000);
 
     addTimelineEvent({
       caseId: "CI-moysc29b-5CVQ",
       type: "CCTV",
       title: "Evidence Zone Snapshot",
-      description: "Automated high-definition snapshot captured from ESP32-CAM surveillance stream.",
-      timestamp: new Date().toISOString(),
+      description: `Automated high-definition snapshot [${snapId}] captured from ESP32-CAM surveillance stream.`,
+      timestamp: now.toISOString(),
       confidence: 98,
     });
   };
@@ -869,13 +924,18 @@ export default function SensorsPage() {
         </div>
 
         {/* Center: Live Feed */}
-        <div className="xl:col-span-3 space-y-6">
+        <div className="xl:col-span-2 space-y-6">
           <LiveSurveillanceFeed 
             status={camStatus} 
             onCapture={captureSnapshot} 
             motionDetected={motionAlert} 
             camIp={camIp}
           />
+        </div>
+
+        {/* Right: Evidence Board */}
+        <div className="xl:col-span-1 space-y-6">
+          <SnapshotBoard snapshots={snapshots} />
         </div>
       </div>
 
